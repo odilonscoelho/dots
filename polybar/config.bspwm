@@ -1,0 +1,121 @@
+[section/base]
+include-file = ~/hdbkp/dots/polybar/modules.config.bspwm
+include-file = ~/hdbkp/dots/polybar/modules
+
+[colors]
+color0=${xrdb:color0:#222}
+color1=${xrdb:color1:#222}
+color2=${xrdb:color2:#222}
+color3=${xrdb:color3:#222}
+color4=${xrdb:color4:#222}
+color5=${xrdb:color5:#222}
+color6=${xrdb:color6:#222}
+color7=${xrdb:color7:#222}
+color8=${xrdb:color8:#222}
+color9=${xrdb:color9:#222}
+color10=${xrdb:color10:#222}
+color11=${xrdb:color11:#222}
+color12=${xrdb:color12:#222}
+color13=${xrdb:color13:#222}
+color14=${xrdb:color14:#222}
+color15=${xrdb:color15:#222}
+color16=${xrdb:color16:#222}
+background = ${xrdb:background:#222}
+foreground = ${xrdb:foreground:#222}
+foreground-alt = ${xrdb:foreground:#222}
+calendar=${colors.color2}
+weatcher=${colors.color6}
+xkeyboard=${colors.color1}
+title=${colors.color2}
+rede=${colors.color2}
+ram=${colors.color3}
+cpu=${colors.color5}
+temperature=${colors.color2}
+gpuinfo=${colors.color1}
+uptime=${colors.color6}
+volume=${colors.color2}
+
+[bar/taskbar1]
+font-0 = mPlus Nerd Font:Semibold:size=8;3
+font-1 = Arimo Nerd Font:size=11;4
+font-2 = Arimo Nerd Font:size=14;4
+font-3 = Arimo Nerd Font:size=15;4
+
+modules-left = x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
+;modules-center  = x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
+;modules-center  = x20 x19 x18 x17 x16 x15 x14 x13 x12 x11 x10 x9 x8 x7 x6 x5 x4 x3 x2 x1 cmd floating close
+modules-right = title cmd floating close
+
+monitor = HDMI-0
+width = 100%
+height = 30
+override-redirect = false
+fixed-center = true
+scroll-up = bspc node -d next -f
+scroll-down = bspc node -d prev -f
+click-left = bspc node -f next
+click-right = bspc node -f -c
+click-middle = wq launch
+module-margin = 1
+padding-right = 8
+padding-left = 8
+border-size = 0
+border-top-size = 5
+border-bottom-size = 5
+line-size = 2
+border-color = ${colors.background}
+background = ${colors.background}
+foreground = ${colors.foreground}
+bottom = false
+radius = 0
+wm-name = bspwm
+dpi-x = 100
+dpi-y = 100
+enable-ipc = true
+
+
+[bar/dock]
+;font-0 = mPlus Nerd Font:size=9;3
+font-0 = Arimo Nerd Font:Bold:size=9;4
+font-1 = Arimo Nerd Font:size=10;3
+font-2 = Arimo Nerd Font:size=14;4
+font-3 = Arimo Nerd Font:Bold:size=13;4
+font-4 = Arimo Nerd Font:size=12;4
+font-5 = mPlus Nerd Font:size=9;3
+font-6 = Arimo Nerd Font:size=12;4
+
+modules-right  = eth-network wireless-network rede memoryramptv cputv1 temperaturecpu gpuinfo uptimetv volume
+modules-center =
+modules-left = datehour weatcher xkeyboard qutebrowser chrome tube alacritty kitty xterm
+
+monitor = HDMI-0
+width = 100%
+height = 30
+override-redirect = false
+fixed-center = true
+scroll-up = bspc node -t tiled
+scroll-down = bspc node -t floating
+click-left = bspc node -f next
+click-right = bspc node -f -c
+module-margin = 1
+padding-right = 8
+padding-left = 8
+border-size = 0
+border-top-size = 5
+border-bottom-size = 5
+line-size = 2
+background = ${colors.background}
+foreground = ${colors.foreground}
+border-color = ${colors.background}
+bottom = true
+radius = 0
+wm-name = bspwm
+dpi-x = 100
+dpi-y = 100
+enable-ipc = true
+;separator = ⏽
+tray-position = center
+tray-background = ${colors.background}
+tray-transparent = true
+tray-scale = 1
+tray-padding = 0

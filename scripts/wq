@@ -1,0 +1,34 @@
+#!/bin/zsh
+declare -x path_proj=~/hdbkp/dots/scripts
+declare -x path_polybar=~/hdbkp/dots/polybar
+declare -x bd=/tmp/taskbar
+
+helpwq () { < $path_proj/mn.zsh |sed 's/^\!//g' }
+help ()
+{
+  funcoes=$(grep "()" $(print $path_proj/*.zsh)|sed 's/() *{*//g')
+  sed 's/.*\:/!wq /g' <<< $funcoes|sort
+}
+
+case $@ in
+  help* ) $@;;
+  notif* ) . $path_proj/notify.zsh; $@ 2>/dev/null;;
+  tema* ) . $path_proj/tema.zsh; $@ 2>/dev/null;;
+  theme* ) . $path_proj/theme.zsh; $@ 2>/dev/null;;
+  color* ) . $path_proj/color.zsh; $@;;
+  rede* ) . $path_proj/rede.zsh; $@;;
+  rofi* ) . $path_proj/rofi.zsh; $@;;
+  process* ) $path_proj/process.zsh $@;;
+  bar* ) . $path_proj/bar.zsh; $@;;
+  capscreen* ) . $path_proj/screencap.zsh; $@;;
+  launch* ) . $path_proj/launch.zsh; $@ 2>/dev/null;;
+  dd* ) . $path_proj/downloads.zsh; $@;;
+  gpu* ) . $path_proj/gpuinfo2.zsh; $@;;
+  weatcher* ) $path_proj/weatcher.zsh $2 2>/dev/null;;
+  install* ) . $path_proj/service.zsh; $@;;
+  app* ) . $path_proj/apps.zsh; $@;;
+  sm* || mp* ) . $path_proj/smplayer.zsh; $@;;
+  cca* || calc* ) . $path_proj/calculadora.zsh; { init 0 2 } &>/dev/null &;;
+  node* || wm* || nd* || cap.id ) . $path_proj/wm.zsh; $@;;
+  lt* || cmd* || mn* || proc || shll* || seletor* || cl* || sf* || msg* ) . $path_proj/yads.zsh; $@;;
+esac
