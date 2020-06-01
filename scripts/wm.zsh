@@ -51,6 +51,16 @@ node.focus ()
   bspc node -f $id
 }
 
+bsp.gap ()
+{
+  bspc config window_gap $@
+}
+
+bsp.border.width ()
+{
+  bspc config border_width $@
+}
+
 wm.restart ()
 {
 	pkill polybar 2>/dev/null && sleep 0.5
@@ -59,5 +69,8 @@ wm.restart ()
 	wq weatcher stop 2>/dev/null && sleep 0.5
 	pkill picom 2>/dev/null && sleep 0.5
 	redshift -x 2>/dev/null && sleep 0.5
-	nohup ~/.config/bspwm/bspwmrc /dev/null &
+	pkill redshift 2>/dev/null && sleep 0.5
+	pkill dunst 2>/dev/null && sleep 0.5
+	{ pulseaudio-equalizer disable &>/dev/null } && sleep 0.5
+	zsh ~/.config/bspwm/bspwmrc &>/dev/null &
 }

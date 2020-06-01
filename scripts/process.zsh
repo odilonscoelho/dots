@@ -13,10 +13,7 @@ process () {
     		{print $11, $12, $13,$ 14"|",$2"|",$3"|",$4"|"}' <<< $(ps auxSf)\
     	)
    	sleep 3
-	clear
+	  clear
     process
 }
-
-#327395
-
-[[ -z $@ ]] || $@
+process

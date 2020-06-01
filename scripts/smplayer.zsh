@@ -1,68 +1,8 @@
 #!/bin/zsh
-smswpf ()
+mpsf ()
 {
-	smplayer -send-action show_preferences &
+	base="$(wq sf)" && nohup mpv ${(s:|:)base} &>/dev/null &
 }
-smopfl ()
-{
-	smplayer -send-action open_file &
-}
-smopdir ()
-{
-	smplayer -send-action open_directory &
-}
-smurl ()
-{
-	smplayer -send-action open_url &
-}
-smswpl ()
-{
-	smplayer -send-action show_playlist &
-}
-smplopn ()
-{
-	smplayer -send-action pl_open &
-}
-smhdrt ()
-{
-	smplayer -send-action restore/hide &
-}
-smstop ()
-{
-	smplayer -send-action stop &
-}
-smplrmall ()
-{
-	smplayer -send-action pl_remove_all &
-}
-smps ()
-{
-	smplayer -send-action pause &
-}
-smpv ()
-{
-	smplayer -send-action play_prev &
-}
-smnt ()
-{
-	smplayer -send-action play_next &
-}
-smpy ()
-{
-	smplayer -send-action play &
-}
-smplpy ()
-{
-	smplayer -send-action pl_play &
-}
-
-smaddpl ()
-{
-	[[ -z $@ ]] && \
-		{ nohup smplayer -add-to-playlist $(xclip -sel clipboard -o) >/dev/null & } || \
-		smplayer -add-to-playlist "$@" &
-}
-
 mpy ()
 {
 
@@ -73,7 +13,7 @@ mpy ()
 			nohup mpv --x11-name="$new_class" $url /dev/null &
 		else
 			nohup mpv $url /dev/null &
-		fi		
+		fi
 	else
 		url="$@"
 		if [[ $(grep "youtube.com" $url) ]]; then
@@ -85,42 +25,32 @@ mpy ()
 	fi
 }
 
-smlt () #questionavel
+mpys ()
 {
-	smplayer ${(f)"$(wq lt $1)"}
-}
+	if [[ -z $@ ]]; then
+		wq msg "Erro não é possível abrir o socket sem o nome
+		por favor use wq mpys 'socket' onde socket é um nome que será
+		usado para controlar os comandos do mpvci, caso passe mais
+		argumentos serão interpretados como arquivos/url para execução"
+	else
+		if [[ $1 =~ "socket" && -n $2 ]];then
+			socket=$2
+			if [[ -z $3 ]];then
+				url="$(xclip -sel clipboard -o)"
 
-mplt () #questionavel
-{
-	mpv ${(f)"$(wq lt $1)"}
-}
-
-smltdt () #questionavel
-{
-	smplayer ${(f)"$(sed -E 's/.$//g' <<< ${(f)"$(sed -E 's/.[0-9]{4}\/.*\:[0-9]{2}$//g' <<< "$(wq ltdt $1)")"})"}
-}
-
-mpltdt () #questionavel
-{
-	mpv ${(f)"$(sed -E 's/.$//g' <<< ${(f)"$(sed -E 's/.[0-9]{4}\/.*\:[0-9]{2}$//g' <<< "$(wq ltdt $1)")"})"}
-}
-
-mpsf ()
-{
-	base="$(wq sf)" && nohup mpv ${(s:|:)base} &>/dev/null &
-}
-
-smsf ()
-{
-	base="$(wq sf)" && nohup smplayer ${(s:|:)base} &>/dev/null &
-}
-
-smsfaddpl ()
-{
-	base="$(wq sf)" && nohup smplayer ${(s:|:)base} &>/dev/null &
-}
-
-mpgsf ()
-{
-	base="$(wq sf)" && nohup mpg123 -CvZ "${(s:|:)base}" &>/dev/null &
+			else
+				url="$3"
+			fi
+			if [[ $url =~ "youtube.com" ]]; then
+				new_class="YouTube"
+				mpv --x11-name="$new_class" $url --input-ipc-server=/tmp/$socket &>/dev/null
+			else
+				mpv $url --input-ipc-server=/tmp/$socket &>/dev/null
+			fi
+		else
+			wq msg "Erro não é possível reconhecer os argumentos, use:
+			wq mpys 'socket' 'url'
+			se url for omitida, será usado o que estiver no xlip"
+		fi
+	fi
 }

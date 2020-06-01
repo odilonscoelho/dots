@@ -6,8 +6,15 @@
 # cat ~/.cache/wal/sequences
 # . ~/.cache/wal/colors.sh
 # source ~/.cache/wal/colors-tty.sh
-export path_proj=$HOME/hdbkp/dots
-source $path_proj/temas/colors.zsh
+# export path_proj=$HOME/hdbkp/dots
+source "$HOME/hdbkp/dots/temas/colors.zsh"
+
+declare -x socket="/tmp/mpvsocket"
+declare -x wq_socket="mpvsocket"
+alias dots="/home/losaoall/hdbkp/dots"
+alias dots.scripts="/home/losaoall/hdbkp/dots/scripts/"
+alias dots.temas="/home/losaoall/hdbkp/dots/temas"
+alias dots.polybar="/home/losaoall/hdbkp/dots/polybar"
 
 alias pacinstall="sudo pacman -S"
 alias pacinstalled="sudo pacman -Qe"
@@ -78,7 +85,7 @@ echo }
 
 se ()
 {
-	test $1 "$2" $3 && \
+	test "$1" "$2" "$3" && \
 		<<< $(corbackground 7;corfont 16; echo " VERDADEIRO ") || \
 		<<< $(corbackground 1;corfont 16; echo "   FALSO    ")
 }

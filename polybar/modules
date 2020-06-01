@@ -1,4 +1,4 @@
-[module/bspwm]
+[module/bspwm2]
 type = internal/bspwm
 pin-workspaces = true
 inline-mode = true
@@ -39,40 +39,46 @@ label-separator =
 label-separator-padding = 1
 label-separator-foreground = #ffb52a
 
-[module/i3]
-type = internal/i3
-strip-wsnumbers = true
-index-sort = true
+
+[module/w1]
+type = custom/ipc
+
+inline-mode = true
 enable-click = true
 enable-scroll = true
-wrapping-scroll = true
-reverse-scroll = true
-fuzzy-match = true
-format = <label-state> <label-mode>
-label-mode = %mode%
-label-mode-padding = 2
-label-mode-background = #e60053
+reverse-scroll = false
+fuzzy-match = false
+ws-icon-default = %{T2}
+ws-icon-0 = 1;%{T3}
+ws-icon-1 = 2;%{T3}
+ws-icon-2 = 3;%{T3}
+ws-icon-3 = 4;%{T3}
+ws-icon-4 = 5;%{T3}
+ws-icon-5 = 6;%{T3}
+ws-icon-6 = 7;%{T3}
+ws-icon-7 = 8;%{T3}
+ws-icon-8 = 9;%{T3}
 
-label-focused = %name%
+format = <label-state>
+
+label-focused = %icon%
 label-focused-foreground = #ffffff
 label-focused-background = #3f3f3f
 label-focused-underline = #fba922
-label-focused-padding = 4
 
-label-unfocused = %name%
-label-unfocused-padding = 4
+label-occupied = %icon%
+label-occupied-underline = #555555
 
-label-visible = %name%
-label-visible-underline = #555555
-label-visible-padding = 4
-
-label-urgent = %name%
+label-urgent = %icon%
 label-urgent-foreground = #000000
 label-urgent-background = #bd2c40
-label-urgent-padding = 4
+label-urgent-underline = #9b0a20
 
-label-separator = |
-label-separator-padding = 2
+label-empty = %icon%
+label-empty-foreground = #55
+
+label-separator =
+label-separator-padding = 1
 label-separator-foreground = #ffb52a
 
 [module/tube]
@@ -83,7 +89,7 @@ hook-2 = nohup wq mpy &> /dev/null &
 initial = 1
 click-left = polybar-msg -p %pid% hook tube 2
 click-right = polybar-msg -p %pid% hook tube 3
-format = %{T2}%{F T-}
+format = %{T4}%{F T-}
 format-padding = 1
 
 [module/kitty]
@@ -133,13 +139,13 @@ format-padding = 1
 [module/volume]
 type = internal/pulseaudio
 format-volume-padding = 20
-label-volume  = "%{T4}%{A1:pavucontrol & disown:}%{A3:pulseaudio-equalizer-gtk & disown:}%percentage%%{A}"
+label-volume  = "%{T10}%{A1:kitty -e 'pulsemixer' & disown:}%{A3:pulseaudio-equalizer-gtk & disown:}%percentage%%{A}"
 format-volume-background = ${colors.color0}
 format-volume-foreground = ${colors.foreground}
 format-volume-underline = ${colors.volume}
 format-volume-overline = ${colors.volume}
 
-format-volume =<label-volume><ramp-volume>%{T-}
+format-volume =<label-volume>%{T9} 蓼%{T-}
 
 ramp-volume-0 ="%{T3} 蓼 %{T-}"
 ramp-volume-1 ="%{T3} 蓼 %{T-}"
@@ -202,7 +208,7 @@ thermal-zone = 0
 ;hwmon-path = /sys/devices/platform/nct6775.656/hwmon/hwmon1/temp8_input
 hwmon-path = /sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon0/temp2_input
 ;hwmon-path = /sys/devices/platform/nct6775.656/hwmon/hwmon1/temp1_input
-format = <label> 
+format = <label> %{T2}%{T-}
 ;
 format-foreground = ${colors.foreground}
 format-background = ${colors.color0}
@@ -228,7 +234,7 @@ format-overline = ${colors.calendar}
 [module/memoryramptv]
 type = internal/memory
 interval = 10
-format = <label> %{T2}﬙%{T-}
+format = <label> %{T8}﬙%{T-}
 label = "%gb_used%"
 format-foreground = ${colors.foreground}
 format-background = ${colors.color0}
@@ -240,7 +246,7 @@ format-padding = 1
 [module/cputv1]
 type = internal/cpu
 interval = 1
-format = <label> %{T5}%{T-}
+format = <label> %{T8}%{T-}
 label = %percentage%%
 format-foreground = ${colors.foreground}
 format-background = ${colors.color0}
@@ -257,7 +263,7 @@ accumulate-stats = true
 unknown-as-up = false
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
-label-connected =  %downspeed% %{T1}
+label-connected =  %downspeed% %{T2}%{T-}
 label-disconnected =
 format-connected-foreground = ${colors.foreground}
 format-connected-background = ${colors.color0}
@@ -273,7 +279,7 @@ accumulate-stats = true
 unknown-as-up = false
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
-label-connected =  %{T1} %downspeed%
+label-connected =  %{T2}%{T-} %downspeed%
 ;label-disconnected = %{T1} -
 format-connected-foreground = ${colors.foreground}
 format-connected-background = ${colors.color0}
@@ -320,13 +326,13 @@ format-underline = ${colors.xkeyboard}
 format-overline = ${colors.xkeyboard}
 layout-icon-0 = pt_BR;P
 layout-icon-1 = en_US;U
-label-layout = "%{T4}  %{T-} %layout%"
+label-layout = "%{T3}  %{T-} %layout%"
 label-layout-padding = 1
-label-indicator = "%{T6}%name%"
+label-indicator = "%name%"
 label-indicator-padding = 1
 label-indicator-on-foreground = ${colors.color0}
 label-indicator-on-background = ${colors.xkeyboard}
-label-indicator-on = "%{T6}%name%"
+label-indicator-on = " %name% "
 click-left = setxkbmap -model abnt2 -layout br -variant abnt2
 click-right = setxkbmap -model us -layout us
 
@@ -336,7 +342,7 @@ hook-0 = echo "%{T4}"
 initial = 1
 click-left = bspc node -c
 click-right = bspc node -k
-format-padding = 1
+format-padding = 0
 format-background = ${colors.background}
 format-foreground = #FF815B
 ;format-underline = ${colors.colorgreen}
@@ -351,7 +357,7 @@ click-left = bspc node -t floating
 click-right = bspc node -t tiled
 scroll-up =$(wq node.to.desktop)
 scroll-down = $(wq node.to.desktop)
-format-padding = 1
+format-padding = 0
 format-background = ${colors.background}
 format-foreground = #C0FD86
 ;format-underline = ${colors.colorgreen}
@@ -362,11 +368,11 @@ tail = true
 type = custom/ipc
 hook-0 = echo "%{T4}"
 initial = 1
-click-left = wq cmd
-click-right = wq mn
+click-left = wq cmd &>/dev/null &
+click-right = wq mn &>/dev/null &
 scroll-up =$(bspc desktop next -f)
 scroll-down = $(bspc desktop prev -f)
-format-padding = 1
+format-padding = 0
 format-background = ${colors.background}
 format-foreground = #F7C279
 ;format-underline = ${colors.colorgreen}

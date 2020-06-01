@@ -17,12 +17,12 @@ gencores ()
 	color13=$(grep color13 $base_file|awk '{print $2}'); [[ -z $color13 ]] && color13=$color5
 	color14=$(grep color14 $base_file|awk '{print $2}'); [[ -z $color14 ]] && color14=$color6
 	color15=$(grep color15 $base_file|awk '{print $2}'); [[ -z $color15 ]] && color15=$color7
-	cursor=$(grep cursor $base_file|awk '{print $2}'); [[ -z $cursor ]] && cursor=$color0
+	cursor=$(grep cursor $base_file|awk '{print $2}'); [[ -z $cursor ]] && cursor=$foreground
 	background=$(grep background $base_file|awk '{print $2}')
 	foreground=$(grep foreground $base_file|awk '{print $2}')
 }
 
-genrofi ()
+genrofi.rasi ()
 {
 		sed -i	's/background\: \#.*/background\: '$background'\;/;
 			s/foreground\: \#.*/foreground\: '$foreground'\;/;
@@ -31,8 +31,9 @@ genrofi ()
 			s/selected\-active\-background\: \#.*/selected\-active\-background\: '$color5'\;/;
 	    s/selected\-normal\-background: \#.*/selected\-normal\-background\: '$color6'\;/;
 	    s/selected\-normal\-foreground\: \#.*/selected\-normal\-foreground\: '$color3'\;/;
-	    s/selected\-urgent-\background\: \#.*/selected\-urgent-\background\: '$color4'\;/' $rofi_file
+	    s/selected\-urgent-\background\: \#.*/selected\-urgent-\background\: '$color4'\;/' $rofi_file_rasi
 }
+
 
 genshell ()
 {
@@ -103,12 +104,60 @@ color14  $color14
 color15  $color15" >| $kitty_file
 }
 
+gennotify ()
+{
+	background=$(echo $background|sed 's/\#//')
+	foreground=$(echo $foreground|sed 's/\#//')
+	color5=$(echo $color5|sed 's/\#//')
+	sed -i 's/bubble\-background\-color \= .*/bubble-background-color = '$background'/;
+	s/text-title-color = .*/text-title-color = '$color5'/;
+	s/text-body-color = .*/text-body-color = '$foreground'/' $notify_file
+	sleep 1
+	notifyconf >/dev/null &
+	sleep 1
+	xdotool keydown alt &&
+	sleep 0.25 &&
+	xdotool keyup alt &&
+	sleep 0.25 &&
+	xdotool keydown space &&
+	sleep 0.25 &&
+	xdotool keyup space &&
+	sleep 0.25 &&
+	xdotool keydown Right &&
+	sleep 0.25 &&
+	xdotool keyup Right &&
+	sleep 0.25 &&
+	xdotool keydown Return &&
+	sleep 0.25 &&
+	xdotool keyup Return &&
+	sleep 0.25 &&
+	xdotool keydown space &&
+	sleep 0.25 &&
+	xdotool keyup space &&
+	sleep 0.25 &&
+	# bspc node -f -c &
+	sleep 0.25 &&
+	taskbar close $(</tmp/taskbar|grep --line-number Noti|cut -d: -f1)
+	sleep 0.25
+	taskbar close $(</tmp/taskbar|grep --line-number Noti|cut -d: -f1)
+}
+
+bsp ()
+{
+	bspc config focused_border_color $color1
+	bspc config normal_border_color $color0
+	bspc config active_border_color $color0
+	bspc config presel_feedback_color $color0
+	hsetroot -solid "$(echo "$background" |tr 'a-z' 'A-Z')"
+	nitrogen --restore &
+}
 vars ()
 {
-	rofi_file=$path_proj/colors-rofi-dark.rasi
-	shell_file=$path_proj/colors.zsh
-	resources_file=$path_proj/.Xresources
-	kitty_file=$path_proj/colors-kitty.conf
+	#rofi_file_rasi=$path_colors/colors-rofi-dark.rasi
+	notify_file=/home/losaoall/.notifyosdconf/test.osdtheme
+	shell_file=$path_colors/colors.zsh
+	resources_file=$path_colors/.Xresources
+	kitty_file=$path_colors/colors-kitty.conf
 }
 
 theme.run ()
@@ -116,35 +165,29 @@ theme.run ()
 	gencores &&
 	genresources &&
 	xrdb -I ~/.Xresources &&
-	polybar-msg cmd restart 2>/dev/null
+	polybar-msg cmd restart &>/dev/null
 	genshell
-	genrofi
 	genkitty
-	tput setaf 10; tput setab 8; echo "$base_file aplicado!"
+	bsp &&
+	wq notificatime 5000 'Theme
+	'${base_file/*\//}' aplicado!' &
 }
 
 theme.sel ()
 {
 	if [[ -z $@ ]]; then
-		wq sf "$path_proj/themes" >>| $path_proj/history
-		base_file=$(<$path_proj/history|tail -1)
-		theme.run &
+		if {{ wq sf "$path_colors/themes" } >> $path_colors/history };then
+			base_file="$(tail -1 < $path_colors/history)"
+			theme.run
+		else
+			wq msg "Nenhum arquivo selecionado!\nsem alterações no theme atual!"
+		fi
 	else
 		base_file="$@"
 		tput setaf 10; tput setab 8; echo "$base_file selecionado!"
 		theme.run &
 	fi
-	echo "$(tail -1 < $path_proj/history) aplicado com sucesso!"
+	echo "$(tail -1 < $path_colors/history) aplicado com sucesso!"
 }
 
-msg_erro ()
-{
-	echo "wq theme.sel - Selecionar o arquivo que contém a paleta de cores (yad necessário)!
-	Opcionalmente :
-	wq theme.sel /path/to/file"
-	exit
-}
-
-path_proj=$HOME/hdbkp/dots/temas
 vars
-[[ -z $@ ]] && msg_erro && exit || $@

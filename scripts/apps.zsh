@@ -17,7 +17,7 @@ app.csgo ()
 
 app.print.full ()
 {
-	import -window root -screen print.png
+	[[ -n $@  ]] &&	import -window root -screen "$@" || import -window root -screen "$(date +%H:%M).jpg"
 }
 
 app.print.cut ()

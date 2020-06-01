@@ -2,44 +2,43 @@
 gpuinfo ()
 {
 	case $@ in
-		start ) gpuinfo.start > /dev/null &;;
+		start ) gpuinfo.start &> /dev/null &;;
 		stop ) gpuinfo.stop;;
 	esac
 }
 
 gpuinfo.start ()
 {
-	wq notificatime "gpuinfo Start!" "50000" &
+	wq notificatime 5000 "gpuinfo Start!" &
 	infoold=""
 	tempold=""
-	$(val)
-	start
+	$(val) && $(val) || gpuinfo.start
 }
 
 gpuinfo.stop ()
 {
-	wq notificatime "gpuinfo Stop!" "50000" &
+	wq notificatime 5000 "gpuinfo Stop!" &
 	kill $(ps aux |grep -E '[w]q gpuinfo start$'|awk {'print $2'})
 	polybar-msg hook gpuinfo 1 > /dev/null &
 }
 
 val ()
 {
-	sleep 10
+	sleep 2
 	new
 	[[ $tempnew != $tempold || $infonew != $infoold ]] && \
-		<<< "${infonew}  ${tempnew}" >| /tmp/gpuinfo
+		<<< "${infonew} %{T2}%{T-} ${tempnew}" >| /tmp/gpuinfo
 		polybar-msg hook gpuinfo 2 > /dev/null
 		infoold=$infonew
 		tempold=$tempnew
-		val || val
+		val
 }
 
 new ()
 {
 	scope="$(nvidia-settings -q all)"
-	tempnew=${$(grep -E "*Reading.*thermalsensor:0]):.*" <<< $scope)[-1]//./}" ºC"
-	infonew=${${${$(grep -E "Attribute.*GPUUtilization.*[gpu:0].*" <<< $scope)[4,5]//graphics=/"  "}//memory=/"﬙ "}//,/%}
+	tempnew=${$(grep -E "*Reading.*thermalsensor:0]):.*" <<< $scope)[-1]//./}" %{T1}ºC%{T-}"
+	infonew=${${${$(grep -E "Attribute.*GPUUtilization.*[gpu:0].*" <<< $scope)[4,5]//graphics=/"%{T2}%{T-}  "}//memory=/"%{T3}﬙%{T-} "}//,/%}
 	#<<< "$info $temperature" >| /tmp/gpuinfo
 	#polybar-msg hook gpuinfo 2 > /dev/null &
 	#sleep 5

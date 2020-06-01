@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 weather.stop () {
-polybar-msg hook weatcher 1 2> /dev/null &
+polybar-msg hook weatcher 1 &>/dev/null &
 pid_task=($(ps aux|grep '[w]eatcher.zsh'|awk {'print $2'}))
 kill $pid_task[@] 2>/dev/null &
 }
@@ -33,15 +33,15 @@ weather.start () {
 			50n)icon="%{T2}%{T}";;
 		esac
 		#<<< "$icon %{T-} $temperatura%{T3}%{T-}" > /tmp/weatcher
-		<<< "$icon %{T-} $temperatura%{T3}%{T-}" > /tmp/weatcher
-		polybar-msg hook weatcher 2 2>/dev/null &
+		<<< "$icon %{T-} $temperatura %{T1}ºC%{T-}" > /tmp/weatcher
+		polybar-msg hook weatcher 2 &>/dev/null
 		sleep 600
 	done
 }
 
 
 case $@ in
-	start) weather.start &>/dev/null &;;
-	stop) weather.stop &>/dev/null &;;
+	start) weather.start;;
+	stop) weather.stop;;
 esac
-wq notificatime "weatcher $@!" "5000" 2>/dev/null
+wq notificatime 5000 "weatcher $@!" 2>/dev/null

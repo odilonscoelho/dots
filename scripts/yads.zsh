@@ -1,5 +1,4 @@
 #!/bin/zsh
-
 #===============| AUTOMAÇÔES |===============
 cl ()
 {
@@ -8,14 +7,17 @@ cl ()
 		echo "$i:"
 	done
 }
-
 mn ()
 {
-	yad \
-	--form --title="wq mn >" --focus-field=1 --quoted-output \
+  . "$path_proj/shell.zsh"
+  base.cmd
+  if zsh -c "`yad \
+  --listen \
+  --button=yad-close\
+	--form --title="wq mn >" --focus-field=1 \
 	--columns=1 --separator="" --entry-text='' --completion \
 	--text-align=center --geometry=600x80 --borders=25 --regex-search \
-	--field='':CE "$(</tmp/cmd)" \
+  --field='':CE "$(</tmp/cmd)"\
 	--field="":FBTN 'zsh -c %1' \
 	--field=" clr":FBTN '@echo 1:' \
 	--field="":LBL '' \
@@ -24,46 +26,49 @@ mn ()
 	--button=" kitty":"kitty" \
 	--button=" cmd":'wq cmd' \
 	--button=" mpy":'wq mpy' \
-	--button=" calc":'wq cca'
+	--button=" calc":'wq cca' \
+  --complete=all`";then
+  #[[ -n $comando ]]&& <<< $comando >> $HOME/.zhistory
+  # mn
+else
+  exit 0
+fi
 }
-
-shll ()
-{
-	nohup $@ /dev/null &
-}
-
-cmd2 ()
-{
-	zsh -c \
-	"$(yad --geometry=800x50 --no-buttons --separator="" --form --borders=25 --mouse --sticky \
-	--field="":CE "$(<$path_proj/mn.zsh)")" &
-}
-
 cmd ()
 {
-	< $HOME/.zhistory |sort --stable --reverse --unique |sed 's/^/!/g' >| /tmp/cmd
-	ls /bin |sed 's/^/!/g' >>| /tmp/cmd
-	wq help >>| /tmp/cmd
-	coleta=$(\
-	yad --geometry=800x50 --no-buttons \
-	--separator="" --form --borders=15 \
-	--field="":CE "$(</tmp/cmd)")
-	[[ -n $coleta ]] && echo "$coleta" >>| $HOME/.zhistory && zsh -c "$coleta" &
+  . "$path_proj/shell.zsh"
+  base.cmd
+  yad --geometry=800x50 \
+  --no-buttons --separator=" " \
+  --borders=15 --form --complete=all \
+  --field="":CE "$(</tmp/cmd)"|read coleta
+	if [[ -n $coleta ]];then
+		<<< $coleta >> $HOME/.zhistory
+		zsh -c "$coleta" &
+	else
+		exit
+	fi
 }
-
-
+base.cmd ()
+{
+  rm /tmp/cmd
+  < $HOME/.zhistory|sed 's/^/!/g'|sort --unique >> /tmp/cmd &&
+  ls /bin |sed 's/^/!/g' >> /tmp/cmd
+  wq help >> /tmp/cmd
+}
+shll ()
+{
+	nohup $($@) /dev/null &
+}
 msg ()
 {
-		case $@ in
-		traducao ) yad --borders=25 --mouse --geometry=700x700 --text="$(trans -b "$(xclip -s xclipboard -o)")" --wrap "traduzido";;
-		* ) yad --borders=25  --mouse\
-			--text="
-		$@
-
-					" &;;
+	case $@ in
+		traducao ) yad \
+		--form --borders=5 --button=yad-ok --mouse --geometry=700x300 \
+		--title "Tradução" --field=TRADUCAO:TXT "$(trans -b "$(xclip -s xclipboard -o)")";;
+		* ) yad --form --button=yad-ok --borders=5 --mouse --geometry=700x300 --title "Information:" --field=CONTEUDO:TXT "$@";;
 	esac
 }
-
 #================| BSPWM | ======================
 seletor4 ()
 {
@@ -73,11 +78,14 @@ seletor4 ()
 	--text-align=center --regex-search \
 	--geometry=400x320 --separator=" " --borders=5 $@ &
 }
-
 #================| SESSÂO SELEÇÃO DE ARQUIVOS |====================
 sf ()
 {
-	[[ -z $@ ]] && yad --file --multiple --geometry 500x600 ||	cd "$@" && yad --file --multiple --geometry 500x600
+	if [[ -z $@ ]];then
+		yad --file --multiple --geometry 500x600
+	else
+		cd "$@" && yad --file --multiple --geometry 500x600
+	fi
 }
 #================| SESSÂO SELEÇÃO DE ARQUIVOS |====================
 
