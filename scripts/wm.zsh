@@ -1,4 +1,10 @@
 #!/bin/zsh
+wm.honor.size.hints.togle ()
+{
+  [[ $(bspc config honor_size_hints) == "false" ]]&&\
+    bspc config honor_size_hints true ||\
+    bspc config honor_size_hints false
+}
 
 ndids ()
 {
@@ -56,9 +62,39 @@ bsp.gap ()
   bspc config window_gap $@
 }
 
+bsp.gap.hori ()
+{
+  bspc config top_padding $@ && bspc config bottom_padding $@
+}
+
+bsp.gap.vert ()
+{
+  bspc config right_padding $@ && bspc config left_padding $@
+}
+bsp.gap.geral ()
+{
+  bspc config top_padding $1 && bspc config bottom_padding $1
+  bspc config right_padding $2 && bspc config left_padding $2
+  bspc config window_gap $3
+}
 bsp.border.width ()
 {
   bspc config border_width $@
+}
+bsp.border.color.focused ()
+{
+  bspc config focused_border_color $@
+}
+bsp.border.color.normal ()
+{
+  bspc config normal_border_color $@
+  bspc config active_border_color $@
+  bspc config presel_feedback_color $@
+}
+
+bsp.clearmodifiers ()
+{
+  xdotool keydown --clearmodifiers super && sleep 1 && xdotool keyup --clearmodifiers super
 }
 
 wm.restart ()
@@ -72,5 +108,6 @@ wm.restart ()
 	pkill redshift 2>/dev/null && sleep 0.5
 	pkill dunst 2>/dev/null && sleep 0.5
 	{ pulseaudio-equalizer disable &>/dev/null } && sleep 0.5
+	pkill kitty &>/dev/null && sleep 0.5
 	zsh ~/.config/bspwm/bspwmrc &>/dev/null &
 }

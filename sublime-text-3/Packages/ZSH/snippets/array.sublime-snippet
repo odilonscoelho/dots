@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+local -a ${1:array}; ${1:array}${2:=(${3:value})}
+]]></content>
+	<tabTrigger>array</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

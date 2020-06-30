@@ -9,15 +9,16 @@ cl ()
 }
 mn ()
 {
-  . "$path_proj/shell.zsh"
-  base.cmd
-  if zsh -c "`yad \
-  --listen \
-  --button=yad-close\
+	. "$path_proj/shell.zsh"
+	base.cmd
+	declare -x sock=/tmp/mpvsocket
+	if zsh -c "`yad \
+  	--listen \
+  	--button=yad-close\
 	--form --title="wq mn >" --focus-field=1 \
 	--columns=1 --separator="" --entry-text='' --completion \
 	--text-align=center --geometry=600x80 --borders=25 --regex-search \
-  --field='':CE "$(</tmp/cmd)"\
+  	--field='':CE "$(</tmp/cmd)"\
 	--field="":FBTN 'zsh -c %1' \
 	--field=" clr":FBTN '@echo 1:' \
 	--field="":LBL '' \
@@ -27,20 +28,22 @@ mn ()
 	--button=" cmd":'wq cmd' \
 	--button=" mpy":'wq mpy' \
 	--button=" calc":'wq cca' \
-  --complete=all`";then
+	--button=" playlist":'mp list' \
+	--align=center\
+  	--buttons-layout=spread\
+	--complete=all`";then
   #[[ -n $comando ]]&& <<< $comando >> $HOME/.zhistory
   # mn
-else
-  exit 0
-fi
+	else
+  	exit 0
+	fi
 }
 cmd ()
 {
-  . "$path_proj/shell.zsh"
   base.cmd
   yad --geometry=800x50 \
   --no-buttons --separator=" " \
-  --borders=15 --form --complete=all \
+  --borders=12 --form --complete=all \
   --field="":CE "$(</tmp/cmd)"|read coleta
 	if [[ -n $coleta ]];then
 		<<< $coleta >> $HOME/.zhistory
@@ -51,8 +54,11 @@ cmd ()
 }
 base.cmd ()
 {
+  # . $path_proj/shell.zsh
   rm /tmp/cmd
-  < $HOME/.zhistory|sed 's/^/!/g'|sort --unique >> /tmp/cmd &&
+  < hdbkp/dots/scripts/shell.zsh|\
+  grep -E "declare"|sed 's/\=.*//g;;s/declare -x//g;s/^/\!\$/g;s/ //g' >> /tmp/cmd
+  < $HOME/.zhistory|sed 's/^/!/g'|sort -R --unique >> /tmp/cmd &&
   ls /bin |sed 's/^/!/g' >> /tmp/cmd
   wq help >> /tmp/cmd
 }
@@ -65,7 +71,7 @@ msg ()
 	case $@ in
 		traducao ) yad \
 		--form --borders=5 --button=yad-ok --mouse --geometry=700x300 \
-		--title "Tradução" --field=TRADUCAO:TXT "$(trans -b "$(xclip -s xclipboard -o)")";;
+		--title "tradutor" --field=TRADUCAO:TXT "$(trans -b "$(xclip -s xclipboard -o)")";;
 		* ) yad --form --button=yad-ok --borders=5 --mouse --geometry=700x300 --title "Information:" --field=CONTEUDO:TXT "$@";;
 	esac
 }

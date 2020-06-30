@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+(( \$+functions[${1:name}] )) || function ${1:name}() {
+	${2:# Do something...}
+}
+]]></content>
+	<tabTrigger>function</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

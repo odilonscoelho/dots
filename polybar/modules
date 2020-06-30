@@ -1,86 +1,3 @@
-[module/bspwm2]
-type = internal/bspwm
-pin-workspaces = true
-inline-mode = true
-enable-click = true
-enable-scroll = true
-reverse-scroll = false
-fuzzy-match = false
-ws-icon-default = %{T2}
-ws-icon-0 = 1;%{T3}
-ws-icon-1 = 2;%{T3}
-ws-icon-2 = 3;%{T3}
-ws-icon-3 = 4;%{T3}
-ws-icon-4 = 5;%{T3}
-ws-icon-5 = 6;%{T3}
-ws-icon-6 = 7;%{T3}
-ws-icon-7 = 8;%{T3}
-ws-icon-8 = 9;%{T3}
-
-format = <label-state>
-
-label-focused = %icon%
-label-focused-foreground = #ffffff
-label-focused-background = #3f3f3f
-label-focused-underline = #fba922
-
-label-occupied = %icon%
-label-occupied-underline = #555555
-
-label-urgent = %icon%
-label-urgent-foreground = #000000
-label-urgent-background = #bd2c40
-label-urgent-underline = #9b0a20
-
-label-empty = %icon%
-label-empty-foreground = #55
-
-label-separator =
-label-separator-padding = 1
-label-separator-foreground = #ffb52a
-
-
-[module/w1]
-type = custom/ipc
-
-inline-mode = true
-enable-click = true
-enable-scroll = true
-reverse-scroll = false
-fuzzy-match = false
-ws-icon-default = %{T2}
-ws-icon-0 = 1;%{T3}
-ws-icon-1 = 2;%{T3}
-ws-icon-2 = 3;%{T3}
-ws-icon-3 = 4;%{T3}
-ws-icon-4 = 5;%{T3}
-ws-icon-5 = 6;%{T3}
-ws-icon-6 = 7;%{T3}
-ws-icon-7 = 8;%{T3}
-ws-icon-8 = 9;%{T3}
-
-format = <label-state>
-
-label-focused = %icon%
-label-focused-foreground = #ffffff
-label-focused-background = #3f3f3f
-label-focused-underline = #fba922
-
-label-occupied = %icon%
-label-occupied-underline = #555555
-
-label-urgent = %icon%
-label-urgent-foreground = #000000
-label-urgent-background = #bd2c40
-label-urgent-underline = #9b0a20
-
-label-empty = %icon%
-label-empty-foreground = #55
-
-label-separator =
-label-separator-padding = 1
-label-separator-foreground = #ffb52a
-
 [module/tube]
 type = custom/ipc
 hook-0 = echo
@@ -218,9 +135,9 @@ format-padding = 1
 base-temperature = 20
 warn-temperature = 60
 
-[module/datehour]
+[module/datehour1]
 type = custom/script
-interval = 10
+interval = 5
 exec = echo "$(wq bar.relogio) $(wq bar.relogio.extenso)"
 click-left = $(wq bar.calendario)
 click-right = $(wq bar.calendario)
@@ -230,6 +147,18 @@ format-foreground = ${colors.foreground}
 format-background = ${colors.color0}
 format-underline = ${colors.calendar}
 format-overline = ${colors.calendar}
+
+[module/datehour]
+type = custom/ipc
+hook-0 = echo "$(wq bar.relogio) $(wq bar.relogio.extenso)"
+hook-1 = echo "$(wq bar.relogio) $(wq bar.relogio.extenso)"
+initial = 2
+interval = 1
+exec = echo "$(wq bar.relogio) $(wq bar.relogio.extenso)"
+click-left = $(wq bar.calendario)
+click-right = $(wq bar.calendario)
+tail = true
+
 
 [module/memoryramptv]
 type = internal/memory
@@ -279,7 +208,7 @@ accumulate-stats = true
 unknown-as-up = false
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
-label-connected =  %{T2}%{T-} %downspeed%
+label-connected =  %{T2}%{T-} %downspeed% %{T2}%{T-}
 ;label-disconnected = %{T1} -
 format-connected-foreground = ${colors.foreground}
 format-connected-background = ${colors.color0}
@@ -305,8 +234,8 @@ type = custom/ipc
 hook-0 = echo " openweatcher off "
 hook-1 = echo $(wq bar.weatcher)
 initial = 2
-click-left = wq weatcher start
-click-right = wq weatcher stop
+click-left = wq weatcher start &
+click-right = wq weatcher stop &
 format-padding = 1
 format-foreground = ${colors.foreground}
 format-background = ${colors.color0}
@@ -336,50 +265,6 @@ label-indicator-on = " %name% "
 click-left = setxkbmap -model abnt2 -layout br -variant abnt2
 click-right = setxkbmap -model us -layout us
 
-[module/close]
-type = custom/ipc
-hook-0 = echo "%{T4}"
-initial = 1
-click-left = bspc node -c
-click-right = bspc node -k
-format-padding = 0
-format-background = ${colors.background}
-format-foreground = #FF815B
-;format-underline = ${colors.colorgreen}
-;format-overline = ${colors.colorgreen}
-tail = true
-
-[module/floating]
-type = custom/ipc
-hook-0 = echo "%{T4}"
-initial = 1
-click-left = bspc node -t floating
-click-right = bspc node -t tiled
-scroll-up =$(wq node.to.desktop)
-scroll-down = $(wq node.to.desktop)
-format-padding = 0
-format-background = ${colors.background}
-format-foreground = #C0FD86
-;format-underline = ${colors.colorgreen}
-;format-overline = ${colors.colorgreen}
-tail = true
-
-[module/cmd]
-type = custom/ipc
-hook-0 = echo "%{T4}"
-initial = 1
-click-left = wq cmd &>/dev/null &
-click-right = wq mn &>/dev/null &
-scroll-up =$(bspc desktop next -f)
-scroll-down = $(bspc desktop prev -f)
-format-padding = 0
-format-background = ${colors.background}
-format-foreground = #F7C279
-;format-underline = ${colors.colorgreen}
-;format-overline = ${colors.colorgreen}
-tail = true
-
-
 [module/title]
 type = internal/xwindow
 ; Available tags:
@@ -402,3 +287,226 @@ label-maxlen = 50
 ;   None
 label-empty = Empty
 label-empty-foreground = ${colors.foreground}
+
+[module/close]
+type = custom/ipc
+hook-0 = echo "%{T4}"
+initial = 1
+click-left = bspc node -c
+click-right = bspc node -k
+scroll-up =$(wq bsp.clearmodifiers && wq notificatime 5000 "ClearModifiers...")
+scroll-down = $(wq bsp.clearmodifiers && wq notificatime 5000 "ClearModifiers...")
+format-padding = 0
+format-background = ${colors.background}
+format-foreground = #FF815B
+;format-underline = ${colors.colorgreen}
+;format-overline = ${colors.colorgreen}
+tail = true
+
+[module/floating]
+type = custom/ipc
+hook-0 = echo "%{T4}"
+initial = 1
+click-left = bspc node -t floating
+click-right = bspc node -t tiled
+scroll-up =$(wq notificatime 900000 "$(wq tradutor.sel)")
+scroll-down = $(wq msg "$(wq tradutor.sel)")
+format-padding = 0
+format-background = ${colors.background}
+format-foreground = #C0FD86
+;format-underline = ${colors.colorgreen}
+;format-overline = ${colors.colorgreen}
+tail = true
+
+[module/cmd]
+type = custom/ipc
+hook-0 = echo "%{T4}"
+initial = 1
+click-left = wq cmd &>/dev/null &
+click-right = wq mn &>/dev/null &
+scroll-up =$(bspc desktop next -f)
+scroll-down = $(bspc desktop prev -f)
+format-padding = 0
+format-background = ${colors.background}
+format-foreground = #F7C279
+;format-underline = ${colors.colorgreen}
+;format-overline = ${colors.colorgreen}
+tail = true
+
+;          
+;--geometry 300x50 \
+;--borders 0 \
+;--form --columns 10 \
+;--title="Controls MPV" \
+;--field="":FBTN "mp" \
+;--field="":FBTN "mp plistyad" \
+;--field="":FBTN "mp select.file" \
+;;--field="":FBTN "mp remove $(<$selcod)" \
+;--field="  ":FBTN "mp save" \
+;--field="  ":FBTN "mp stop" \
+;--field="    ":FBTN "mp prev" \
+;--field="|":FBTN "mp pause.toggle" \
+;--field="    ":FBTN "mp next" \
+;--no-buttons
+;
+
+
+[module/pause]
+type = custom/ipc
+format = "%{T5}%{T-}" 
+hook-0 = echo
+hook-1 = mp pause.toggle &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook pause 2
+click-right = polybar-msg -p %pid% hook pause 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/prev]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp prev &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook prev 2
+click-right = polybar-msg -p %pid% hook prev 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/next]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp next &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook next 2
+click-right = polybar-msg -p %pid% hook next 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/stop]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp stop &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook stop 2
+click-right = polybar-msg -p %pid% hook stop 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/save]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp save &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook save 2
+click-right = polybar-msg -p %pid% hook save 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/playlist]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp plistyad null &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook playlist 2
+click-right = polybar-msg -p %pid% hook playlist 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/yt]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp $(wq app.paste) &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook yt 2
+click-right = polybar-msg -p %pid% hook yt 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/sf]
+type = custom/ipc
+format = "%{T6}%{T-}" 
+hook-0 = echo
+hook-1 = mp select.file &>/dev/null &
+initial = 1
+click-left = polybar-msg -p %pid% hook sf 2
+click-right = polybar-msg -p %pid% hook sf 2
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+;format-underline = ${colors.color8}
+;format-overline = ${colors.color8}
+
+[module/mpv]
+type = custom/ipc
+hook-0 = echo "..."
+hook-1 = mp poly.title
+hook-2 = mp controls &>/dev/null & mp poly.title &
+initial = 2
+click-left = polybar-msg -p %pid% hook mpv 2
+click-right = polybar-msg -p %pid% hook mpv 3
+;scroll-up = polybar-msg -p %pid% hook mpv 4
+;scroll-down = polybar-msg -p %pid% hook mpv 1
+format-padding = 1
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+format-underline = ${colors.color8}
+format-overline = ${colors.color8}
+;tail = true
+
+[module/mp]
+type = custom/menu
+expand-right = false
+;format-suffix = "%{T5}%{F#569027}%{F-T1}" 
+menu-0-0 = "%{T6}  %{T-}"
+menu-0-0-exec = mp $(wq app.paste) &>/dev/null &
+menu-0-1 = "%{T6}  %{T-}"
+menu-0-1-exec = mp plistyad null &>/dev/null &
+menu-0-2 = "%{T6}  %{T-}"
+menu-0-2-exec = mp save &>/dev/null &
+menu-0-3 = "%{T6}  %{T-}"
+menu-0-3-exec = mp stop &>/dev/null &
+menu-0-4 = "%{T6}  %{T-}"
+menu-0-4-exec = mp select.file &>/dev/null &
+menu-0-5 = "%{T6}  %{T-}"
+menu-0-5-exec = mp prev &>/dev/null &
+menu-0-6 = "%{T6}  %{T-}"
+menu-0-6-exec = mp pause.toggle &>/dev/null &
+menu-0-7 = "%{T6}  %{T-}"
+menu-0-7-exec = mp next &>/dev/null &
+
+label-open = " %{T5}%{F#569027}%{F-T1} " 
+label-close = x
+label-separator = |
+
+format-padding = 0
+format-background = ${colors.background}
+format-foreground = ${colors.color8}
+format-underline = ${colors.color8}
+format-overline = ${colors.color8}

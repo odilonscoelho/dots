@@ -1,0 +1,8 @@
+<snippet>
+	<content><![CDATA[
+zparseopts -D \
+	${1:o}=${2:option} -${2:option}=${2:option}
+]]></content>
+	<tabTrigger>zparseopts</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

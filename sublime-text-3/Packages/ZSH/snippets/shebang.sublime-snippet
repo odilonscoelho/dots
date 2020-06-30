@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+#!${1:/usr/bin/env zsh}
+]]></content>
+	<tabTrigger>zsh</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

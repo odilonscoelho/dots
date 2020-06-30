@@ -1,10 +1,21 @@
-*background: #1E1F22
-*foreground: #FFF1E7
-*color0:  #2E2F2F
-*color1:  #FD778C
-*color2:  #71DD00
-*color3:  #FAFF40
-*color4:  #43F3FC
-*color5:  #CF64E9
-*color6:  #00C6B6
-*color7:  #D3D3D3
+*background: #282828
+*foreground: #ebdbb2
+*color0:  #282828
+*color1:  #cc241d
+*color2:  #98971a
+*color3:  #d79921
+*color4:  #458588
+*color5:  #b16286
+*color6:  #689d6a
+*color7:  #a89984
+*color8:  #928374
+*color9:  #fb9334
+*color10:  #b8bb26
+*color11:  #fabd2f
+*color12:  #83a598
+*color13:  #d3869b
+*color14:  #8ec07c
+*color15:  #8ev07c
+*color16:  #3c3836
+
+ 

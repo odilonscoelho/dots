@@ -26,7 +26,7 @@ foreground = ${xrdb:foreground:#222}
 foreground-alt = ${xrdb:foreground:#222}
 calendar=${colors.color2}
 weatcher=${colors.color6}
-xkeyboard=${colors.color1}
+xkeyboard=${colors.color5}
 title=${colors.color2}
 rede=${colors.color2}
 ram=${colors.color3}
@@ -35,15 +35,20 @@ temperature=${colors.color2}
 gpuinfo=${colors.color1}
 uptime=${colors.color6}
 volume=${colors.color2}
+mpv=${colors.color2}
 
 [bar/taskbar1]
 font-0 = mPlus Nerd Font:regular:size=10;3
-font-1 = Arimo Nerd Font:size=11;4
+font-1 = Arimo Nerd Font:size=11;3
 font-2 = Arimo Nerd Font:size=14;4
 font-3 = Arimo Nerd Font:size=15;4
+font-4 = mPlus Nerd Font:regular:size=16;5
+font-5 = Arimo Nerd Font:regular:size=11;4
+
 
 modules-left = x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
-modules-right = title cmd floating close
+;modules-right = 
+modules-right = mpv mp cmd floating close
 
 monitor = HDMI-0
 width = 100%
@@ -67,7 +72,7 @@ background = ${colors.background}
 foreground = ${colors.foreground}
 bottom = false
 radius = 0
-wm-name = bspwm
+;wm-name = bspwm
 dpi-x = 100
 dpi-y = 100
 enable-ipc = true
@@ -88,7 +93,7 @@ font-9 = mPlus Nerd Font:regular:size=16;5
 
 modules-right  = memoryramptv cputv1 temperaturecpu gpuinfo volume
 modules-center =
-modules-left = datehour weatcher xkeyboard rede eth-network wireless-network
+modules-left = datehour1 weatcher xkeyboard eth-network
 
 monitor = HDMI-0
 width = 100%
@@ -111,13 +116,13 @@ foreground = ${colors.foreground}
 border-color = ${colors.background}
 bottom = true
 radius = 0
-wm-name = bspwm
+;wm-name = bspwm
 dpi-x = 100
 dpi-y = 100
 enable-ipc = true
 separator = " "
 tray-position = center
-tray-background = ${colors.color1}
+tray-background = ${colors.background}
 tray-transparent = true
 tray-scale = 1
 tray-padding = 0

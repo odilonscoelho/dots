@@ -6,5 +6,5 @@ if ps aux|awk '{print $11}'|grep --silent '[p]icom'; then
 else
   echo "PARADO não está em execução"
   wq notificatime "Picom Started!" 5000
-  picom --config hdbkp/dots/picom.conf -b --experimental-backends	
+  picom --config $path_dots/picom.conf -b --experimental-backends
 fi

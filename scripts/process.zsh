@@ -9,7 +9,7 @@ process () {
     	-o "|" \
     	--table-order PID,MEM%,CPU%,PROCESS <<< $(\
     		awk '\
-    		/taskbar start|taskbar.zsh start|weatcher.zsh|polybar *.|[w]q gpu|[y]ad*/ \
+    		/taskbar start|taskbar.zsh start|weatcher.zsh|polybar *.|[w]q gpu|[y]ad*|[m]p mpd|[m]p .*/ \
     		{print $11, $12, $13,$ 14"|",$2"|",$3"|",$4"|"}' <<< $(ps auxSf)\
     	)
    	sleep 3

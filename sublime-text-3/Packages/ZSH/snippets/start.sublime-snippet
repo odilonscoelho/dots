@@ -1,0 +1,47 @@
+<snippet>
+	<content><![CDATA[
+#!/usr/bin/env zsh
+
+###
+# Output usage information and exit
+###
+function _${1:name}_usage() {
+	echo '\033[0;32mUsage:\033[0;m'
+	echo '  ${1:name} [options]'
+}
+
+###
+# Output version information and exit
+###
+function _${1:name}_version() {
+	echo '${2:0.1.0}'
+}
+
+###
+# The main ${1:name} process
+###
+(( \$+functions[_${1:name}] )) || function _${1:name}() {
+	local help version
+
+	zparseopts -D \
+		h=help -help=help \
+		v=version -version=version
+
+	if [[ -n \$help ]]; then
+		_${1:name}_usage
+		exit
+	fi
+
+	if [[ -n \$version ]]; then
+		_${1:name}_version
+		exit
+	fi
+
+	${3:# Do something...}
+}
+
+_${1:name} "\$@"
+]]></content>
+	<tabTrigger>start</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

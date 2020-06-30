@@ -1,0 +1,73 @@
+[
+	{ "keys": ["ctrl+m"], "command": "context_menu" },
+	// { "keys": ["ctrl+x"], "command": "show_panel", "args": {"panel": "console", "toggle": true} },
+	  // (ctrl+shift+c+o) key binding
+{
+  // (ctrl+shift+c+o) key binding
+  "keys": ["ctrl+shift+c", "ctrl+shift+o"],
+
+  // "shell_exec_open": Open Shell Exec box to input some command.
+  // "shell_exec_run": Runs a predefined command.
+  "command": "shell_exec_open",
+
+  "args": {
+    // Title of the Shell Exec box.
+    "title": "Shell Exec",
+
+    // Predefined command.
+    "command": "git status",
+
+    // Format the command with variables.
+    "format": "git ${input}",
+
+    // You can use this file to load RVM, ~/.bashrc, custom shell functions...
+    // "load_sh_file": "your-sh-file-to-load-before-commands.sh",
+
+    // Shell executable: "/bin/bash", "/bin/sh", "/usr/bin/zsh"...
+    "executable": "/bin/zsh",
+
+    // Shell executable option: --login # Run as login load your ~/.bashrc or other user settings.
+    "executable_option": "--login", // ["-l"] ["--login"]
+
+    // The output of the command can be shown on the Panel or in a New File: "panel", "file".
+    "output": "file",
+
+    // Set the Output File Syntax. Default is Ruby, because Ruby looks nice. =)
+    "output_syntax": "Ruby",
+
+    // Enable or Disable the  word wrap at the Output File.
+    "output_word_wrap": true,
+
+    // Enable or Disable the Debug infos (for plugin developers).
+    "debug": false,
+
+    // Name of the Shell Exec command box.
+    "title": "Shell Exec",
+
+    // Defines where the command should be executed: false, "project_folder" or "file_folder".
+    // If "project_folder" is set, will execute: cd project_folder && your_commnad.
+    "context": "file_folder",
+
+
+  },
+
+  // (ctrl+shift+c+f) key binding
+"keys": ["ctrl+shift+c", "ctrl+shift+f"],
+
+// "shell_exec_open": Open Shell Exec box to input some command.
+// "shell_exec_run": Runs a predefined command.
+"command": "shell_exec_exec",
+
+"args": {
+    // Format the command with variables.
+    "format": "rspec '${file}:${row}'"
+},
+
+  "keys": ["ctrl+shift+u", "ctrl+shift+p"],
+  "command": "shell_exec_open",
+  "args": {
+    "title": "Find Process",
+    "format": "ps aux | grep ${input}"
+},
+}
+]

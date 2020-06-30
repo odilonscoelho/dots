@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+integer ${1:var}${2:=${3:value}}
+]]></content>
+	<tabTrigger>integer</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

@@ -1,0 +1,7 @@
+<snippet>
+	<content><![CDATA[
+typeset -A ${1:hash}; ${1:hash}${2:=(${3:key} ${4:value})}
+]]></content>
+	<tabTrigger>hash</tabTrigger>
+	<scope>source.shell</scope>
+</snippet>

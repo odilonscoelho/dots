@@ -113,3 +113,8 @@ for (( i = 1; i <= 4; i++ )); do
 done
 echo "$icons[1]$icons[2]/$icons[3]$icons[4] %{T2}$dayweek %{T3}"
 }
+bar.mpv.title ()
+{
+  declare -x sock=$socket
+  <<< "$(sed -n ''$(mp trackget)'p' /tmp/mptitles|tail -c 25)"
+}

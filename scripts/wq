@@ -1,39 +1,91 @@
 #!/bin/zsh
-declare -x path_proj=~/hdbkp/dots/scripts
-declare -x path_polybar=~/hdbkp/dots/polybar
-declare -x path_colors=~/hdbkp/dots/temas
-declare -x path_raiz=~/hdbkp/dots
-declare -x bd=/tmp/taskbar
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+# Caso não esteja usando a minha conf do bspwm descomente as linhas abaixo abaixo e altere
+# 'caminho' pelo local onde está o repositório: 
+# declare -zgx path_dots=/caminho/dots
+# declare -zgx path_scripts=$path_dots/scripts
+# declare -zgx path_polybar=$path_dots/polybar
+# declare -zgx path_colors=$path_dots/temas
 
-helpwq () { < $path_proj/mn.zsh |sed 's/^\!//g' }
+# Caso não use o taskbar.zsh não há necessidade da linha abaixo:
+declare -zgx bd=/tmp/taskbar
+
+# Para incluir variáveis globais dinâmicas, necessário para $wq mn $wq cmd $mp.command
+. $path_scripts/shell.zsh
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+helpwq () { < $path_scripts/mn.zsh |sed 's/^\!//g' }
 help ()
 {
-  funcoes=$(grep "()" $(print $path_proj/*.zsh)|sed 's/() *{*//g')
+  funcoes=$(grep "()" $(print $path_scripts/*.zsh)|sed 's/() *{*//g')
   sed 's/.*\:/!wq /g' <<< $funcoes|sort
 }
-
-case $@ in
-  help* ) $@;;
-  notif* ) . $path_proj/notify.zsh; $@ 2>/dev/null;;
-  fetch* ) $path_proj/fetch.zsh $@ 2>/dev/null;;
-  theme* ) . $path_proj/theme.zsh; $@ &>/dev/null;;#2>/dev/null;;
-  tradutor* ) . $path_proj/tradutor.zsh; $@;;
-  color* ) . $path_proj/color.zsh; $@;;
-  rede* ) . $path_proj/rede.zsh; $@;;
-  rofi* ) . $path_proj/rofi.zsh; $@;;
-  picom* ) $path_proj/picom.zsh;;
-  process* ) $path_proj/process.zsh;;
-  bar* ) . $path_proj/bar.zsh; $@;;
-  keyboard* ) . $path_proj/keyboard.zsh; $@;;
-  capscreen* ) . $path_proj/screencap.zsh; $@;;
-  launch* ) . $path_proj/launch.zsh; $@ 2>/dev/null;;
-  dd* ) . $path_proj/downloads.zsh; $@;;
-  gpu* ) . $path_proj/gpuinfo2.zsh; $@;;
-  weatcher* ) $path_proj/weatcher.zsh $2 2>/dev/null;;
-  install* ) . $path_proj/service.zsh; $@;;
-  app* ) . $path_proj/apps.zsh; $@;;
-  mp* ) . $path_proj/mpv.zsh; $@;;
-  cca* || calc* ) . $path_proj/calculadora.zsh; { init 0 2 } &>/dev/null &;;
-  bsp* || node* || wm* || nd* || cap.id ) . $path_proj/wm.zsh; $@;;
-  lt* || cmd* || mn* || proc || shll* || seletor* || cl* || sf* || msg* ) . $path_proj/yads.zsh; "$@" ;; # &>/dev/null;;
-esac
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+[[ -z $@ ]] && return 0 || \
+  case $@ in
+    help* )
+      $@;;
+    capscreen* )
+      . $path_scripts/screencap.zsh
+      shift
+      $@;;
+    notif* )
+      . $path_scripts/notify.zsh
+      $@ 2>/dev/null;;
+    fetch* )
+      $path_scripts/fetch.zsh $@ 2>/dev/null;;
+    theme* )
+      . $path_scripts/theme.zsh
+      $@ &>/dev/null;;#2>/dev/null;;
+    tradutor* )
+      . $path_scripts/tradutor.zsh
+      $@;;
+    color* )
+      . $path_scripts/color.zsh
+      $@;;
+    rede* )
+      . $path_scripts/rede.zsh
+      $@;;
+    rofi* )
+      . $path_scripts/rofi.zsh
+      $@;;
+    picom* )
+      $path_scripts/picom.zsh;;
+    process* )
+      $path_scripts/process.zsh;;
+    bar* )
+      . $path_scripts/bar.zsh
+      $@;;
+    keyboard* )
+      . $path_scripts/keyboard.zsh
+      $@;;
+    launch* )
+      . $path_scripts/launch.zsh
+      $@ 2>/dev/null;;
+    dd* )
+      . $path_scripts/downloads.zsh
+      $@;;
+    gpu* )
+      . $path_scripts/gpuinfo2.zsh
+      $@;;
+    weatcher* )
+      $path_scripts/weatcher.zsh $2 2>/dev/null;;
+    install* )
+      . $path_scripts/service.zsh
+      $@;;
+    app* )
+      . $path_scripts/apps.zsh
+      $@;;
+    mp.* || mp* )
+      . /home/losaoall/hdbkp/projetos/shell/mpvd/mpv.zsh
+      $@;;
+    cca* || calc* )
+      . $path_scripts/calculadora.zsh
+      { init 0 2 } &>/dev/null &;;
+    gap.* || bsp.* || node* || wm* || nd* || cap.id )
+      . $path_scripts/wm.zsh
+      $@;;
+    lt* || cmd* || mn* || proc || shll* || seletor* || cl* || sf* || msg* )
+      . $path_scripts/yads.zsh
+      "$@" ;; # &>/dev/null;;
+  esac
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
