@@ -1,12 +1,8 @@
-	    _    _ _   ____        _       
-	   / \  | | | |  _ \  ___ | |_ ___ 
-	  / _ \ | | | | | | |/ _ \| __/ __|
-	 / ___ \| | | | |_| | (_) | |_\__ \
-	/_/   \_\_|_| |____/ \___/ \__|___/
-
 # welcome to the jungle !
+![my desktop](logodots.jpg)
 
-![screenshoot](https://github.com/odilonscoelho/dots/blob/master/print.jpg)
+<!-- ![screenshoot](https://github.com/odilonscoelho/dots/blob/master/print.jpg) -->
+![screenshoot](print.jpg)
 
 ## Setup
 
