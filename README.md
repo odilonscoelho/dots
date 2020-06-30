@@ -6,7 +6,7 @@
 
 # welcome to the jungle !
 
-[screenshoot](https://github.com/odilonscoelho/dots/blob/master/print.jpg)
+![screenshoot](https://github.com/odilonscoelho/dots/blob/master/print.jpg)
 
 ## Setup
 
