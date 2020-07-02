@@ -7,20 +7,20 @@
 distro|manjaro | complementary | configs
 :--:|:-------:|:------:|:-----:
 twm|[bspwm](https://github.com/baskerville/bspwm) | - | [bspwmrc](bspwmrc)
-bar|[polybar](https://github.com/polybar/polybar) | - | [config](polybar/config.bspwm)
-terminal|[kitty](https://github.com/kovidgoyal/kitty)
-shell|[zsh](https://www.zsh.org/)
-editor|[sublime-text](http://www.sublimetext.com/3)
-file-manager|[nemo](https://github.com/linuxmint/nemo)
-menu|[rofi](https://github.com/DaveDavenport/rofi)
-player|[mpv](https://mpv.io/)
-browsers|[qutebrowser](https://www.qutebrowser.org/)
-gtk themes|[lxappearance](https://lxde.org/)
-qt themes|[qt5ct](https://qt5ct.sourceforge.io/)
-composer|[picom](https://github.com/yshui/picom)
-sound|[pulseaudio](https://www.freedesktop.org/wiki/Software/PulseAudio/)
-network|[networkmanager](https://wiki.gnome.org/Projects/NetworkManager)
-wallpapers|[nitrogen](http://projects.l3ib.org/nitrogen/)/[hsetroot](https://github.com/himdel/hsetroot)
+bar|[polybar](https://github.com/polybar/polybar) | - | [config](polybar/config.bspwm) , [modules](polybar/modules) , [taskbar](polybar/taskbar)
+terminal|[kitty](https://github.com/kovidgoyal/kitty)| - | [kitty.conf](kitty/kitty.conf)
+shell|[zsh](https://www.zsh.org/)| - | [.zshrc](.zshrc)
+editor|[sublime-text](http://www.sublimetext.com/3)| - | [files](sublime-text-3)
+file-manager|[nemo](https://github.com/linuxmint/nemo)| - |
+menu|[rofi](https://github.com/DaveDavenport/rofi)| - |
+player|[mpv](https://mpv.io/)| - |
+browsers|[qutebrowser](https://www.qutebrowser.org/)| - |
+gtk themes|[lxappearance](https://lxde.org/)| - |
+qt themes|[qt5ct](https://qt5ct.sourceforge.io/)| - |
+composer|[picom](https://github.com/yshui/picom)| - |
+sound|[pulseaudio](https://www.freedesktop.org/wiki/Software/PulseAudio/)| - |
+network|[networkmanager](https://wiki.gnome.org/Projects/NetworkManager)| - |
+wallpapers|[nitrogen](http://projects.l3ib.org/nitrogen/)/[hsetroot](https://github.com/himdel/hsetroot)| - |
 
 ### Dependencies for complete application this dots.
 
