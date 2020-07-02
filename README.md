@@ -4,10 +4,10 @@
 
 ## Setup
 
-distro|manjaro
-:--:|:-------:
-twm|[bspwm](https://github.com/baskerville/bspwm)
-bar|[polybar](https://github.com/polybar/polybar)
+distro|manjaro | complementary | configs
+:--:|:-------:|:------:|:-----:
+twm|[bspwm](https://github.com/baskerville/bspwm) | - | [bspwmrc](bspwmrc)
+bar|[polybar](https://github.com/polybar/polybar) | - | [config](polybar/config.bspwm)
 terminal|[kitty](https://github.com/kovidgoyal/kitty)
 shell|[zsh](https://www.zsh.org/)
 editor|[sublime-text](http://www.sublimetext.com/3)
@@ -46,8 +46,8 @@ for complete application this dots, this fonts has necessary:
 
 The dots is composite the many smalls projects. you don't need all, analyze of accord for your need.
  
-* **taskbar** -> labels for polybar to the windows openeds -> [taskbar](https://github.com/odilonscoelho/taskbar)
-* **mp** -> daemon music player using mpv -> [mp](https://github.com/odilonscoelho/mp)
+* **[taskbar](https://github.com/odilonscoelho/taskbar)** -> labels for polybar to the windows openeds
+* **[mp](https://github.com/odilonscoelho/mp)** -> daemon music player using mpv
 * **gpuinfo** -> informations about gpu nvidia - inluded in dots.
 * **weatcher** -> weatcher informations - included in dots.
 * **wq** -> driver necessary for corret execution to scripts the dots - included in dots.
