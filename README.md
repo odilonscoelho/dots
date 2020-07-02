@@ -7,7 +7,7 @@
 distro|manjaro | plugins | configs
 :--:|:-------:|:------:|:-----:
 twm|[bspwm](https://github.com/baskerville/bspwm) | - | [bspwmrc](bspwmrc)
-bar|[polybar](https://github.com/polybar/polybar) | - | [config](polybar/config.bspwm) , [modules](polybar/modules) , [taskbar](polybar/taskbar)
+bar|[polybar](https://github.com/polybar/polybar) | [scripts](scripts) | [config](polybar/config.bspwm) , [modules](polybar/modules) , [taskbar](polybar/taskbar)
 terminal|[kitty](https://github.com/kovidgoyal/kitty)| - | [kitty.conf](kitty/kitty.conf)
 shell|[zsh](https://www.zsh.org/)| [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions), [zsh-completions](https://github.com/zsh-users/zsh-completions), [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search), [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | [.zshrc](.zshrc)
 editor|[sublime-text](http://www.sublimetext.com/3)| [gruvbox](https://github.com/Briles/gruvbox#readme), [MarkdownPreview](https://packagecontrol.io/packages/MarkdownPreview), [Livereload](https://packagecontrol.io/packages/LiveReload) | [files](sublime-text-3)
@@ -35,6 +35,7 @@ wallpapers|[nitrogen](http://projects.l3ib.org/nitrogen/)/[hsetroot](https://git
 * **[xorg-xclipboard](https://xorg.freedesktop.org/)**
 * **[xdotool](http://www.semicomplete.com/projects/xdotool/)**
 * **[yad](https://github.com/v1cont/yad)**
+* **[themix-theme-oomox-git](https://github.com/themix-project/oomox-gtk-theme)**
 
 #### Fonts
 for complete application this dots, this fonts has necessary:
