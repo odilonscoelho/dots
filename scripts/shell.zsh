@@ -23,6 +23,7 @@ se ()
 	test "$@" && <<< $(corbackground 7;corfont 16; echo " VERDADEIRO ") || <<< $(corbackground 1;corfont 16; echo "   FALSO    ")
 }
 
+
 alias dots="$path_dots"
 alias dots.scripts="$path_scripts"
 alias dots.temas="$path_temas"

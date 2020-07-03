@@ -91,12 +91,19 @@ bsp.border.color.normal ()
   bspc config active_border_color $@
   bspc config presel_feedback_color $@
 }
-
 bsp.clearmodifiers ()
 {
   xdotool keydown --clearmodifiers super && sleep 1 && xdotool keyup --clearmodifiers super
 }
-
+bsp.tdrop ()
+{
+  case $1 in
+    open* )
+      "$2" |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
+    * ) 
+      tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm $1;;
+  esac
+}
 wm.restart ()
 {
 	pkill polybar 2>/dev/null && sleep 0.5

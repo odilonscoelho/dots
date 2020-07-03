@@ -1,7 +1,7 @@
 [section/base]
-include-file = ~/hdbkp/dots/polybar/taskbar
+include-file = ~/hdbkp/dots/polybar/taskbar-amber
+include-file = ~/hdbkp/dots/polybar/modules-amber
 ;include-file = ~/hdbkp/dots/polybar/workspaces
-include-file = ~/hdbkp/dots/polybar/modules
 
 [colors]
 color0=${xrdb:color0:#222}

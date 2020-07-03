@@ -1,9 +1,9 @@
 #!/bin/zsh
 . $path_colors/colors.zsh
 # font="mPlus Nerd Font light 13"
-font="Nova Slim Book 12"
-colornormal="$background,$foreground,$color0,$foreground,$background"
-colorwindow="$background,$color1,$color5"
+font="Nova Slim Book 14"
+colornormal="$background,$foreground,$color6,$color0,$foreground"
+colorwindow="$background,$color1,$color1"
 rofi.drun () {
 	rofi \
 	-modi drun \
@@ -15,28 +15,30 @@ rofi.drun () {
 	-terminal kitty \
 	-columns 4 \
 	-lines 10 \
-	-show-icons \
 	-width 60 \
-	-padding 20 \
+	-padding 25 \
 	-line-padding 5 \
 	-combi-hide-mode-prefix \
+	-show-icons \
 	-color-normal $colornormal \
 	-color-window $colorwindow
+	# -icon-theme /usr/share/icons/Breeze_Amber
 }
 
+	# -icon-theme=/usr/share/icons/mojave-ct/apps/128 \
 rofi.windows () {
 	rofi modi window \
 	-show window \
 	-font "$font" \
-	-bw 10 \
+	-bw 2 \
 	-location 0 \
 	-terminal kitty \
-	-columns 3 \
-	-lines 10 \
+	-columns 1 \
+	-lines 5 \
 	-show-icons \
-	-width 30 \
-	-padding 10 \
-	-line-padding 0 \
+	-width 60 \
+	-padding 60 \
+	-line-padding 20 \
 	-color-normal $colornormal \
 	-color-window $colorwindow
 
@@ -46,16 +48,15 @@ rofi.run () {
 	rofi modi run \
 	-show run \
 	-font $font \
-	-bw 10 \
+	-bw 2 \
 	-location 0 \
 	-terminal kitty \
-	-columns 3 \
-	-lines 1 \
+	-columns 1 \
+	-lines 5 \
 	-show-icons \
 	-width 60 \
-	-padding 80 \
-	-line-padding 5 \
-	-combi-hide-mode-prefix \
+	-padding 60 \
+	-line-padding 20 \
 	-color-normal $colornormal \
 	-color-window $colorwindow
 }

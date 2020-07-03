@@ -1,5 +1,12 @@
 #!/bin/zsh
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+helpwq () { < $path_scripts/mn.zsh |sed 's/^\!//g' }
+help ()
+{
+  funcoes=$(grep "()" $(print $path_scripts/*.zsh)|sed 's/() *{*//g')
+  sed 's/.*\:/!wq /g' <<< $funcoes|sort
+}
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 # Caso não esteja usando a minha conf do bspwm descomente as linhas abaixo abaixo e altere
 # 'caminho' pelo local onde está o repositório: 
 # declare -zgx path_dots=/caminho/dots
@@ -8,17 +15,10 @@
 # declare -zgx path_colors=$path_dots/temas
 
 # Caso não use o taskbar.zsh não há necessidade da linha abaixo:
-declare -zgx bd=/tmp/taskbar
+declare -x bd=/tmp/taskbar
 
 # Para incluir variáveis globais dinâmicas, necessário para $wq mn $wq cmd $mp.command
 . $path_scripts/shell.zsh
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
-helpwq () { < $path_scripts/mn.zsh |sed 's/^\!//g' }
-help ()
-{
-  funcoes=$(grep "()" $(print $path_scripts/*.zsh)|sed 's/() *{*//g')
-  sed 's/.*\:/!wq /g' <<< $funcoes|sort
-}
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 [[ -z $@ ]] && return 0 || \
   case $@ in
