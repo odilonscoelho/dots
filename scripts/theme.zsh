@@ -17,6 +17,7 @@ gencores ()
 	color13=$(grep color13 $base_file|awk '{print $2}'); [[ -z $color13 ]] && color13=$color5
 	color14=$(grep color14 $base_file|awk '{print $2}'); [[ -z $color14 ]] && color14=$color6
 	color15=$(grep color15 $base_file|awk '{print $2}'); [[ -z $color15 ]] && color15=$color7
+	color16=$(grep color16 $base_file|awk '{print $2}'); [[ -z $color16 ]] && color16=$color8
 	cursor=$(grep cursor $base_file|awk '{print $2}'); [[ -z $cursor ]] && cursor=$foreground
 	background=$(grep background $base_file|awk '{print $2}')
 	foreground=$(grep foreground $base_file|awk '{print $2}')
@@ -24,14 +25,14 @@ gencores ()
 
 genrofi.rasi ()
 {
-		sed -i	's/background\: \#.*/background\: '$background'\;/;
+	sed -i	's/background\: \#.*/background\: '$background'\;/;
 			s/foreground\: \#.*/foreground\: '$foreground'\;/;
 			s/active\-background\: \#.*/active\-background\: '$color3'\;/;
 			s/urgent\-background\: \#.*/urgent-background\: '$color2'\;/;
 			s/selected\-active\-background\: \#.*/selected\-active\-background\: '$color5'\;/;
-	    s/selected\-normal\-background: \#.*/selected\-normal\-background\: '$color6'\;/;
-	    s/selected\-normal\-foreground\: \#.*/selected\-normal\-foreground\: '$color3'\;/;
-	    s/selected\-urgent-\background\: \#.*/selected\-urgent-\background\: '$color4'\;/' $rofi_file_rasi
+		    s/selected\-normal\-background: \#.*/selected\-normal\-background\: '$color6'\;/;
+		    s/selected\-normal\-foreground\: \#.*/selected\-normal\-foreground\: '$color3'\;/;
+		    s/selected\-urgent-\background\: \#.*/selected\-urgent-\background\: '$color4'\;/' $rofi_file_rasi
 }
 
 
@@ -54,8 +55,9 @@ genshell ()
 			s/color11\=.*/color11\=\"'$color11'\"/;
 			s/color12\=.*/color12\=\"'$color12'\"/;
 			s/color13\=.*/color13\=\"'$color13'\"/;
-			s/color14\=.*/color14\=\"'$color15'\"/;
-			s/color15\=.*/color15\=\"'$color14'\"/' $shell_file
+			s/color14\=.*/color14\=\"'$color14'\"/;
+			s/color15\=.*/color15\=\"'$color15'\"/;
+			s/color16\=.*/color16\=\"'$color16'\"/' $shell_file
 }
 
 genresources ()
@@ -78,68 +80,39 @@ genresources ()
 			s/\*color12\:.*/\*color12\:'$color12'/;
 			s/\*color13\:.*/\*color13\:'$color13'/;
 			s/\*color14\:.*/\*color14\:'$color14'/;
-			s/\*color15\:.*/\*color15\:'$color15'/' $resources_file
+			s/\*color15\:.*/\*color15\:'$color15'/;
+			s/\*color16\:.*/\*color16\:'$color16'/' $resources_file
 }
 
 genkitty ()
 {
 	echo "background  $background
-foreground  $foreground
-cursor $cursor
-color0  $color0
-color1  $color1
-color2  $color2
-color3  $color3
-color4  $color4
-color5  $color5
-color6  $color6
-color7  $color7
-color8  $color8
-color9  $color9
-color10  $color10
-color11  $color11
-color12  $color12
-color13  $color13
-color14  $color14
-color15  $color15" >| $kitty_file
+	foreground  $foreground
+	cursor $cursor
+	color0  $color0
+	color1  $color1
+	color2  $color2
+	color3  $color3
+	color4  $color4
+	color5  $color5
+	color6  $color6
+	color7  $color7
+	color8  $color8
+	color9  $color9
+	color10  $color10
+	color11  $color11
+	color12  $color12
+	color13  $color13
+	color14  $color14
+	color15  $color15
+	color16  $color16" >| $kitty_file
 }
 
 gennotify ()
 {
-	background=$(echo $background|sed 's/\#//')
-	foreground=$(echo $foreground|sed 's/\#//')
-	color5=$(echo $color5|sed 's/\#//')
-	sed -i 's/bubble\-background\-color \= .*/bubble-background-color = '$background'/;
-	s/text-title-color = .*/text-title-color = '$color5'/;
-	s/text-body-color = .*/text-body-color = '$foreground'/' $notify_file
-	sleep 1
-	notifyconf >/dev/null &
-	sleep 1
-	xdotool keydown alt &&
-	sleep 0.25 &&
-	xdotool keyup alt &&
-	sleep 0.25 &&
-	xdotool keydown space &&
-	sleep 0.25 &&
-	xdotool keyup space &&
-	sleep 0.25 &&
-	xdotool keydown Right &&
-	sleep 0.25 &&
-	xdotool keyup Right &&
-	sleep 0.25 &&
-	xdotool keydown Return &&
-	sleep 0.25 &&
-	xdotool keyup Return &&
-	sleep 0.25 &&
-	xdotool keydown space &&
-	sleep 0.25 &&
-	xdotool keyup space &&
-	sleep 0.25 &&
-	# bspc node -f -c &
-	sleep 0.25 &&
-	taskbar close $(</tmp/taskbar|grep --line-number Noti|cut -d: -f1)
-	sleep 0.25
-	taskbar close $(</tmp/taskbar|grep --line-number Noti|cut -d: -f1)
+	sed -i 's/background\ \= \"\#.*/background\ \= \"'$background'\"/g;
+			s/foreground\ \= \"\#.*/foreground\ \= \"'$foreground'\"/g;
+			s/frame_color\ \= \"\#.*/frame_color\ \= \"'$foreground'"/g' $notify_file
 }
 
 bsp ()
@@ -153,8 +126,7 @@ bsp ()
 }
 vars ()
 {
-	#rofi_file_rasi=$path_colors/colors-rofi-dark.rasi
-	notify_file=/home/losaoall/.notifyosdconf/test.osdtheme
+	notify_file=$path_dots/dunst/dunstrc
 	shell_file=$path_colors/colors.zsh
 	resources_file=$path_colors/.Xresources
 	kitty_file=$path_colors/colors-kitty.conf
@@ -165,12 +137,23 @@ theme.run ()
 	gencores &&
 	genresources &&
 	xrdb -I ~/.Xresources &&
-	polybar-msg cmd restart &>/dev/null
 	genshell
 	genkitty
+	source $path_dots/.zshrc
 	bsp &&
-	wq notificatime 5000 'Theme
-	'${base_file/*\//}' aplicado!' &
+	pkill polybar
+	wq launch
+	taskbar stop
+	wq gpuinfo stop
+	wq weatcher stop
+	taskbar start &
+	wq gpuinfo start &
+	wq weatcher start &
+	gennotify &&
+	pkill dunst
+	dunst &
+	dunstify -t 5000 "Theme
+		${base_file//.*\//} aplicado!" &
 }
 
 theme.sel ()

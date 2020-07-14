@@ -16,7 +16,7 @@ file-manager|[nemo](https://github.com/linuxmint/nemo)|[nemo-fileroller](https:/
 menu|[rofi](https://github.com/DaveDavenport/rofi)| - | [rofi.zsh](scripts/rofi.zsh)
 player|[mpv](https://mpv.io/)| [mp](https://github.com/odilonscoelho/mp) | -
 browsers|[qutebrowser](https://www.qutebrowser.org/)| [base16-qutebrowser](https://github.com/theova/base16-qutebrowser) | [config.py](qutebrowser/config.py)
-gtk themes|[lxappearance](https://lxde.org/)| - | -
+gtk themes|[lxappearance](https://lxde.org/)| [themix-theme-oomox-git](https://github.com/themix-project/oomox-gtk-theme) | -
 qt themes|[qt5ct](https://qt5ct.sourceforge.io/)| [qt5-styleplugins](https://github.com/qt/qtstyleplugins) | -
 composer|[picom](https://github.com/yshui/picom)| - | [picom.conf](picom.conf)
 sound|[pulseaudio](https://www.freedesktop.org/wiki/Software/PulseAudio/)| [pulseaudio-equalizer-ladspa](https://github.com/pulseaudio-equalizer-ladspa/equalizer), [pulsemixer](https://github.com/GeorgeFilipkin/pulsemixer) | -
@@ -54,4 +54,16 @@ The dots is composite the many smalls projects. propabily you don't need all, an
 * **weatcher** - weatcher informations - included in dots.
 * **wq** - driver necessary for corret execution to scripts the dots - included in dots.
 
-See wiki for more details and how to configure.
+
+##### Configuration
+Os dots são compostos de varios scripts contidos na pasta "dots/scripts", você pode usar apenas algum script que o interesse ou conservar a estrutura dos diretórios e usar a automação proposta, os script são escritos em zsh, que não precisa ser o seu shell padrão, apenas uma dependência, .
+
+ os scripts funcionam com variáveis de ambientes globais, tanto para colorir os itens da polybar como para aplicar temas aos terminais kitty e alacritty e ao script do rofi (não utilizo o rofi.conf ou rofi.rasi, mas você pode configurar o gerador de temas para usá-lo), e que por consequência podem ser usadas a qualquer momento em qualquer script, similar ao que o pywal faz, uma diferença sginificativa é que o script que gera esse colorscheme e o aplica [theme.zsh](scripts/theme.zsh), realmente altera os arquivos de configurações dos programas (dunst, xresources, rofi.rasi,) as configurações 
+
+ bspwmrc - Declaração de variáveis globais e import de funções
+
+ wq - script controlador da automação, 
+ 
+ shell.zsh - 
+
+

@@ -2,7 +2,7 @@
 . $path_colors/colors.zsh
 # font="mPlus Nerd Font light 13"
 font="Nova Slim Book 14"
-colornormal="$background,$foreground,$color6,$color0,$foreground"
+colornormal="$background,$foreground,$color16,$foreground,$background"
 colorwindow="$background,$color1,$color1"
 rofi.drun () {
 	rofi \

@@ -38,7 +38,8 @@ for (( i = 1; i <= 4; i++ )); do
    9)icons[$i]="";;
   esac
 done
-echo "%{T4} %{T9}$icons[1]$icons[2]:$icons[3]$icons[4] "
+# echo "%{T4} %{T9}$icons[1]$icons[2]:$icons[3]$icons[4] "
+echo "%{T$calendarfontlabelhour} $icons[1]$icons[2]:$icons[3]$icons[4]"
 }
 
 bar.relogio.extenso () {
@@ -58,7 +59,8 @@ for (( i = 1; i <= 4; i++ )); do
    9)icons[$i]="";;
   esac
 done
-echo "$icons[1]$icons[2]/$icons[3]$icons[4] %{T2}$dayweek %{T4}%{T-}"
+# echo "$icons[1]$icons[2]/$icons[3]$icons[4] %{T2}$dayweek %{T4}%{T-}"
+echo "%{T$calendarfontlabelday} $dayweek,%{T$calendarfontlabeldate}$icons[1]$icons[2]/$icons[3]$icons[4] "
 }
 
 bar.calendario () {

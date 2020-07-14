@@ -210,7 +210,7 @@ stty -ixon
 ######CASO NÃO USE MEU BSPWMRC###########
 # Comente as linhas abaixo, 
 . $path_scripts/shell.zsh
-. $path_colors/colors.zsh
+# . $path_colors/colors.zsh
 # Descomente as linhas abaixo e subsitua /path/ 
 #pelo caminhos onde está o repositório:
 #. /path/dots/scripts/shell.zsh 

@@ -1,11 +1,10 @@
 #!/bin/zsh
- #. "${HOME}/.cache/wal/colors.sh"
-declare -gx path_dots=$HOME/hdbkp/dots
-declare -gx path_scripts=$path_dots/scripts
-declare -gx path_polybar=$path_dots/polybar
-declare -gx path_colors=$path_dots/temas
+# export PATH="${HOME}/.local/bin:${HOME}/.local/share/virtualenvs/qutewal-8OrCaHwS/bin/activate:${PATH}"
+declare -x path_dots=$HOME/hdbkp/dots
+declare -x path_scripts=$path_dots/scripts
+declare -x path_polybar=$path_dots/polybar
+declare -x path_colors=$path_dots/temas
 . $path_scripts/shell.zsh
-. $path_colors/colors.zsh
 export colorgreen="#2CD776"
 export color_focused_border_color
 export color_normal_border_color="#333333"
@@ -16,16 +15,13 @@ export LANG="pt_BR.UTF-8"
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export QUTEWAL_DYNAMIC_LOADING="True"
 export XDG_CONFIG_HOME="$HOME/.config"
-export PATH="${HOME}/.local/bin:${HOME}/.local/share/virtualenvs/qutewal-8OrCaHwS/bin/activate:${PATH}"
 export monitor1=$(xrandr |grep ' connected'|sed -n 1p|awk '{print $1}'); echo $monitor1 > /tmp/monitor1
 export monitor2=$(xrandr |grep ' connected'|sed -n 2p|awk '{print $1}'); echo $monitor2 > /tmp/monitor2
 xrandr --output "$monitor1" --mode 2560x1440 --dpi 96 --primary
 bspc monitor "$monitor1" -d 1 2 3 4 5 6 7 8 9
-hsetroot -solid "$(echo "$background" |tr 'a-z' 'A-Z')"
-nitrogen --restore &
+wq app.hset
 sxhkd &
 lxqt-policykit-agent &
-
 bspc config remove_disabled_monitors true
 bspc config ignore_ewmh_focus true
 bspc config honor_size_hints false
@@ -79,11 +75,9 @@ wq weatcher start &
 wq gpuinfo start &
 taskbar start &
 redshift-gtk &
+caffeine -a &
 lxappearance &
 { sleep 2 && taskbar close "$(</tmp/taskbar|grep --line-number lxapp| cut -d: -f1)" }
-kitty 
 sleep 1
-tdrop -w 940 -h 400 -y 500 -x 500 -s dropdown --wm bspwm current
-mp mpd
-# sleep 2
-# mpv &
+wq bsp.tdrop kitty &
+mp mpd start &

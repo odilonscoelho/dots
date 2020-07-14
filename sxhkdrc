@@ -49,13 +49,23 @@ shift + super + {button4,button5}
 #Flutuante ou Tiled
 alt + {button4,button5,button8}
 	bspc node -t {tiled,floating,fullscreen}
-alt + {w,d,a}
-	bspc node -t {tiled,floating,fullscreen}
+alt + {w,d}
+	bspc node -t {tiled,floating}
 # Personalizados
 Print
 	wq app.print.full
 shift + Print
 	wq app.print.cut
+@XF86AudioPrev
+	mp prev
+@XF86AudioNext
+	mp next
+@XF86AudioPlay
+	mp pause.toggle
+shift + @XF86AudioPlay
+	wq app.mpv
+@XF86AudioStop
+	mp stop
 @XF86AudioLowerVolume
 	pulsemixer --change-volume -1
 @XF86AudioRaiseVolume
@@ -68,8 +78,8 @@ ctrl + shift + F10
 	mp "$(wq app.paste)"
 shift + F10
 	mp controls
-F10
-	mp select.file
+#F10
+#	mp select.file
 @shift + XF86HomePage
 	qutebrowser -R --target window youtube.com.br
 @shift + ctrl + XF86HomePage
@@ -97,9 +107,9 @@ button8
 ctrl + button 8
   $(wq bsp.clearmodifiers)
 F1
-	tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm kitty
+	wq bsp.tdrop kitty
 shift + F1
-	kitty && tdrop -w 940 -h 400 -y 500 -x 800 -s dropdown --wm bspwm current
+	wq bsp.tdrop open kitty
 F11
 	wq cmd &
 F12

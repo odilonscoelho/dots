@@ -9,7 +9,8 @@ cl ()
 }
 mn ()
 {
-	. "$path_proj/shell.zsh"
+	. "$path_colors/colors.zsh"
+    . "$path_scripts/shell.zsh"
 	base.cmd
 	declare -x sock=/tmp/mpvsocket
 	if zsh -c "`yad \
@@ -40,11 +41,13 @@ mn ()
 }
 cmd ()
 {
-  base.cmd
-  yad --geometry=800x50 \
-  --no-buttons --separator=" " \
-  --borders=12 --form --complete=all \
-  --field="":CE "$(</tmp/cmd)"|read coleta
+	. "$path_colors/colors.zsh"
+	. "$path_scripts/shell.zsh"
+	base.cmd
+	yad --geometry=800x50 \
+	--no-buttons --separator=" " \
+	--borders=12 --form --complete=all \
+	--field="":CE "$(</tmp/cmd)"|read coleta
 	if [[ -n $coleta ]];then
 		<<< $coleta >> $HOME/.zhistory
 		zsh -c "$coleta" &
@@ -54,14 +57,14 @@ cmd ()
 }
 base.cmd ()
 {
-  # . $path_proj/shell.zsh
-  rm /tmp/cmd
-  < hdbkp/dots/scripts/shell.zsh|\
-  grep -E "declare"|sed 's/\=.*//g;;s/declare -x//g;s/^/\!\$/g;s/ //g' >> /tmp/cmd
-  < $HOME/.zhistory|sed 's/^/!/g'|sort -R --unique >> /tmp/cmd &&
-  ls /bin |sed 's/^/!/g' >> /tmp/cmd
-  wq help >> /tmp/cmd
-}
+	# . $path_proj/shell.zsh
+	rm /tmp/cmd
+	< hdbkp/dots/scripts/shell.zsh|\
+	grep -E "declare"|sed 's/\=.*//g;;s/declare -x//g;s/^/\!\$/g;s/ //g' >> /tmp/cmd
+	< $HOME/.zhistory|sed 's/^/!/g'|sort -R --unique >> /tmp/cmd &&
+	ls /bin |sed 's/^/!/g' >> /tmp/cmd
+	wq help >> /tmp/cmd
+	}
 shll ()
 {
 	nohup $($@) /dev/null &

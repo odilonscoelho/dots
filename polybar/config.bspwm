@@ -1,48 +1,16 @@
 [section/base]
-include-file = ~/hdbkp/dots/polybar/taskbar-amber
-include-file = ~/hdbkp/dots/polybar/modules-amber
+;include-file = ~/hdbkp/dots/polybar/taskbar-amber
+;include-file = ~/hdbkp/dots/polybar/modules-amber
 ;include-file = ~/hdbkp/dots/polybar/workspaces
-
-[colors]
-color0=${xrdb:color0:#222}
-color1=${xrdb:color1:#222}
-color2=${xrdb:color2:#222}
-color3=${xrdb:color3:#222}
-color4=${xrdb:color4:#222}
-color5=${xrdb:color5:#222}
-color6=${xrdb:color6:#222}
-color7=${xrdb:color7:#222}
-color8=${xrdb:color8:#222}
-color9=${xrdb:color9:#222}
-color10=${xrdb:color10:#222}
-color11=${xrdb:color11:#222}
-color12=${xrdb:color12:#222}
-color13=${xrdb:color13:#222}
-color14=${xrdb:color14:#222}
-color15=${xrdb:color15:#222}
-color16=${xrdb:color16:#222}
-background = ${xrdb:background:#222}
-foreground = ${xrdb:foreground:#222}
-foreground-alt = ${xrdb:foreground:#222}
-calendar=${colors.color2}
-weatcher=${colors.color6}
-xkeyboard=${colors.color5}
-title=${colors.color2}
-rede=${colors.color2}
-ram=${colors.color3}
-cpu=${colors.color5}
-temperature=${colors.color2}
-gpuinfo=${colors.color1}
-uptime=${colors.color6}
-volume=${colors.color2}
-mpv=${colors.color2}
+include-file = ~/hdbkp/dots/polybar/taskbar
+include-file = ~/hdbkp/dots/polybar/modules
 
 [bar/taskbar1]
-font-0 = mPlus Nerd Font:regular:size=10;3
+font-0 = mPlus Nerd Font:bold:size=10;3
 font-1 = Arimo Nerd Font:size=11;3
 font-2 = Arimo Nerd Font:size=14;4
 font-3 = Arimo Nerd Font:size=15;4
-font-4 = mPlus Nerd Font:regular:size=16;5
+font-4 = mPlus Nerd Font:bold:size=16;5
 font-5 = Arimo Nerd Font:regular:size=11;4
 
 
@@ -50,7 +18,7 @@ modules-left = x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x1
 ;modules-right = 
 modules-right = mpv mp cmd floating close
 
-monitor = HDMI-0
+monitor = ${env:monitor1}
 width = 100%
 height = 30
 override-redirect = false
@@ -64,12 +32,12 @@ module-margin = 0
 padding-right = 8
 padding-left = 8
 border-size = 0
-border-top-size = 5
-border-bottom-size = 5
+border-top-size = 10
+border-bottom-size = 10
 line-size = 2
-border-color = ${colors.background}
-background = ${colors.background}
-foreground = ${colors.foreground}
+border-color = ${env:background}
+background = ${env:background}
+foreground = ${env:color8}
 bottom = false
 radius = 0
 ;wm-name = bspwm
@@ -80,7 +48,7 @@ separator = " "
 
 
 [bar/dock]
-font-0 = mPlus Nerd Font:regular:size=11;4
+font-0 = mPlus Nerd Font:bold:size=11;4
 font-1 = Arimo Nerd Font:size=10;2
 font-2 = Arimo Nerd Font:size=12;3
 font-3 = Arimo Nerd Font:size=13;3
@@ -89,11 +57,11 @@ font-5 = Arimo Nerd Font:size=15;5
 font-6 = Arimo Nerd Font:size=16;6
 font-7 = Arimo Nerd Font:size=13;3
 font-8 = Arimo Nerd Font:size=16;3
-font-9 = mPlus Nerd Font:regular:size=16;5
+font-9 = mPlus Nerd Font:bold:size=16;5
+font-10 = Arimo Nerd Font:size=13;4
 
-modules-right  = memoryramptv cputv1 temperaturecpu gpuinfo volume
-modules-center =
-modules-left = datehour1 weatcher xkeyboard eth-network
+modules-right  = memory cpu temperaturecpu gpuinfo volume
+modules-left = calendar weatcher xkeyboard eth
 
 monitor = HDMI-0
 width = 100%
@@ -104,16 +72,17 @@ scroll-up = bspc node -t tiled
 scroll-down = bspc node -t floating
 click-left = bspc node -f next
 click-right = bspc node -f -c
+click-middle = wq launch
 module-margin = 0
 padding-right = 8
 padding-left = 8
 border-size = 0
-border-top-size = 8
-border-bottom-size = 8
+border-top-size = 10
+border-bottom-size = 10
 line-size = 2
-background = ${colors.background}
-foreground = ${colors.foreground}
-border-color = ${colors.background}
+background = ${env:background}
+foreground = ${env:foreground}
+border-color = ${env:background}
 bottom = true
 radius = 0
 ;wm-name = bspwm
@@ -122,7 +91,7 @@ dpi-y = 100
 enable-ipc = true
 separator = " "
 tray-position = center
-tray-background = ${colors.background}
+tray-background = ${env:background}
 tray-transparent = true
 tray-scale = 1
 tray-padding = 0

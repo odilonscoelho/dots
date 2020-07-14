@@ -32,7 +32,19 @@ app.print.cut ()
 	import "$(yad --entry --title="screenshot =...")"
 }
 
-app.kitty.sticky.tablet ()
+app.kitty.reload.colors ()
 {
-460 273 2858 209
+	kitty @set-colors --all --configured $path_dots/kitty/kitty.conf
+}
+
+app.hset ()
+{
+	hsetroot -solid "$(echo "$background" |tr 'a-z' 'A-Z')"
+}
+
+app.mpv ()
+{
+	[[ -z $@ ]] && \
+		{ nohup mpv --no-config "$(app.paste)" &>/dev/null & } || \
+			{ nohup mpv --no-config "$@" &>/dev/null & }
 }

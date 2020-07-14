@@ -13,27 +13,27 @@ weather.start () {
 		sed -i 's/\,/'\\n'/g' /tmp/weatcher.base
 		temperatura=$(grep "feels_like" /tmp/weatcher.base |sed 's/.*\://'|sed 's/\"//g')
 		case $(grep icon /tmp/weatcher.base|sed 's/.*\:"//g;s/"}]//g') in
-			01d)icon="%{T2}%{T}";;
-			02d)icon="%{T2}%{T}";;
-			03d)icon="%{T2}%{T}";;
-			04d)icon="%{T2}%{T}";;
-			09d)icon="%{T2}%{T}";;
-			10d)icon="%{T2}%{T}";;
-			11d)icon="%{T2}%{T}";;
-			13d)icon="%{T2}%{T}";;
-			50d)icon="%{T2}%{T}";;
-			01n)icon="%{T2}%{T}";;
-			02n)icon="%{T2}%{T}";;
-			03n)icon="%{T2}%{T}";;
-			04n)icon="%{T2}%{T}";;
-			09n)icon="%{T2}%{T}";;
-			10n)icon="%{T2}%{T}";;
-			11n)icon="%{T2}%{T}";;
-			13n)icon="%{T2}%{T}";;
-			50n)icon="%{T2}%{T}";;
+			01d)icon="";;
+			02d)icon="";;
+			03d)icon="";;
+			04d)icon="";;
+			09d)icon="";;
+			10d)icon="";;
+			11d)icon="";;
+			13d)icon="";;
+			50d)icon="";;
+			01n)icon="";;
+			02n)icon="";;
+			03n)icon="";;
+			04n)icon="";;
+			09n)icon="";;
+			10n)icon="";;
+			11n)icon="";;
+			13n)icon="";;
+			50n)icon="";;
 		esac
-		#<<< "$icon %{T-} $temperatura%{T3}%{T-}" > /tmp/weatcher
-		<<< "$icon %{T-} $temperatura %{T1}ºC%{T-}" > /tmp/weatcher
+		# <<< "$icon %{T-} $temperatura %{T1}ºC%{T-}" > /tmp/weatcher
+		<<< "%{T"$weatcherfonticon"}%{F"$weatchercoloricon"} $icon %{T-}%{F-} $temperatura %{T1}%{F"$weatchercoloricon"}ºC%{T-}%{F-}" > /tmp/weatcher
 		polybar-msg hook weatcher 2 &>/dev/null
 		sleep 600
 	done

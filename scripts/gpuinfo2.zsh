@@ -27,7 +27,7 @@ val ()
 	sleep 2
 	new
 	[[ $tempnew != $tempold || $infonew != $infoold ]] && \
-		<<< "${infonew} %{T2}%{T-} ${tempnew}" >| /tmp/gpuinfo
+		<<< "${infonew} %{F$gpuinfotempcolor}%{T$gpuinfotempfonticon}$gpuinfotempicon%{T-}%{F-} ${tempnew}" >| /tmp/gpuinfo
 		polybar-msg hook gpuinfo 2 > /dev/null
 		infoold=$infonew
 		tempold=$tempnew
@@ -37,8 +37,8 @@ val ()
 new ()
 {
 	scope="$(nvidia-settings -q all)"
-	tempnew=${$(grep -E "*Reading.*thermalsensor:0]):.*" <<< $scope)[-1]//./}" %{T1}ºC%{T-}"
-	infonew=${${${$(grep -E "Attribute.*GPUUtilization.*[gpu:0].*" <<< $scope)[4,5]//graphics=/"%{T2}%{T-}  "}//memory=/"%{T3}﬙%{T-} "}//,/%}
+	tempnew=${$(grep -E "*Reading.*thermalsensor:0]):.*" <<< $scope)[-1]//./}" %{F$gpuinfotempcolor}%{T$gpuinfotempfonticon2}$gpuinfotempicon2%{T-}%{F-}"
+	infonew=${${${$(grep -E "Attribute.*GPUUtilization.*[gpu:0].*" <<< $scope)[4,5]//graphics=/"%{F$gpuinfousagecolor}%{T$gpuinfousagefonticon}$gpuinfousageicon%{T-}%{F-}  "}//memory=/"%{F$gpuinfomemorycolor}%{T$gpuinfomemoryfonticon}$gpuinfomemoryicon%{T-}%{F-} "}//,/%}
 	#<<< "$info $temperature" >| /tmp/gpuinfo
 	#polybar-msg hook gpuinfo 2 > /dev/null &
 	#sleep 5
