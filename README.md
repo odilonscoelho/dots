@@ -46,15 +46,6 @@ Para completa aplicação dos dots, as seguintes fontes são necessárias:
 
 ## How to this to work
 
-<!-- The dots is composite the many smalls projects. propabily you don't need all, analyze of accord for your need.
- 
-* **[taskbar](https://github.com/odilonscoelho/taskbar)** - labels for polybar to the windows openeds
-* **[mp](https://github.com/odilonscoelho/mp)** - daemon music player using mpv
-* **gpuinfo** - informations about gpu nvidia - inluded in dots.
-* **weatcher** - weatcher informations - included in dots.
-* **wq** - driver necessary for corret execution to scripts the dots - included in dots. -->
-
-
 ##### Configuration
 Os dots são compostos de varios scripts contidos na pasta "dots/scripts", você pode usar apenas algum script que o interesse ou conservar a estrutura dos diretórios e usar a automação proposta, os script são escritos em zsh, que não precisa ser o seu shell padrão, apenas uma dependência.
 
@@ -70,10 +61,28 @@ Os dots são compostos de varios scripts contidos na pasta "dots/scripts", você
 
  wq carrega a função disponível em gpuinfo.zsh e a executa, para todos os efeitos de rastreio do script o processo será o script wq, mas o codigo rodando será o do gpuinfo.zsh
 
+##### polybar
+
+Módulos da polybar | Argumentos | Descrição | Dependências | scripts/files
+:--:|:-------:|:------:|:-----:|:-----:
+volume | N/H | Volume do Pulseaudio | [pulseaudio-equalizer-ladspa](https://github.com/pulseaudio-equalizer-ladspa/equalizer), [pulsemixer](https://github.com/GeorgeFilipkin/pulsemixer) | [modules](polybar/modules)
+gpuinfo | wq gpuinfo start/stop | Módulos para placas Nvidia, funciona como daemon pode ser ativado/desativado clicando no módulo | N/H | [gpuinfo2.zsh](scripts/gpuinfo2.zsh), [modules](polybar/modules)
+temperaturecpu | N/H | Temperatura geral | N/H | [modules](polybar/modules)
+cpu | N/H | Uso da CPU | N/H | [modules](polybar/modules)
+memory | N/H | Uso da RAM | N/H | [modules](polybar/modules)
+eth | N/H | Uso da Rede Cabeada | N/H | [modules](polybar/modules)
+xkeyboard | N/H | Layout keyboard | N/H | [modules](polybar/modules)
+weatcher | wq weatcher start/stop | [OpenWeatcher](https://rapidapi.com/blog/lp/openweathermap/?utm_source=google&utm_medium=cpc&utm_campaign=Alpha_104783631314&utm_term=openweathermap_e&gclid=CjwKCAjwr7X4BRA4EiwAUXjbt4UTay9_M3MwRfr6G14RDl3mZq8iDEvJQn5zK5HH_JUNiE3x3xxtIxoC8XAQAvD_BwE) informações climáticas, funciona como daemon pode ser ativado/desativado clicando no módulo | [wget](https://www.gnu.org/software/wget/) | [weatcher.zsh](scripts/weatcher.zsh), [modules](polybar/modules)
+calendar | N/H | | N/H | [bar.zsh](scripts/bar.zsh), [modules](polybar/modules)
+
+
  alguns programas que são usados e estão fora dos dots:
 
-**[taskbar](https://github.com/odilonscoelho/taskbar)** - labels for polybar to the windows openeds
+**[taskbar](https://github.com/odilonscoelho/taskbar)** - modulos das janelas abertas para polybar
 
-**[mp](https://github.com/odilonscoelho/mp)** - daemon music player using mpv
+**[mp](https://github.com/odilonscoelho/mp)** - MPV como daemon music player & Módulo polybar
+
+##### ColorScheme
+
 
 
