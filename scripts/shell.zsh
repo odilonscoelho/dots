@@ -2,9 +2,18 @@
 
 # Import colors variables
 . $path_colors/colors.zsh
+
 se ()
 {
-	test "$@" && <<< $(bg 7;fg 16; echo " VERDADEIRO ") || <<< $(bg 1;fg 16; echo "   FALSO    ")
+	test ${@} && testSucess || testError
+}
+testSucess ()
+{
+	bg 2;fg 16; tput bold; printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/7))}; do; echo -n "| TRUE " ;done)"
+}
+testError ()
+{
+	bg 1;fg 16; tput bold; printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/8))}; do; echo -n "! FALSE " ;done)"
 }
 bg ()
 {
@@ -90,6 +99,28 @@ declare -x gpuinfomemoryfonticon=3
 declare -x gpuinfotempfonticon=2
 declare -x gpuinfotempfonticon2=1
 declare -x gpuinfousagefonticon=2
+####### TRANSLATE
+declare -x translatefonticon=7
+declare -x translatecoloricon=$color2
+declare -x translateicon=""
+declare -x translatelabel="%{T$translatefonticon}%{F$translatecoloricon} $translateicon %{T-}%{F-}"
+####### WS
+declare -x wsfonticon=7
+declare -x wscoloricon="$color2"
+declare -x wscolorbg="$color16"
+# wslabel ()
+# {
+# 	<<< "%{F$wscoloricon}%{T5}%{T$wsfonticon}$(</tmp/taskbar.workspace)%{T5}%{T-}%{F-}"
+# }
+#%{B$wscolorbg}
+#%{B-}
+
+#### UPTIME
+#
+declare -x uptimeicon=""
+declare -x uptimecoloricon="$color2"
+declare -x uptimefonticon="7"
+declare -x uptimelabel="%{T$uptimefonticon}%{F$uptimecoloricon} $uptimeicon %{T-}%{F-}"
 ### PLAYER
 declare -x mcolor=$color11
 declare -x mopencolor=$color1
@@ -101,7 +132,7 @@ declare -x mclosefonticon=6
 declare -x mcloseicon=""
 declare -x mclose="%{T$mclosefonticon}%{F$mclosecolor}  $mcloseicon  %{T-}%{F-}"
 declare -x mprefixcolor=$color11
-declare	-x mprefixfont=6
+declare	-x mprefixfont=7
 declare	-x mprefixicon=""
 declare -x mytcolor=$color1
 declare	-x mytfont=6

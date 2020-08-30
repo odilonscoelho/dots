@@ -1,5 +1,5 @@
 *background:  #383838
-*foreground:  #dcdccc
+*foreground:  #c0c0c0
 *color0:  #404040
 *color1:  #dca3a3
 *color2:  #5f7f5f
@@ -15,4 +15,7 @@
 *color12:  #7cb8bb
 *color13:  #dc8cc3
 *color14:  #93e0e3
-*color15:  #ffffff
+*color15:  #c0c0c0
+*color16:  #707070
+
+

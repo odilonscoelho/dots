@@ -101,8 +101,10 @@ bsp.tdrop ()
     open* )
       "$2" |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
     * ) 
-      tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm $1;;
+      tdrop  -x $(( 2560 / 3 )) -y $(( 1440 / 3 )) -w 900 -h 580 -s dropdown --wm bspwm $1;;
   esac
+
+#-w 900 -h 550 -x $(( 2560 / 2 )) -y $(( 1440 / 2 ))
 }
 wm.restart ()
 {

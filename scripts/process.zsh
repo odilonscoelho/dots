@@ -1,35 +1,98 @@
 #!/bin/zsh
-process () {
+processbkp () {
 
-    base="$(ps auxSf)"
-    clear
+    if [[ $1 == real ]]; then
+        base="$(ps auxSf)"
+    else
+        base="$(ps auxf)"
+    fi
+
     column \
     	--table \
     	--table-truncate=PROCESS \
     	--separator "|" \
         --table-columns PROCESS,"    PID",CPU%,MEM% \
         -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< $(\
+        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
+        $(\
     		awk '\
-    		/taskbar start|taskbar.zsh start|weatcher.zsh|polybar *.|[w]q gpu/ \
+    		/taskbar loop|taskbar start|taskbar.zsh start|weatcher.zsh|polybar *.|[w]q gpu/ \
     		{print $11, $12, $13,$14"|",$2"|",$3"|",$4"|"}' <<< "$base"\
     	)
-        echo
-        column \
+    echo
+    column \
         --table \
         --table-truncate=PROCESS \
         --separator "|" \
         --table-columns PROCESS,"    PID",CPU%,MEM% \
         -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< $(\
+        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
+        $(\
             awk '\
-            /[m]p |[v]al/\
+            /[m]p mpd/\
+            {print $13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
+        )
+    echo
+    column \
+        --table \
+        --table-truncate=PROCESS \
+        --separator "|" \
+        --table-columns PROCESS,"    PID",CPU%,MEM% \
+        -o "|" \
+        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
+        $(\
+            awk '\
+            /[m]pv /\
+            {print $11,$12,$13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
+        )
+    echo
+    column \
+        --table \
+        --table-truncate=PROCESS \
+        --separator "|" \
+        --table-columns PROCESS,"    PID",CPU%,MEM% \
+        -o "|" \
+        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
+        $(\
+            awk '\
+            /[w]q process.*|[w]q fetch.*/\
             {print $13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
         )
 
-
    	sleep 3
-	  clear
+	clear
+    if [[ $1 == real ]]; then
+        processbkp real
+    else
+        processbkp
+    fi    
+}
+process () {
+
+    base="$(ps -axH -o pid,%cpu,%mem,command |grep -E '[t]askbar .*|[t]askbar.zsh .*|[w]eatcher.zsh .*|[p]olybar .*|[w]q gpu|[w]q process|[w]q |[m]p ')"
+    clear
+    column \
+        --table \
+        --table-truncate=PROCESS \
+        --separator "|" \
+        --table-columns "    PID",CPU%,MEM%,PROCESS \
+        -o "|" \
+        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
+        $(for x in {1..$(wc -l <<< "$base")}
+        {
+            <<< "${${(s: :)${(f)base}[$x]}[1]}|${${(s: :)${(f)base}[$x]}[2]}|${${(s: :)${(f)base}[$x]}[3]}|${${(s: :)${(f)base}[$x]}[4,-1]}"
+        })
+    
+    sleep 3
+    clear
     process
 }
-process
+
+clear
+if [[ $@ =~ "--d" || $@ =~ "--details" || $@ =~ "d" ]]; then
+    process
+elif [[ $@ == "real" ]]; then
+    processbkp "real"
+else
+    processbkp
+fi

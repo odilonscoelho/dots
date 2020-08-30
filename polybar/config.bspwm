@@ -1,22 +1,25 @@
 [section/base]
-;include-file = ~/hdbkp/dots/polybar/taskbar-amber
-;include-file = ~/hdbkp/dots/polybar/modules-amber
-;include-file = ~/hdbkp/dots/polybar/workspaces
 include-file = ~/hdbkp/dots/polybar/taskbar
 include-file = ~/hdbkp/dots/polybar/modules
 
 [bar/taskbar1]
-font-0 = mPlus Nerd Font:bold:size=10;3
+;font-0 = mPlus Nerd Font:medium:size=10;3
+;font-0 = Play:Regular:size=10;2
+;font-0 = Hack Nerd Font:Regular:size=9;2
+;font-0 = Iosevka Type:bold:size=11;3
+font-0 = Iosevka Term SS14:Bold:size=11;3
 font-1 = Arimo Nerd Font:size=11;3
 font-2 = Arimo Nerd Font:size=14;4
 font-3 = Arimo Nerd Font:size=15;4
 font-4 = mPlus Nerd Font:bold:size=16;5
 font-5 = Arimo Nerd Font:regular:size=11;4
+font-6 = Arimo Nerd Font:size=16;5
+font-7 = mPlus Nerd Font:medium:size=10;3
 
-
-modules-left = x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
+modules-left = ws x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
 ;modules-right = 
-modules-right = mpv mp cmd floating close
+modules-right = mpv translate uptime
+;cmd floating close
 
 monitor = ${env:monitor1}
 width = 100%
@@ -28,16 +31,18 @@ scroll-down = bspc node -d prev -f
 click-left = bspc node -f next
 click-right = bspc node -f -c
 click-middle = wq launch
+cursor-click = pointer
+cursor-scroll = ns-resize
 module-margin = 0
 padding-right = 8
 padding-left = 8
 border-size = 0
-border-top-size = 10
+border-top-size = 20
 border-bottom-size = 10
 line-size = 2
 border-color = ${env:background}
 background = ${env:background}
-foreground = ${env:color8}
+foreground = ${env:foreground}
 bottom = false
 radius = 0
 ;wm-name = bspwm
@@ -48,7 +53,9 @@ separator = " "
 
 
 [bar/dock]
-font-0 = mPlus Nerd Font:bold:size=11;4
+;font-0 = mPlus Nerd Font:regular:size=11;4
+;font-0 = Hack Nerd Font:Regular:size=9;3
+font-0 = Iosevka Term SS14:Bold:size=11;4
 font-1 = Arimo Nerd Font:size=10;2
 font-2 = Arimo Nerd Font:size=12;3
 font-3 = Arimo Nerd Font:size=13;3
@@ -57,7 +64,7 @@ font-5 = Arimo Nerd Font:size=15;5
 font-6 = Arimo Nerd Font:size=16;6
 font-7 = Arimo Nerd Font:size=13;3
 font-8 = Arimo Nerd Font:size=16;3
-font-9 = mPlus Nerd Font:bold:size=16;5
+font-9 = Iosevka Type:bold:size=16;4
 font-10 = Arimo Nerd Font:size=13;4
 
 modules-right  = memory cpu temperaturecpu gpuinfo volume
@@ -73,12 +80,14 @@ scroll-down = bspc node -t floating
 click-left = bspc node -f next
 click-right = bspc node -f -c
 click-middle = wq launch
+cursor-click = default
+cursor-scroll = ns-resize
 module-margin = 0
 padding-right = 8
 padding-left = 8
 border-size = 0
 border-top-size = 10
-border-bottom-size = 10
+border-bottom-size = 20
 line-size = 2
 background = ${env:background}
 foreground = ${env:foreground}

@@ -1,5 +1,5 @@
 #!/bin/zsh
-#===============| AUTOMAÇÔES |===============
+#===============| AUTOMAÇÕES |===============
 cl ()
 {
 	for i in $@;
@@ -67,7 +67,7 @@ base.cmd ()
 	}
 shll ()
 {
-	nohup $($@) /dev/null &
+	nohup $($@) >/dev/null &
 }
 msg ()
 {
@@ -87,7 +87,7 @@ seletor4 ()
 	--text-align=center --regex-search \
 	--geometry=400x320 --separator=" " --borders=5 $@ &
 }
-#================| SESSÂO SELEÇÃO DE ARQUIVOS |====================
+#================| SELEÇÃO DE ARQUIVOS |====================
 sf ()
 {
 	if [[ -z $@ ]];then

@@ -24,7 +24,7 @@ gpuinfo.stop ()
 
 val ()
 {
-	sleep 2
+	sleep 5
 	new
 	[[ $tempnew != $tempold || $infonew != $infoold ]] && \
 		<<< "${infonew} %{F$gpuinfotempcolor}%{T$gpuinfotempfonticon}$gpuinfotempicon%{T-}%{F-} ${tempnew}" >| /tmp/gpuinfo

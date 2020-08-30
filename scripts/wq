@@ -51,7 +51,7 @@ source $path_scripts/shell.zsh
     picom* )
       $path_scripts/picom.zsh;;
     process* )
-      $path_scripts/process.zsh;;
+      $path_scripts/process.zsh $2;;
     bar* )
       . $path_scripts/bar.zsh
       $@;;

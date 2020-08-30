@@ -10,6 +10,11 @@ app.paste ()
 	xclip -selection clipboard -o
 }
 
+app.pastex ()
+{
+	xclip -selection clipboard -o
+}
+
 app.csgo ()
 {
 	nohup steam steam://rungameid/730 /dev/null &

@@ -62,8 +62,12 @@ shift + Print
 	mp next
 @XF86AudioPlay
 	mp pause.toggle
-shift + @XF86AudioPlay
+ctrl + shift + @XF86AudioPlay
 	wq app.mpv
+shift + @XF86AudioPlay
+	mp
+shift + F7
+	mp
 @XF86AudioStop
 	mp stop
 @XF86AudioLowerVolume
@@ -85,7 +89,9 @@ shift + F10
 @shift + ctrl + XF86HomePage
 	qutebrowser -R --target window spankbang.com
 @XF86Calculator
-	wq cca
+	wq rofi.drun
+	
+	#wq cca
 @shift + XF86Calculator
 	kitty
 super + {v,c}

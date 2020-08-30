@@ -22,10 +22,8 @@ rofi.drun () {
 	-show-icons \
 	-color-normal $colornormal \
 	-color-window $colorwindow
-	# -icon-theme /usr/share/icons/Breeze_Amber
 }
 
-	# -icon-theme=/usr/share/icons/mojave-ct/apps/128 \
 rofi.windows () {
 	rofi modi window \
 	-show window \

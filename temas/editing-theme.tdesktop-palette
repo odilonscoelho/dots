@@ -1,41 +1,41 @@
 // base16-telegram by theova (https://github.com/theova/base16-telegram)
-// oomox-sandcastle scheme by oomox-sandcastle
+// oomox-158 scheme by oomox-158
 
 // base16 colors
-base00: #282828;
-base01: #42331a;
-base02: #4c3d24;
-base03: #686056;
-base04: #141414;
-base05: #a89984;
-base06: #989c88;
-base07: #cfc0a7;
-base08: #ce4d67;
-base09: #8b7c80;
-base0A: #ad9eb2;
-base0B: #62a68d;
-base0C: #6f96a6;
-base0D: #567a9a;
-base0E: #8d629a;
-base0F: #98505f;
+base00: #1f1f1f;
+base01: #4b3737;
+base02: #4b3737;
+base03: #706955;
+base04: #0b0b0b;
+base05: #c1b38b;
+base06: #c1b38b;
+base07: #c1b38b;
+base08: #d17c47;
+base09: #ad8a59;
+base0A: #ad8a59;
+base0B: #747c44;
+base0C: #6f7259;
+base0D: #535e6b;
+base0E: #765957;
+base0F: #ab6f3c;
 
 // base16 with transparency
-base00T: #282828cc;
-base01T: #42331acc;
-base02T: #4c3d24cc;
-base03T: #686056cc;
-base04T: #141414cc;
-base05T: #a89984cc;
-base06T: #989c88cc;
-base07T: #cfc0a7cc;
-base08T: #ce4d67cc;
-base09T: #8b7c80cc;
-base0AT: #ad9eb2cc;
-base0BT: #62a68dcc;
-base0CT: #6f96a6cc;
-base0DT: #567a9acc;
-base0ET: #8d629acc;
-base0FT: #98505fcc;
+base00T: #1f1f1fcc;
+base01T: #4b3737cc;
+base02T: #4b3737cc;
+base03T: #706955cc;
+base04T: #0b0b0bcc;
+base05T: #c1b38bcc;
+base06T: #c1b38bcc;
+base07T: #c1b38bcc;
+base08T: #d17c47cc;
+base09T: #ad8a59cc;
+base0AT: #ad8a59cc;
+base0BT: #747c44cc;
+base0CT: #6f7259cc;
+base0DT: #535e6bcc;
+base0ET: #765957cc;
+base0FT: #ab6f3ccc;
 
 // Color Pallete
 pBg: base00;
@@ -274,9 +274,9 @@ historyScrollBarBg: scrollBarBg;
 historyScrollBarBgOver: scrollBarBgOver;
 historyScrollBg: scrollBg;
 historyScrollBgOver: scrollBgOver;
-msgInBg: pComment;
-msgInBgSelected: pPink;
-msgOutBg: pSelection;
+msgInBg: pBg;
+msgInBgSelected: pSelection;
+msgOutBg: pBg;
 msgOutBgSelected: pPurple;
 msgSelectOverlay: base01T;
 msgStickerOverlay: rippleBgHeavy;
