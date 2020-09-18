@@ -1,6 +1,4 @@
-# welcome to the jungle !
-![my desktop](logodots.jpg)
-### [Sandcastle-all-edition](temas/themes/sandcastle-all-edition)
+### [onedark](temas/themes/onedark_losaoall)
 ![screenshoot](print.jpg)
 
 ## Setup
