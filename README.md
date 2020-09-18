@@ -62,6 +62,7 @@ Os dots são compostos de varios scripts contidos na pasta "dots/scripts", você
  wq carrega a função disponível em gpuinfo.zsh e a executa, para todos os efeitos de rastreio do script o processo será o script wq, mas o codigo rodando será o do gpuinfo.zsh
 
 ##### polybar
+![screenshoot](bars.png)
 
 Módulos da polybar | Argumentos | Descrição | Dependências | scripts/files
 :--:|:-------:|:------:|:-----:|:-----:
