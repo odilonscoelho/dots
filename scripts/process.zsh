@@ -20,7 +20,7 @@ processbkp () {
     		{print $11, $12, $13,$14"|",$2"|",$3"|",$4"|"}' <<< "$base"\
     	)
     echo
-    column \
+        column \
         --table \
         --table-truncate=PROCESS \
         --separator "|" \
@@ -29,7 +29,7 @@ processbkp () {
         --table-order "    PID",MEM%,CPU%,PROCESS <<< \
         $(\
             awk '\
-            /[m]p mpd/\
+            /[m]p mpd|[m]p plist/\
             {print $13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
         )
     echo

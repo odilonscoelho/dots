@@ -18,7 +18,8 @@ declare -x path_colors=$path_dots/temas
 declare -x bd=/tmp/taskbar
 
 # Para incluir variáveis globais dinâmicas, necessário para $wq mn $wq cmd $mp.command
-source $path_scripts/shell.zsh
+. $path_scripts/icons.zsh # Todas as funções criadas para o shell
+. $path_colors/colors.zsh # Import das cores do tema.
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 [[ -z $@ ]] && return 0 || \
   case $@ in
@@ -28,7 +29,7 @@ source $path_scripts/shell.zsh
       . $path_scripts/screencap.zsh
       shift
       $@;;
-    notif* )
+    notif* || ntf* )
       . $path_scripts/notify.zsh
       $@ 2>/dev/null;;
     fetch* )

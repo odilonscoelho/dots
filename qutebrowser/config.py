@@ -5,6 +5,9 @@
 
 c.statusbar.position = 'top' 
 
+# hidpi
+# c.qt.highdpi = true
+c.zoom.default = 142
 
 # Uncomment this to still load settings configured via autoconfig.yml
 # config.load_autoconfig()
@@ -39,7 +42,7 @@ config.set('content.notifications', True, 'https://www.youtube.com')
 
 # Hide the statusbar unless a message is shown.
 # Type: Bool
-c.statusbar.hide = True
+c.statusbar.show = 'never'
 
 # Mouse button with which to close tabs.
 # Type: String
@@ -60,7 +63,7 @@ c.tabs.padding = {'bottom': 2, 'left': 2, 'right': 2, 'top': 2}
 #   - bottom
 #   - left
 #   - right
-c.tabs.position = 'bottom'
+c.tabs.position = 'top'
 
 # When to show the tab bar.
 # Type: String
@@ -77,12 +80,12 @@ c.tabs.show = 'multiple'
 #   - left
 #   - right
 #   - center
-c.tabs.title.alignment = 'center'
+c.tabs.title.alignment = 'left'
 
 # Width (in pixels or as percentage of the window) of the tab bar if
 # it's vertical.
 # Type: PercOrInt
-c.tabs.width = '50%'
+c.tabs.width = '20%'
 
 # Width (in pixels) of the progress indicator (0 to disable).
 # Type: Int
@@ -90,68 +93,71 @@ c.tabs.indicator.width = 2
 
 # Padding (in pixels) for tab indicators.
 # Type: Padding
-c.tabs.indicator.padding = {'bottom': 2, 'left': 4, 'right': 4, 'top': 2}
+c.tabs.indicator.padding = {'bottom': 4, 'left': 4, 'right': 4, 'top': 4}
 
 # Background color of the statusbar.
 # Type: QssColor
-c.colors.statusbar.normal.bg = 'white'
+# c.colors.statusbar.normal.bg = 'white'
 
 # Default monospace fonts. Whenever "monospace" is used in a font
 # setting, it's replaced with the fonts listed here.
 # Type: Font
-# c.fonts.monospace = '"Open Sans Condensed" "xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", Fixed, Consolas, Terminal'
+# c.fonts.monospace = '"Iosevka Term SS07" "xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", Fixed, Consolas, Terminal'
+# c.fonts.monospace = 'Iosevka Term SS07'
+c.fonts.default_family = 'Bold Iosevka Term SS07'
 
 # Font used in the completion widget.
 # Type: Font
-c.fonts.completion.entry = '11pt Open Sans Condensed'
+c.fonts.completion.entry = 'Bold 11pt Iosevka Term SS07'
 
 # Font used in the completion categories.
 # Type: Font
-c.fonts.completion.category = '11pt Open Sans Condensed'
+c.fonts.completion.category = 'Bold 11pt Iosevka Term SS07'
 
 # Font used for the debugging console.
 # Type: QtFont
-c.fonts.debug_console = '11pt Open Sans Condensed'
+c.fonts.debug_console = 'Bold 10pt Iosevka Term SS07'
 
 # Font used for the downloadbar.
 # Type: Font
-c.fonts.downloads = '9pt Open Sans Condensed'
+c.fonts.downloads = 'Bold 10pt Iosevka Term SS07'
 
 # Font used for the hints.
 # Type: Font
-c.fonts.hints = '12pt Open Sans Condensed'
+c.fonts.hints = '10pt Iosevka Term SS07'
 
 # Font used in the keyhint widget.
 # Type: Font
-c.fonts.keyhint = '12pt Open Sans Condensed'
+c.fonts.keyhint = '10pt Iosevka Term SS07'
 
 # Font used for error messages.
 # Type: Font
-c.fonts.messages.error = '9pt Open Sans Condensed'
+c.fonts.messages.error = '10pt Iosevka Term SS07'
 
 # Font used for info messages.
 # Type: Font
-c.fonts.messages.info = '9pt Open Sans Condensed'
+c.fonts.messages.info = '10pt Iosevka Term SS07'
 
 # Font used for warning messages.
 # Type: Font
-c.fonts.messages.warning = '9pt Open Sans Condensed'
+c.fonts.messages.warning = '10pt Iosevka Term SS07'
 
 # Font used for prompts.
 # Type: Font
-c.fonts.prompts = '11pt Open Sans Condensed'
+c.fonts.prompts = '10pt Iosevka Term SS07'
 
 # Font used in the statusbar.
 # Type: Font
-c.fonts.statusbar = '10pt Open Sans Condensed'
+c.fonts.statusbar = '10pt Iosevka Term SS07'
 
 # Font used in the tab bar.
 # Type: QtFont
-c.fonts.tabs = '11pt Open Sans Condensed'
+c.fonts.tabs.selected = 'Bold 11.25pt Iosevka Term SS07'
+c.fonts.tabs.unselected = 'Bold 11.25pt Iosevka Term SS07'
 
 # Default font size (in pixels) for Light text.
 # Type: Int
-c.fonts.web.size.default = 12
+c.fonts.web.size.default = 16
 
 #import dracula.draw
 
@@ -170,31 +176,32 @@ c.fonts.web.size.default = 12
 config.bind('<c>', 'hint --mode number links yank')
 # config.bind('<r>', 'hint --mode number links spawn mpv --title="YouTube-{hint-url}" {hint-url}')
 #config.bind('<r>', 'hint --mode number links spawn mpv --x11-name="YouTube" {hint-url}')
-config.bind('<r>', 'spawn --userscript /usr/bin/wq mp')
+# config.bind('<r>', 'spawn --userscript /usr/bin/mp')
+config.bind('<r>', 'spawn /usr/bin/mp')
 config.bind('<shift+r>', 'spawn --userscript /usr/bin/wq mpurl')
 config.bind('<t>', 'hint --mode number links spawn smplayer -add-to-playlist QUTE_URL')
 config.bind('<f>', 'hint --mode number')
 
 # base16-qutebrowser (https://github.com/theova/base16-qutebrowser)
 # Base16 qutebrowser template by theova
-# oomox-sandcastle scheme by oomox-sandcastle
+# oomox-onedark_losaoall scheme by oomox-onedark_losaoall
 
-base00 = "#282828"
-base01 = "#42331a"
-base02 = "#4c3d24"
-base03 = "#686056"
-base04 = "#141414"
-base05 = "#a89984"
-base06 = "#989c88"
-base07 = "#cfc0a7"
-base08 = "#ce4d67"
-base09 = "#8b7c80"
-base0A = "#ad9eb2"
-base0B = "#62a68d"
-base0C = "#6f96a6"
-base0D = "#567a9a"
-base0E = "#8d629a"
-base0F = "#98505f"
+base00 = "#282c34"
+base01 = "#353b45"
+base02 = "#3e4451"
+base03 = "#696f79"
+base04 = "#141820"
+base05 = "#abb2bf"
+base06 = "#b6bdca"
+base07 = "#c8ccd4"
+base08 = "#e06c75"
+base09 = "#d19a66"
+base0A = "#e5c07b"
+base0B = "#98c379"
+base0C = "#56b6c2"
+base0D = "#61afef"
+base0E = "#c678dd"
+base0F = "#c46f59"
 
 # set qutebrowser colors
 

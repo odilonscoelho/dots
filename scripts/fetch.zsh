@@ -165,9 +165,6 @@ if [[ $2 == "natal" ]]; then
 	optn=$3
 	[[ -z $4 ]] && { natal 5 } || { natal $4 }
 else
-	base.info
-	figtbsp "$(( $3 - 2 ))" c
 	"$2" "$3"
-	info "$(( $3 + 2 ))"
-	figtbsp "$(( $3 - 2 ))" c
+	figtbsp "$4"
 fi

@@ -95,28 +95,38 @@ bsp.clearmodifiers ()
 {
   xdotool keydown --clearmodifiers super && sleep 1 && xdotool keyup --clearmodifiers super
 }
-bsp.tdrop ()
-{
-  case $1 in
-    open* )
-      "$2" |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
-    * ) 
-      tdrop  -x $(( 2560 / 3 )) -y $(( 1440 / 3 )) -w 900 -h 580 -s dropdown --wm bspwm $1;;
-  esac
-
-#-w 900 -h 550 -x $(( 2560 / 2 )) -y $(( 1440 / 2 ))
-}
 wm.restart ()
 {
 	pkill polybar 2>/dev/null && sleep 0.5
-	wq gpuinfo stop 2>/dev/null && sleep 0.5
 	taskbar stop 2>/dev/null && sleep 0.5
+	wq gpuinfo stop 2>/dev/null && sleep 0.5
 	wq weatcher stop 2>/dev/null && sleep 0.5
 	pkill picom 2>/dev/null && sleep 0.5
-	redshift -x 2>/dev/null && sleep 0.5
+	# redshift -x 2>/dev/null && sleep 0.5
 	pkill redshift 2>/dev/null && sleep 0.5
 	pkill dunst 2>/dev/null && sleep 0.5
-	{ pulseaudio-equalizer disable &>/dev/null } && sleep 0.5
-	pkill kitty &>/dev/null && sleep 0.5
-	zsh ~/.config/bspwm/bspwmrc &>/dev/null &
+	# { pulseaudio-equalizer disable &>/dev/null } && sleep 0.5
+	# pkill kitty &>/dev/null && sleep 0.5
+	source ~/.config/bspwm/bspwmrc  #&>/dev/null &
+}
+
+# Evolução do KittyDraw, tdrop + slop + kitty
+bsp.tdrop ()
+{
+  read -r X Y W H < <(slop -f "%x %y %w %h" --color=0.23,0.70,0.30,0.8 -b 3 -t 0 -q)
+  if [[ -n $X ]]; then
+    case $1 in
+      open* )
+        "$2" |tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm ;;
+      * ) 
+        tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm $1;;
+    esac
+  else
+    case $1 in
+      open* )
+        "$2" |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
+      * ) 
+        tdrop  -x $(( 3840 / 4 )) -y $(( 2160 / 4 )) -w 900 -h 580 -s dropdown --wm bspwm $1;;
+    esac
+  fi
 }

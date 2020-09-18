@@ -37,7 +37,7 @@ super + {_,shift + }w
 alt + {_,shift +}  button3
 	bspc node {-c,-k}
 shift + Insert
-	var=$(wq tradutor.sel) && wq notifica $var
+	var=$(wq tradutor.sel) && wq ntf 100000 bell "$var"
 ctrl + shift + Insert
 	var=$(wq tradutor.sel) && wq msg "$var"
 #Enviar Wndow focada para prox/ant desktop
@@ -68,6 +68,8 @@ shift + @XF86AudioPlay
 	mp
 shift + F7
 	mp
+super + tab
+	mp
 @XF86AudioStop
 	mp stop
 @XF86AudioLowerVolume
@@ -78,32 +80,38 @@ shift + F7
 	thunderbird
 @XF86Explorer
 	nemo
-ctrl + shift + F10
+F10
 	mp "$(wq app.paste)"
-shift + F10
-	mp controls
+alt + F10
+	mp select.file
+ctrl + F10
+	mp plistyad force
+
 #F10
 #	mp select.file
 @shift + XF86HomePage
 	qutebrowser -R --target window youtube.com.br
 @shift + ctrl + XF86HomePage
 	qutebrowser -R --target window spankbang.com
-@XF86Calculator
-	wq rofi.drun
+
 	
 	#wq cca
 @shift + XF86Calculator
 	kitty
 super + {v,c}
 	pulsemixer {--change-volume +1,--change-volume -1}
-alt + {x,z}
-	pulsemixer {--change-volume +1,--change-volume -1}
+#alt + {x,z}
+#	pulsemixer {--change-volume +1,--change-volume -1}
 #shift + Return
 #	kitty
+
+super + alt + Return
+	wq rofi.combi
 alt + space
 	wq rofi.drun
 button8
 	wq rofi.drun
+
 @button9
 	xdotool keydown super
 @super + @button8
@@ -119,7 +127,7 @@ shift + F1
 F11
 	wq cmd &
 F12
-	wq mn &
+	wq rofi.drun
 super + ctrl + c
 	pkill picom
 super + alt + c

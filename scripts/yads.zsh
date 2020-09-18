@@ -42,7 +42,7 @@ mn ()
 cmd ()
 {
 	. "$path_colors/colors.zsh"
-	. "$path_scripts/shell.zsh"
+	. "$path_scripts/functions.zsh"
 	base.cmd
 	yad --geometry=800x50 \
 	--no-buttons --separator=" " \
@@ -57,7 +57,6 @@ cmd ()
 }
 base.cmd ()
 {
-	# . $path_proj/shell.zsh
 	rm /tmp/cmd
 	< hdbkp/dots/scripts/shell.zsh|\
 	grep -E "declare"|sed 's/\=.*//g;;s/declare -x//g;s/^/\!\$/g;s/ //g' >> /tmp/cmd

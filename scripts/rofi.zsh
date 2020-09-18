@@ -1,7 +1,7 @@
 #!/bin/zsh
-. $path_colors/colors.zsh
+# . $path_colors/colors.zsh
 # font="mPlus Nerd Font light 13"
-font="Nova Slim Book 14"
+font="Nova Slim Book 21"
 colornormal="$background,$foreground,$color16,$foreground,$background"
 colorwindow="$background,$color1,$color1"
 rofi.drun () {
@@ -10,13 +10,32 @@ rofi.drun () {
 	-combi-modi drun \
 	-show drun \
 	-font "$font" \
-	-bw 2 \
+	-bw 5 \
 	-location 0 \
 	-terminal kitty \
-	-columns 4 \
+	-columns 5 \
 	-lines 10 \
 	-width 60 \
-	-padding 25 \
+	-padding 35 \
+	-line-padding 5 \
+	-combi-hide-mode-prefix \
+	-show-icons \
+	-color-normal $colornormal \
+	-color-window $colorwindow
+}
+
+rofi.combi ()
+{
+	rofi -combi-modi drun,run \
+	-show combi \
+	-font "$font" \
+	-bw 5 \
+	-location 0 \
+	-terminal kitty \
+	-columns 5 \
+	-lines 10 \
+	-width 60 \
+	-padding 35 \
 	-line-padding 5 \
 	-combi-hide-mode-prefix \
 	-show-icons \

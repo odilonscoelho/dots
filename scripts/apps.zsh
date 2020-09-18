@@ -22,19 +22,21 @@ app.csgo ()
 
 app.print.full ()
 {
-	if [[ -n $@  ]];then
-		wq notificatime 5000 "screenshot $@.jpg" &&
+	if [[ -n $1  ]];then
+		wq ntf "screenshot $@.jpg" 5000 
 		import -window root -screen "$@.jpg"
 	else
-		var="$(date +%d.%m\ %H.%M.%S).jpg"
-		wq notificatime 5000 "screenshot $var" && sleep 0.5
-		import -quality 100 -window root "$var"
+		var="$(date +%H%M%S).jpg"
+		wq ntf 5000 "screenshot saved in ~/Pictures"
+		sleep 0.5
+		import -quality 100 -window root "$HOME/Pictures/$var"
 	fi
 }
 
 app.print.cut ()
 {
-	import "$(yad --entry --title="screenshot =...")"
+	file="$HOME/Pictures/$(yad --entry --title="screenshot =...")"
+	import $file
 }
 
 app.kitty.reload.colors ()

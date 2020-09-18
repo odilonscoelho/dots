@@ -112,7 +112,8 @@ gennotify ()
 {
 	sed -i 's/background\ \= \"\#.*/background\ \= \"'$background'\"/g;
 			s/foreground\ \= \"\#.*/foreground\ \= \"'$foreground'\"/g;
-			s/frame_color\ \= \"\#.*/frame_color\ \= \"'$foreground'"/g' $notify_file
+			s/frame_color\ \= \"\#.*/frame_color\ \= \"'$color4'"/g;
+			s/separator_color\ \= \"#.*/separator_color\ \= \"'$color4'\"/g'	$notify_file
 }
 
 bsp ()
@@ -153,7 +154,7 @@ theme.run ()
 	pkill dunst
 	dunst &
 	dunstify -t 5000 "Theme
-		${base_file//.*\//} aplicado!" &
+${base_file//.*\//} aplicado!" &
 }
 
 theme.sel ()

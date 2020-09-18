@@ -1,10 +1,13 @@
 #!/bin/zsh
-# export PATH="${HOME}/.local/bin:${HOME}/.local/share/virtualenvs/qutewal-8OrCaHwS/bin/activate:${PATH}"
+
+#--------------------------------------------------------------------------------------
+# Configure shell envs
+#--------------------------------------------------------------------------------------
 declare -x path_dots=$HOME/hdbkp/dots
 declare -x path_scripts=$path_dots/scripts
 declare -x path_polybar=$path_dots/polybar
 declare -x path_colors=$path_dots/temas
-. $path_scripts/shell.zsh
+. $path_colors/colors.zsh
 export colorgreen="#2CD776"
 export color_focused_border_color
 export color_normal_border_color="#333333"
@@ -13,29 +16,40 @@ export color_presel_feedback_color="#333333"
 export TERM="xterm-256color"
 export LANG="pt_BR.UTF-8"
 export QT_QPA_PLATFORMTHEME="qt5ct"
+export QT_AUTO_SCREEN_SCALE_FACTORS="1.42"
+export PLASMA_USE_QT_SCALING="1.42"
 export QUTEWAL_DYNAMIC_LOADING="True"
 export XDG_CONFIG_HOME="$HOME/.config"
-export monitor1=$(xrandr |grep ' connected'|sed -n 1p|awk '{print $1}'); echo $monitor1 > /tmp/monitor1
-export monitor2=$(xrandr |grep ' connected'|sed -n 2p|awk '{print $1}'); echo $monitor2 > /tmp/monitor2
-xrandr --output "$monitor1" --mode 2560x1440 --dpi 96 --primary
+#--------------------------------------------------------------------------------------
+# Configure Displays
+#--------------------------------------------------------------------------------------
+# Capture of displays to envs
+export monitor1=$(xrandr |grep ' connected'|sed -n 1p|awk '{print $1}')
+export monitor2=$(xrandr |grep ' connected'|sed -n 2p|awk '{print $1}')
+# Xrandr for HDPI , alter mode for others reslutions
+mode=3840x2160
+# mode=2560x1440
+xrandr --output "$monitor1" --mode "$mode" --primary
 bspc monitor "$monitor1" -d 1 2 3 4 5 6 7 8 9
-# wq app.hset
-nitrogen --restore &
-sxhkd &
-lxqt-policykit-agent &
+#--------------------------------------------------------------------------------------
+# Configure bspwm envs
+#--------------------------------------------------------------------------------------
+bspc config window_gap 0
 bspc config remove_disabled_monitors true
 bspc config ignore_ewmh_focus true
 bspc config honor_size_hints false
 bspc config split_ratio 0.5
-bspc config border_width 4
-bspc config window_gap 0
-bspc config focused_border_color $foreground
-bspc config normal_border_color $background || bspc config normal_border_color $color_normal_border_color
-bspc config active_border_color $background || bspc config normal_border_color $color_active_border_color
-bspc config presel_feedback_color $background || bspc config normal_border_color $color_presel_feedback_color
+bspc config border_width 5
+bspc config focused_border_color $color4
+bspc config normal_border_color $foreground || bspc config normal_border_color $color_normal_border_color
+bspc config active_border_color $foreground || bspc config normal_border_color $color_active_border_color
+bspc config presel_feedback_color $foreground || bspc config normal_border_color $color_presel_feedback_color
 bspc config status_prefix true
+#--------------------------------------------------------------------------------------
+# Rules for programs
+#--------------------------------------------------------------------------------------
 bspc rule -a XTerm state=floating follow=off center=false sticky=off
-bspc rule -a kitty state=floating follow=off center=false sticky=off
+bspc rule -a kitty state=floating follow=off center=false sticky=off,
 bspc rule -a tilda state=floating follow=on center=false sticky=on
 bspc rule -a Alacritty state=floating follow=off center=false sticky=off
 bspc rule -a Termite state=floating follow=on center=false sticky=off
@@ -66,19 +80,21 @@ bspc rule -a SimpleScreenRecorder state=floating follow=on center=false
 bspc rule -a Code-oss #state=floating follow=on center=false
 bspc rule -a Thunderbird state=floating follow=on center=false
 bspc rule -a google-keep-nativefier-d04d04 state=floating follow=on center=false
-picom --config ~/hdbkp/dots/picom.conf -b --experimental-backends &
-#nvidia-settings -l --config ~/.nvidia-settings-rc &
-wq launch &
-pulseaudio-equalizer enable &
-dunst &
-wq keyboard.br &
-wq weatcher start &
-wq gpuinfo start &
-taskbar start &
+#--------------------------------------------------------------------------------------
+# External Auto-Start
+#--------------------------------------------------------------------------------------
+sxhkd &
+lxqt-policykit-agent &
+nitrogen --restore &
 redshift-gtk &
 caffeine -a &
-lxappearance &
-{ sleep 2 && taskbar close "$(</tmp/taskbar|grep --line-number lxapp| cut -d: -f1)" }
-sleep 1
-wq bsp.tdrop kitty &
-# mp mpd start &
+xsetroot -cursor_name left_ptr
+pulseaudio-equalizer enable &
+wq keyboard.br &
+wq launch &
+wq weatcher start &
+wq gpuinfo start &
+wq picom &
+taskbar start &
+dunst &
+xrdb -merge ~/.Xresources &
