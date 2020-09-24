@@ -1,11 +1,18 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
 
-## Options section
+# Declaração dos $path_*
+declare -x path_dots=$HOME/hdbkp/dots
+declare -x path_scripts=$path_dots/scripts
+declare -x path_polybar=$path_dots/polybar
+declare -x path_colors=$path_dots/temas
+
+# Import das funções dispostas em arquivos externos
+. $path_scripts/functions.zsh # Todas as funções criadas para o shell
+. $path_scripts/lst.zsh # Um ls bonitinho
+. $path_scripts/icons.zsh # Para Polybar
+. $path_colors/colors.zsh # Import das cores do tema.
+
+#export PATH=${PATH}:~/.local
+
 setopt correct                                                  # Auto correct mistakes
 setopt extendedglob                                             # Extended globbing. Allows using regular expressions with *
 setopt nocaseglob                                               # Case insensitive globbing
@@ -64,6 +71,23 @@ bindkey '^[[Z' undo                                             # Shift+tab undo
 alias df='df -h'                                                # Human-readable sizes
 alias free='free -m'                                            # Show sizes in MB
 alias gitu='git add . && git commit && git push'
+alias dots="$path_dots"
+alias dots.scripts="$path_scripts"
+alias dots.temas="$path_colors"
+alias dots.polybar="$path_polybar"
+alias pacinstall="sudo pacman -S"
+alias pacinstalled="sudo pacman -Qe"
+alias pacremove="sudo pacman -R"
+alias pacremovecomplete="sudo pacman -Rsn"
+alias pacorfaos="sudo pacman -Qdt |awk {'print $1'}"
+alias aurinstalled='sudo pacman -Qm'
+alias aursearch='yay -Ss'
+alias aurinstall='yay -S'
+alias aurremove='yay -R'
+alias aurremovecomplete='yay -Rsn'
+alias fetch='clear;{wq fetch quadro 11};{wq colorfetch}'
+alias equalizer='pulseaudio-equalizer enable'
+alias ls='ls --color=auto'
 
 # Theming section
 autoload -U compinit colors zcalc
@@ -76,15 +100,11 @@ setopt prompt_subst
 # Prompt (on left side) similar to default bash prompt, or redhat zsh prompt with colors
  #PROMPT="%(!.%{$fg[red]%}[%n@%m %1~]%{$reset_color%}# .%{$fg[green]%}[%n@%m %1~]%{$reset_color%}$ "
 # Maia prompt
-PROMPT="%B%{$fg[cyan]%}%(4~|%-1~/.../%2~|%~)%u%b >%{$fg[cyan]%}>%B%(?.%{$fg[cyan]%}.%{$fg[red]%})>%{$reset_color%}%b "
-# Print some system information when the shell is first started
-# Print a greeting message when shell is started
-#echo $USER@$HOST  $(uname -srm) $(lsb_release -rcs)
-## Prompt on right side:
-#  - shows status of git when in git repository (code adapted from https://techanic.net/2012/12/30/my_git_prompt_for_zsh.html)
-#  - shows exit status of previous command (if previous command finished with an error)
-#  - is invisible, if neither is the case
+# PROMPT="%B%{$fg[cyan]%}%(4~|%-1~/.../%2~|%~)%u%b >%{$fg[cyan]%}>%B%(?.%{$fg[cyan]%}.%{$fg[red]%})>%{$reset_color%}%b "
 
+# "%(?.%{$fg[green]%}✓ %{$reset_color%}.%{$fg[red]%}✗ %{$reset_color%})"
+PROMPT="%B%{$fg[magenta]%}%(4~|%-1~/.../%2~|%~)%u%b %{$fg[blue]%}  %{$reset_color%}%b "
+# 盧   ➲   
 # Modify the colors and symbols in these variables as desired.
 GIT_PROMPT_SYMBOL="%{$fg[blue]%}±"                              # plus/minus     - clean repo
 GIT_PROMPT_PREFIX="%{$fg[green]%}[%{$reset_color%}"
@@ -135,16 +155,19 @@ git_prompt_string() {
   local git_where="$(parse_git_branch)"
 
   # If inside a Git repository, print its branch and state
-  [ -n "$git_where" ] && echo "$GIT_PROMPT_SYMBOL$(parse_git_state)$GIT_PROMPT_PREFIX%{$fg[yellow]%}${git_where#(refs/heads/|tags/)}$GIT_PROMPT_SUFFIX"
+  [ -n "$git_where" ] && \
+    echo "$GIT_PROMPT_SYMBOL$(parse_git_state)$GIT_PROMPT_PREFIX%{$fg[yellow]%}${git_where#(refs/heads/|tags/)}$GIT_PROMPT_SUFFIX" || \
+      echo "%B%(?.%{$fg[green]%}.%{$fg[red]%})         "
+      
+      #echo "%(?.%{$fg[green]%}✓ %{$reset_color%}.%{$fg[red]%}✗ %{$reset_color%})"
 
   # If not inside the Git repo, print exit codes of last command (only if it failed)
-  [ ! -n "$git_where" ] && echo "%{$fg[red]%} %(?..[%?])"
+  # [ ! -n "$git_where" ] && echo "%{$fg[red]%} %(?..[%?])"
 }
 
 # Right prompt with exit status of previous command if not successful
  #RPROMPT="%{$fg[red]%} %(?..[%?])"
 # Right prompt with exit status of previous command marked with ✓ or ✗
- #RPROMPT="%(?.%{$fg[green]%}✓ %{$reset_color%}.%{$fg[red]%}✗ %{$reset_color%})"
 
 
 # Color man pages
@@ -156,7 +179,6 @@ export LESS_TERMCAP_so=$'\E[01;47;34m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;36m'
 export LESS=-r
-
 
 ## Plugins section: Enable fish style features
 # Use syntax highlighting
@@ -173,33 +195,33 @@ bindkey '^[[B' history-substring-search-down
 # Apply different settigns for different terminals
 case $(basename "$(cat "/proc/$PPID/comm")") in
   login)
-    	RPROMPT="%{$fg[red]%} %(?..[%?])"
-    	alias x='startx ~/.xinitrc'      # Type name of desired desktop after x, xinitrc is configured for it
+      RPROMPT="%{$fg[red]%} %(?..[%?])"
+      alias x='startx ~/.xinitrc'      # Type name of desired desktop after x, xinitrc is configured for it
     ;;
-#  'tmux: server')
-#        RPROMPT='$(git_prompt_string)'
-#		## Base16 Shell color themes.
-#		#possible themes: 3024, apathy, ashes, atelierdune, atelierforest, atelierhearth,
-#		#atelierseaside, bespin, brewer, chalk, codeschool, colors, default, eighties,
-#		#embers, flat, google, grayscale, greenscreen, harmonic16, isotope, londontube,
-#		#marrakesh, mocha, monokai, ocean, paraiso, pop (dark only), railscasts, shapesifter,
-#		#solarized, summerfruit, tomorrow, twilight
-#		#theme="eighties"
-#		#Possible variants: dark and light
-#		#shade="dark"
-#		#BASE16_SHELL="/usr/share/zsh/scripts/base16-shell/base16-$theme.$shade.sh"
-#		#[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-#		# Use autosuggestion
-#		source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-#		ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-#  		ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
-#     ;;
+ 'tmux: server')
+       RPROMPT='$(git_prompt_string)'
+  ## Base16 Shell color themes.
+  #possible themes: 3024, apathy, ashes, atelierdune, atelierforest, atelierhearth,
+  #atelierseaside, bespin, brewer, chalk, codeschool, colors, default, eighties,
+  #embers, flat, google, grayscale, greenscreen, harmonic16, isotope, londontube,
+  #marrakesh, mocha, monokai, ocean, paraiso, pop (dark only), railscasts, shapesifter,
+  #solarized, summerfruit, tomorrow, twilight
+  #theme="eighties"
+  #Possible variants: dark and light
+  #shade="dark"
+  #BASE16_SHELL="/usr/share/zsh/scripts/base16-shell/base16-$theme.$shade.sh"
+  #[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+  # Use autosuggestion
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+    ;;
   *)
-        RPROMPT='$(git_prompt_string)'
-		# Use autosuggestion
-		source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-		ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-  		ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+    RPROMPT='$(git_prompt_string)'
+    # Use autosuggestion
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+    ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$color16,bg=$foreground,bold,underline"
     ;;
 esac
 
@@ -207,13 +229,7 @@ esac
 stty -ixon
 
 
-######CASO NÃO USE MEU BSPWMRC###########
-# Comente as linhas abaixo, 
-. $path_scripts/shell.zsh
-# . $path_colors/colors.zsh
-# Descomente as linhas abaixo e subsitua /path/ 
-#pelo caminhos onde está o repositório:
-#. /path/dots/scripts/shell.zsh 
-#. /path/dots/colors/color.zsh
+
+
 
 
