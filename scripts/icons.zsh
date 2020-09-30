@@ -64,9 +64,10 @@ declare -x translatecoloricon="$color6"
 declare -x translateicon="" #
 declare -x translatelabel="%{T$translatefonticon}%{F$translatecoloricon} $translateicon %{T-}%{F-}"
 ####### WS
-declare -x wsfonticon=7
+declare -x wsfonticon=2
 declare -x wscoloricon="$color4"
 declare -x wscolorbg=$background
+declare -x wsicon="%{T$fonticon} "
 #### UPTIME
 #
 declare -x uptimeicon=""

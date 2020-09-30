@@ -29,7 +29,7 @@ processbkp () {
         --table-order "    PID",MEM%,CPU%,PROCESS <<< \
         $(\
             awk '\
-            /[m]p mpd|[m]p plist/\
+            /[m]p mpd|[m]p plist|[m]p basepl/\
             {print $13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
         )
     echo

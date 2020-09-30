@@ -1,8 +1,10 @@
 #!/bin/zsh
-path_icons="$HOME/.icons/oomox-onedark_losaoall/actions/24"
+
+path_icons="$HOME/.icons/oomox-1584k"
 
 ntf ()
 {
+	
 	if [[ -z $@ ]]; then
 		echo "Uso:
 	São necessário pelo menos um argumento que será o conteúdo da notificação
@@ -16,8 +18,8 @@ ntf ()
 			if [[ $i =~ [[:digit:]] ]]; then
 				time="$i"
 				shift
-			elif [[ -n $(echo $path_icons/"$i".*) ]]; then
-				icon="$i"
+			elif [[ -n $(find $path_icons/**/$i.*) ]]; then
+				icon="$(find $path_icons/**/$i.*|sed -n '1p')"
 				shift
 			else
 				msg="$i"

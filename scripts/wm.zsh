@@ -113,8 +113,15 @@ wm.restart ()
 # Evolução do KittyDraw, tdrop + slop + kitty
 bsp.tdrop ()
 {
+  tmpfile=/tmp/bsptdrop.zsh
   read -r X Y W H < <(slop -f "%x %y %w %h" --color=0.23,0.70,0.30,0.8 -b 3 -t 0 -q)
   if [[ -n $X ]]; then
+    echo "\
+    !#/bin/zsh
+    X=$X
+    Y=$Y
+    W=$W
+    H=$H" > $tmpfile
     case $1 in
       open* )
         "$2" |tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm ;;
@@ -122,11 +129,19 @@ bsp.tdrop ()
         tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm $1;;
     esac
   else
-    case $1 in
-      open* )
-        "$2" |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
-      * ) 
-        tdrop  -x $(( 3840 / 4 )) -y $(( 2160 / 4 )) -w 900 -h 580 -s dropdown --wm bspwm $1;;
-    esac
+    [[ -n $(< $tmpfile) ]] && \
+      { . $tmpfile
+      case $1 in
+        open* )
+          "$2" |tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm ;;
+        * ) 
+          tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm $1;;
+      esac } || \
+        { case $1 in
+          open* )
+            "$2" |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
+          * ) 
+            tdrop  -x 1400 -y 600 -w 1200 -h 600 -s dropdown --wm bspwm $1;;
+        esac }
   fi
 }

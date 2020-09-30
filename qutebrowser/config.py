@@ -182,26 +182,77 @@ config.bind('<shift+r>', 'spawn --userscript /usr/bin/wq mpurl')
 config.bind('<t>', 'hint --mode number links spawn smplayer -add-to-playlist QUTE_URL')
 config.bind('<f>', 'hint --mode number')
 
-# base16-qutebrowser (https://github.com/theova/base16-qutebrowser)
-# Base16 qutebrowser template by theova
-# oomox-onedark_losaoall scheme by oomox-onedark_losaoall
+def gruvbox():
+	global base00
+	global base01
+	global base02
+	global base03
+	global base04
+	global base05
+	global base06
+	global base07
+	global base08
+	global base09
+	global base0A
+	global base0B
+	global base0C
+	global base0D
+	global base0E
+	global base0F
+	## gruvbox
+	base00 = "#1d2021"
+	base01 = "#3c3836"
+	base02 = "#504945"
+	base03 = "#797261"
+	base04 = "#090c0d"
+	base05 = "#d5c4a1"
+	base06 = "#ebdbb2"
+	base07 = "#efe7c5"
+	base08 = "#f56352"
+	base09 = "#fe8019"
+	base0A = "#fabd2f"
+	base0B = "#a4a700"
+	base0C = "#7ba76c"
+	base0D = "#7ebaa3"
+	base0E = "#a17682"
+	base0F = "#e55d21"
 
-base00 = "#282c34"
-base01 = "#353b45"
-base02 = "#3e4451"
-base03 = "#696f79"
-base04 = "#141820"
-base05 = "#abb2bf"
-base06 = "#b6bdca"
-base07 = "#c8ccd4"
-base08 = "#e06c75"
-base09 = "#d19a66"
-base0A = "#e5c07b"
-base0B = "#98c379"
-base0C = "#56b6c2"
-base0D = "#61afef"
-base0E = "#c678dd"
-base0F = "#c46f59"
+def materialdarker ():
+	global base00
+	global base01
+	global base02
+	global base03
+	global base04
+	global base05
+	global base06
+	global base07
+	global base08
+	global base09
+	global base0A
+	global base0B
+	global base0C
+	global base0D
+	global base0E
+	global base0F
+	## material-darker
+	base00 = "#212121"
+	base01 = "#303030"
+	base02 = "#353535"
+	base03 = "#879090"
+	base04 = "#0d0d0d"
+	base05 = "#eeffff"
+	base06 = "#eeffff"
+	base07 = "#b9b9b9"
+	base08 = "#f34a34"
+	base09 = "#f78c6c"
+	base0A = "#ffcb6b"
+	base0B = "#9ea102"
+	base0C = "#4acaff"
+	base0D = "#2882f9"
+	base0E = "#daa0ff"
+	base0F = "#e0573c"
+
+gruvbox()
 
 # set qutebrowser colors
 
@@ -231,7 +282,7 @@ c.colors.completion.category.border.bottom = base00
 c.colors.completion.item.selected.fg = base01
 
 # Background color of the selected completion item.
-c.colors.completion.item.selected.bg = base0A
+c.colors.completion.item.selected.bg = base0D
 
 # Top border color of the selected completion item.
 c.colors.completion.item.selected.border.top = base0A
@@ -426,7 +477,7 @@ c.colors.tabs.indicator.error = base08
 c.colors.tabs.odd.fg = base05
 
 # Background color of unselected odd tabs.
-c.colors.tabs.odd.bg = base03
+c.colors.tabs.odd.bg = base00
 
 # Foreground color of unselected even tabs.
 c.colors.tabs.even.fg = base05
@@ -435,25 +486,25 @@ c.colors.tabs.even.fg = base05
 c.colors.tabs.even.bg = base00
 
 # Background color of pinned unselected even tabs.
-c.colors.tabs.pinned.even.bg = base0C
+c.colors.tabs.pinned.even.bg = base00
 
 # Foreground color of pinned unselected even tabs.
 c.colors.tabs.pinned.even.fg = base07
 
 # Background color of pinned unselected odd tabs.
-c.colors.tabs.pinned.odd.bg = base0B
+c.colors.tabs.pinned.odd.bg = base00
 
 # Foreground color of pinned unselected odd tabs.
 c.colors.tabs.pinned.odd.fg = base07
 
 # Background color of pinned selected even tabs.
-c.colors.tabs.pinned.selected.even.bg = base05
+c.colors.tabs.pinned.selected.even.bg = base00
 
 # Foreground color of pinned selected even tabs.
 c.colors.tabs.pinned.selected.even.fg = base00
 
 # Background color of pinned selected odd tabs.
-c.colors.tabs.pinned.selected.odd.bg = base05
+c.colors.tabs.pinned.selected.odd.bg = base00
 
 # Foreground color of pinned selected odd tabs.
 c.colors.tabs.pinned.selected.odd.fg = base0E
@@ -462,14 +513,10 @@ c.colors.tabs.pinned.selected.odd.fg = base0E
 c.colors.tabs.selected.odd.fg = base00
 
 # Background color of selected odd tabs.
-c.colors.tabs.selected.odd.bg = base05
+c.colors.tabs.selected.odd.bg = base0D
 
 # Foreground color of selected even tabs.
 c.colors.tabs.selected.even.fg = base00
 
 # Background color of selected even tabs.
-c.colors.tabs.selected.even.bg = base05
-
-# Background color for webpages if unset (or empty to use the theme's
-# color).
-# c.colors.webpage.bg = base00
+c.colors.tabs.selected.even.bg = base0D

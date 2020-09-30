@@ -118,13 +118,6 @@ natal ()
 				optnArg=$(( $x - $i - 2 ))
 				infoArg=$(( $x - $i + 3 ))
 
-				# if [[ $figtbspArg1 -lt 16 ]]; then
-				# 	figtbsp $figtbspArg1 c
-				# else
-				# 	figtbsp $(( $figtbspArg1 - 16 )) c
-				# fi
-
-				# echo
 
 				if [[ $gnuArg -lt 16 ]]; then
 					gnu $gnuArg
@@ -134,13 +127,6 @@ natal ()
 
 				echo
 
-				# if [[ $infoArg -lt 16 ]]; then
-				# 	info $infoArg
-				# else
-				# 	info $(( $infoArg - 16 ))
-				# fi
-
-				# echo
 
 				if [[ $figtbspArg1 -lt 16 ]]; then
 					figtbsp $figtbspArg1 c

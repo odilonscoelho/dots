@@ -12,13 +12,11 @@ lst ()
 lst.init ()
 {
 	unset directory column recursive all pesquisa qtLabels limiteString limiter controller
-
 	# Definição das cores de cada tipo de arquivo ou elemento do retorno; 
 	colorIcon=$(fg 1); colorReset=$(tput sgr0;); colorBold=$(tput bold;); colorSeta=$(fg 16)
 	colorPastas=$(fg 6); colorScripts=$(fg 2); colorTextos=$(fg 5) ; colorVideos=$(fg 15)
 	colorAudios=$(fg 8); colorImagens=$(fg 10); colorLinks=$(fg 3); colorPdfs=$(fg 4) 
 	colorZips=$(fg 3); colorDefault=$(fg 6)
-
 	# Definição dos ícones por tipo de arquivo:
 	pastas="$colorReset$colorPastas " #             \
 	seta="$colorReset$colorSeta ➼"
@@ -32,7 +30,6 @@ lst.init ()
 	pdfs="$colorReset$colorPdfs " #   
 	zips="$colorReset$colorZips " #
 	default="$colorReset$colorDefault " #➼   
-
 	# declara situação default das vars
 	recursive="false"
 	column="false"
@@ -85,7 +82,6 @@ lst.init ()
 lst.main ()
 {
 	# Define o comando ls a ser utilizado;
-
 	if [[ -n "$directory" ]]; then
 		if [[ $recursive == "false" && $all == "true" ]];then
 			base="$(ls --sort=extension --all --group-directories-first $directory |sed 's/^\.\.$//g;s/^\.$//g')"

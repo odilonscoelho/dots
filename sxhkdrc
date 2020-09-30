@@ -1,147 +1,250 @@
 # wm independent hotkeys
+
+#===========================================================================================================================#
+# REALOAD
 # make sxhkd reload its configuration files:
+#===========================================================================================================================#
+
 super + Escape
 	pkill -USR1 -x sxhkd
-# bspwm hotkeys
-# quit/restart bspwm
+
+#===========================================================================================================================#
+# RESTART BSPWM
+# quit | restart bspwm
+#===========================================================================================================================#
+
 super + alt + {q,r}
 	bspc {quit,wm -r}
-# close and kill
+
+#===========================================================================================================================#
+# CLOSE | KILL
+# close and kill | super + w => close | super + shift + w => kill
+#===========================================================================================================================#
+
 super + {_,shift + }w
 	bspc node -{c,k}
-alt + q
-  bspc node -c
+
+#===========================================================================================================================#
+# MODES
+# super + t => tiled | super + shift +t => pseudo-tiled | super + s => floating | super + f => fullscreen
+#===========================================================================================================================#
+
 super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+#===========================================================================================================================#
+# FOCUS | CIRCULATE NODES ON DESKTOP
+# super + {} => Circle for nodes to desktop | super + shift + {} => Circle nodes on desktop
+#===========================================================================================================================#
+
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
+
+#===========================================================================================================================#
+# PREV | NEXT NODE ON DESKTOP
+# Circle nodes on all desktops | i => next | o => prev
+#===========================================================================================================================#
+
 super + {o,i}
 	bspc wm -h off; \
 	bspc node {older,newer} -f; \
 	bspc wm -h on
+
+#===========================================================================================================================#
+# FOCUS DESKTOP | SEND NODES TO DESKTOP
+# => Workspace focus | shift => Send node to desktop
+#===========================================================================================================================#
+
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
+
+#===========================================================================================================================#
+
 super + ctrl + {1-9}
 	bspc node -o 0.{1-9}
+
+#===========================================================================================================================#
+
 super + alt + {h,j,k,l}
 	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+#===========================================================================================================================#
+
 # contract a window by moving one of its side inward
 super + alt + shift + {h,j,k,l}
 	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+#===========================================================================================================================#
+
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
-# close and kill
-super + {_,shift + }w
-	bspc node -{c,k}
+
+#===========================================================================================================================#
+
 alt + {_,shift +}  button3
 	bspc node {-c,-k}
+
+#===========================================================================================================================#
+
 shift + Insert
-	var=$(wq tradutor.sel) && wq ntf 100000 bell "$var"
+	var=$(wq tradutor.sel) && wq ntf 100000 translator "$var"
+
 ctrl + shift + Insert
 	var=$(wq tradutor.sel) && wq msg "$var"
+
+#===========================================================================================================================#
+
 #Enviar Wndow focada para prox/ant desktop
+
 super + control + {button4,button5}
 	bspc node -d {next,prev}
+
+#===========================================================================================================================#
+
 #Circular nos desktops
+
 shift + super + {button4,button5}
 	bspc desktop -f  {next,prev}
+
+#===========================================================================================================================#
+
 #Flutuante ou Tiled
+
 alt + {button4,button5,button8}
 	bspc node -t {tiled,floating,fullscreen}
+
 alt + {w,d}
 	bspc node -t {tiled,floating}
+
+#===========================================================================================================================#
+
 # Personalizados
+
 Print
 	wq app.print.full
+
 shift + Print
 	wq app.print.cut
+
+#===========================================================================================================================#
+
 @XF86AudioPrev
 	mp prev
+
 @XF86AudioNext
 	mp next
+
 @XF86AudioPlay
 	mp pause.toggle
+
 ctrl + shift + @XF86AudioPlay
 	wq app.mpv
+
 shift + @XF86AudioPlay
 	mp
+
 shift + F7
 	mp
-super + tab
-	mp
+
 @XF86AudioStop
 	mp stop
-@XF86AudioLowerVolume
-	pulsemixer --change-volume -1
-@XF86AudioRaiseVolume
-	pulsemixer --change-volume +1
-@XF86Mail
-	thunderbird
-@XF86Explorer
-	nemo
+
 F10
 	mp "$(wq app.paste)"
+
 alt + F10
 	mp select.file
+
 ctrl + F10
 	mp plistyad force
 
-#F10
-#	mp select.file
+#===========================================================================================================================#
+
+@XF86AudioLowerVolume
+	pulsemixer --change-volume -1
+
+@XF86AudioRaiseVolume
+	pulsemixer --change-volume +1
+
+#===========================================================================================================================#
+
+@XF86Mail
+	thunderbird
+
+#===========================================================================================================================#
+
+@XF86Explorer
+	nemo
+
+#===========================================================================================================================#
+
 @shift + XF86HomePage
 	qutebrowser -R --target window youtube.com.br
+
 @shift + ctrl + XF86HomePage
 	qutebrowser -R --target window spankbang.com
 
-	
-	#wq cca
-@shift + XF86Calculator
-	kitty
+#===========================================================================================================================#
+
 super + {v,c}
 	pulsemixer {--change-volume +1,--change-volume -1}
-#alt + {x,z}
-#	pulsemixer {--change-volume +1,--change-volume -1}
-#shift + Return
-#	kitty
 
-super + alt + Return
-	wq rofi.combi
-alt + space
+#===========================================================================================================================#
+
+shift + F12
 	wq rofi.drun
+
+F12
+	wq rofi.drun.full
+
 button8
 	wq rofi.drun
 
+#===========================================================================================================================#
+
 @button9
 	xdotool keydown super
+
 @super + @button8
 	xdotool keyup super
+
 @super + @button9
 	xdotool keyup super	
+
 ctrl + button 8
   $(wq bsp.clearmodifiers)
+
+#===========================================================================================================================#
+
 F1
 	wq bsp.tdrop kitty
 shift + F1
 	wq bsp.tdrop open kitty
+
+#===========================================================================================================================#
+
 F11
 	wq cmd &
+
+#===========================================================================================================================#
+
 F12
 	wq rofi.drun
-super + ctrl + c
-	pkill picom
-super + alt + c
-	picom --config ~/hdbkp/dots/picom.conf --experimental-backends -b &
+
+#===========================================================================================================================#
+
 super + c
 	wq picom
-#ctrl + shift + Escape
-	#kitty
+
+#===========================================================================================================================#
+
 super + Return
 	kitty
+
+#===========================================================================================================================#
+
 super + alt + {Left,Right,Up,Down}
 	bspc node -f --to-node {prev.local,next.local,next,prev}
 
-super + d
-	dunst &>/dev/null
-shift + super +d
-	pkill dunst
+#===========================================================================================================================#
