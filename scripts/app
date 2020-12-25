@@ -1,0 +1,59 @@
+#!/bin/zsh
+
+qute ()
+{
+	qutebrowser --target window "$@"
+}
+
+paste ()
+{
+	xclip -selection clipboard -o
+}
+
+pastex ()
+{
+	xclip -selection clipboard -o
+}
+
+csgo ()
+{
+	nohup steam steam://rungameid/730 /dev/null &
+}
+
+print.full ()
+{
+	if [[ -n $1  ]];then
+		notify -msg "screenshot $@.jpg" -t 5000 
+		import -window root -screen "$@.jpg"
+	else
+		var="$(date +%H%M%S).jpg"
+		notify -t 5000 -msg "screenshot saved in ~/Pictures"
+		sleep 0.5
+		import -quality 100 -window root "$HOME/Pictures/$var"
+	fi
+}
+
+print.cut ()
+{
+	file="$HOME/Pictures/$(yad --entry --title="screenshot =...")"
+	import $file
+}
+
+kitty.reload.colors ()
+{
+	kitty @set-colors --all --configured $path_dots/kitty/kitty.conf
+}
+
+hset ()
+{
+	hsetroot -solid "$(echo "$background" |tr 'a-z' 'A-Z')"
+}
+
+mpv ()
+{
+	[[ -z $@ ]] && \
+		{ nohup mpv --no-config "$(app.paste)" &>/dev/null & } || \
+			{ nohup mpv --no-config "$@" &>/dev/null & }
+}
+
+$@

@@ -88,17 +88,22 @@ alt + {_,shift +}  button3
 #===========================================================================================================================#
 
 shift + Insert
-	var=$(wq tradutor.sel) && wq ntf 100000 translator "$var"
+	var=$(tradutor sel) && notify -t 1000000 -i translator -m "$var"
 
 ctrl + shift + Insert
-	var=$(wq tradutor.sel) && wq msg "$var"
+	var=$(tradutor sel) && cmd msg "$var"
 
 #===========================================================================================================================#
 
-#Enviar Wndow focada para prox/ant desktop
+#Foco no next/prev desktop
 
 super + control + {button4,button5}
 	bspc node -d {next,prev}
+
+# Enviar node para outro desktop com escolha de focar ou não do desktop de destino que 
+alt + shift + Tab
+	wm node.to.desktop
+	
 
 #===========================================================================================================================#
 
@@ -122,42 +127,46 @@ alt + {w,d}
 # Personalizados
 
 Print
-	wq app.print.full
+	app print.full
 
 shift + Print
-	wq app.print.cut
+	app print.cut
 
 #===========================================================================================================================#
 
 @XF86AudioPrev
-	mp prev
+	mp -prev
 
 @XF86AudioNext
-	mp next
+	mp -next
 
 @XF86AudioPlay
-	mp pause.toggle
+	mp -pause
 
 ctrl + shift + @XF86AudioPlay
-	wq app.mpv
+	app mpv
 
 shift + @XF86AudioPlay
-	mp
+	mp -x
 
 shift + F7
-	mp
+	mp -x
 
 @XF86AudioStop
-	mp stop
+	mp -stop
 
 F10
-	mp "$(wq app.paste)"
+	mp -x
 
-alt + F10
-	mp select.file
+shift + F10
+	mp -console
 
 ctrl + F10
-	mp plistyad force
+	mp -plr
+	#lrofi player plistrofi -w 100 -f 'Iosevka Term SS07 Medium 17' -iD -lH -nW -l 2 -y 74
+
+shift + ctrl + F10
+	mp -controlsr
 
 #===========================================================================================================================#
 
@@ -179,7 +188,7 @@ ctrl + F10
 
 #===========================================================================================================================#
 
-@shift + XF86HomePage
+XF86HomePage
 	qutebrowser -R --target window youtube.com.br
 
 @shift + ctrl + XF86HomePage
@@ -192,16 +201,24 @@ super + {v,c}
 
 #===========================================================================================================================#
 
+alt + Tab
+	lrofi -modi combi -show window -f 'Iosevka Term SS07 Bold 18' -lH -iD -w 90 -l 7 -yoffset -74 -xoffset 5 -terminal kitty -nW
+
 shift + F12
-	wq rofi.drun
+	lrofi -modi combi -show drun -w 90 -x 5 -f 'Iosevka Term SS07 Bold 22' -lH -iD -yoffset 74 -l 2 -nW -title "Menu"
+
+F11 
+	lrofi cmd -f 'Iosevka Term SS07 Medium 18' -nW
 
 F12
-	wq rofi.drun.full
+	lrofi main -f "Arimo Nerd Font 55" -w 45 -cl 5 -lines 2 -nW -iD -hS -padding 25
+
+	#lrofi -iD  -w 45 -lH -f 'Hack Nerd Font 41' -ft 'Iosevka Term SS07 Medium 17' -terminal kitty -yoffset 74 -l 2 -nW -radius 5 -title "Main"
 
 button8
-	wq rofi.drun
+	lrofi -modi combi -show drun -f 'Nova Flat 22' -w 15 -padding 25 -terminal kitty -nW
 
-#===========================================================================================================================#
+#======================================================================================================================t=====#
 
 @button9
 	xdotool keydown super
@@ -213,35 +230,30 @@ button8
 	xdotool keyup super	
 
 ctrl + button 8
-  $(wq bsp.clearmodifiers)
+  $(app clearmodifiers)
 
 #===========================================================================================================================#
 
-F1
-	wq bsp.tdrop kitty
-shift + F1
-	wq bsp.tdrop open kitty
-
+#F1
+	#wm tdrop
+#shift + F1
+	#wm tdrop open
 #===========================================================================================================================#
 
-F11
-	wq cmd &
 
+	#lrofi -f 'Iosevka Term SS07 20' -lines 20 -columns 1 cmd
 #===========================================================================================================================#
 
-F12
-	wq rofi.drun
-
-#===========================================================================================================================#
-
-super + c
-	wq picom
+#super + c
+#	wq picom
 
 #===========================================================================================================================#
 
 super + Return
-	kitty
-
+	tilix |bspc node -f -t tiled
+XF86Calculator
+	tilix -q
+	
 #===========================================================================================================================#
 
 super + alt + {Left,Right,Up,Down}

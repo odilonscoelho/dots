@@ -1,0 +1,179 @@
+#!/bin/zsh
+wm.honor.size.hints.togle ()
+{
+	[[ $(bspc config honor_size_hints) == "false" ]]&& \
+		{ bspc config honor_size_hints true } || \
+	 		{ bspc config honor_size_hints false }
+}
+
+ndids ()
+{
+	awk '{print $2,$4,$5,$1}' /tmp/taskbar
+}
+
+captura.id ()
+{
+	id=$(awk '{print $1}' <<< $(seletor4 $(ndids)))
+}
+
+node.sticky ()
+{
+	captura.id
+	bspc node "$id" --flag sticky=on
+}
+
+node.stickyoff ()
+{
+	captura.id
+	bspc node "$id" --flag sticky=off
+}
+
+node.to.desktop.next ()
+{
+	bspc node --to-desktop next -f
+}
+
+node.to.desktop.prev ()
+{
+	bspc node $id --to-desktop prev -f
+}
+
+node.to.desktop ()
+{
+	captura.id
+	workspace=$(yad --entry --title="WORKSPACE DESTINO")
+	case "$(yad --list --wrap --text "FOCAR NO DESKTOP DESTINO?" --column "SELECIONE" $(echo -e "SIM\nNAO"))" in
+		"SIM|" )
+		 	bspc node $id --to-desktop $workspace -f ;;
+		"NAO|" )
+		 	bspc node $id --to-desktop $workspace ;;
+	esac
+}
+
+node.manager ()
+{
+	to.desktop ()
+	{
+		workspace=$(yad --list --wrap --text "FOCAR NO DESKTOP DESTINO?" --column "SELECIONE" $(echo -e "SIM\nNAO"))
+		case "$(yad --list --wrap --text "FOCAR NO DESKTOP DESTINO?" --column "SELECIONE" $(echo -e "SIM\nNAO"))" in
+			"SIM|" )
+				bspc node $id --to-desktop $workspace -f ;;
+			"NAO|" )
+				bspc node $id --to-desktop $workspace ;;
+		esac
+	}  
+
+	menu ()
+	{
+		yad --form 
+	}
+
+
+	captura.id
+
+}
+
+seletor4 ()
+{
+	#--expand-column=1,2,3,4
+	yad --list --wrap \
+	--column=ID --column=ICON --column=PROGRAMA --column=WORKSPACE\
+	--selectable-labels --search-column=3 \
+	--text-align=center --regex-search \
+	--geometry=400x320 --separator=" " --borders=5 $@
+}
+
+node.focus ()
+{
+	captura.id
+	bspc node -f $id
+}
+
+gap ()
+{
+	bspc config window_gap $@
+}
+
+gap.hori ()
+{
+	bspc config top_padding $@ && bspc config bottom_padding $@
+}
+
+gap.vert ()
+{
+	bspc config right_padding $@ && bspc config left_padding $@
+}
+gap.geral ()
+{
+	bspc config top_padding $1 && bspc config bottom_padding $1
+	bspc config right_padding $2 && bspc config left_padding $2
+	bspc config window_gap $3
+}
+border.width ()
+{
+	bspc config border_width $@
+}
+border.color.focused ()
+{
+	bspc config focused_border_color $@
+}
+border.color.normal ()
+{
+	bspc config normal_border_color $@
+	bspc config active_border_color $@
+	bspc config presel_feedback_color $@
+}
+clearmodifiers ()
+{
+	xdotool keydown --clearmodifiers super && sleep 1 && xdotool keyup --clearmodifiers super
+}
+restart ()
+{
+	pkill polybar 2>/dev/null && sleep 0.5
+	taskbar stop 2>/dev/null && sleep 0.5
+	wq gpuinfo stop 2>/dev/null && sleep 0.5
+	wq weatcher stop 2>/dev/null && sleep 0.5
+	pkill picom 2>/dev/null && sleep 0.5
+	# redshift -x 2>/dev/null && sleep 0.5
+	pkill redshift 2>/dev/null && sleep 0.5
+	pkill dunst 2>/dev/null && sleep 0.5
+	# { pulseaudio-equalizer disable &>/dev/null } && sleep 0.5
+	# pkill kitty &>/dev/null && sleep 0.5
+	source ~/.config/bspwm/bspwmrc  #&>/dev/null &
+}
+
+# Evolução do KittyDraw, tdrop + slop + kitty
+tdrop ()
+{
+	tmpfile=/tmp/bsptdrop.zsh
+	read -r X Y W H < <(slop -f "%x %y %w %h" --color=0.23,0.70,0.30,0.8 -b 3 -t 0 -q)
+	if [[ -n $X ]]; then
+		echo "X=$X; Y=$Y; W=$W; H=$H" >| $tmpfile
+		case $1 in
+			 open* )
+				kitty |tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm ;;
+			 * ) 
+				tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm kitty;;
+		esac
+	else
+		[[ -n $(< $tmpfile) ]] && \
+			{ 
+				. $tmpfile
+				case $1 in
+				open* )
+					kitty |tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm ;;
+				* ) 
+					tdrop  -x $X -y $Y -w $W -h $H -s dropdown --wm bspwm kitty;;
+				esac 
+			} || \
+				{ 
+					case $1 in
+						open* )
+							kitty |tdrop -w 940 -h 700 -y 400 -x 800 -s dropdown --wm bspwm ;;
+						* ) 
+							tdrop  -x 1400 -y 600 -w 1200 -h 600 -s dropdown --wm bspwm kitty;;
+					esac 
+				}
+	fi
+}
+$@

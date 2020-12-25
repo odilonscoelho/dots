@@ -1,0 +1,11 @@
+#!/usr/bin/zsh
+
+# [[ -p /dev/stdin ]] && pipeArgs+=($(cat -))
+
+for arg in $@
+{ 
+	paraArgs+=($arg)
+}
+
+dunstify -t 5000 $(printf %b "$pipeArgs\n$#pipeArgs recebidos via pipe")
+dunstify -t 5000 $(printf %b "$paraArgs\n$#paraArgs recebidos via args")

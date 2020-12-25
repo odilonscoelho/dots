@@ -3,7 +3,7 @@
 #   qute://help/configuring.html
 #   qute://help/settings.html
 
-c.statusbar.position = 'top' 
+c.statusbar.position = 'top'
 
 # hidpi
 # c.qt.highdpi = true
@@ -251,6 +251,40 @@ def materialdarker ():
 	base0D = "#2882f9"
 	base0E = "#daa0ff"
 	base0F = "#e0573c"
+
+def pnevma () :
+	global base00
+	global base01
+	global base02
+	global base03
+	global base04
+	global base05
+	global base06
+	global base07
+	global base08
+	global base09
+	global base0A
+	global base0B
+	global base0C
+	global base0D
+	global base0E
+	global base0F
+	base00 = "#1c1c1c"
+	base01 = "#4a4845"
+	base02 = "#000000"
+	base03 = "#767676"
+	base04 = "#080808"
+	base05 = "#d0d0d0"
+	base06 = "#e6e6e6"
+	base07 = "#c8ccd4"
+	base08 = "#d7af87"
+	base09 = "#e4c9af"
+	base0A = "#e4c9af"
+	base0B = "#afbea2"
+	base0C = "#56b6c2"
+	base0D = "#7fa5bd"
+	base0E = "#c79ec4"
+	base0F = "#c9a887"
 
 gruvbox()
 

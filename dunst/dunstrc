@@ -16,7 +16,7 @@
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
     follow = mouse
-    geometry = "400x2460-30+110"
+    geometry = "400x2460-60+80"
     indicate_hidden = yes
 
     # Shrink window if it's smaller than the width.  Will be ignored if
@@ -49,7 +49,7 @@
     frame_width = 4
 
     # Defines color of the frame around the notification window.
-    frame_color = "#61afef"
+    frame_color = ""
 
     # Define a color for the separator.
     # possible values are:
@@ -58,8 +58,7 @@
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
     #separator_color = frame
-    # separator_color = anything
-    separator_color = "#61afef"
+    separator_color = auto
 
     # Sort messages by urgency.
     #sort = yes
@@ -76,8 +75,7 @@
     ### Text ###
 
     #font = Monospace 8
-    #font = Nova Square 12
-    font = Iosevka Term SS07 Medium 12.25
+    font = Iosevka Term SS07 12
     #font = Poppins 9
     #font = LiterationMono Nerd Font Book 9
 
@@ -196,7 +194,7 @@
     # Print a notification on startup.
     # This is mainly for error detection, since dbus (re-)starts dunst
     # automatically after a crash.
-    startup_notification = false
+    startup_notification = true
 
     # Manage dunst's desire for talking
     # Can be one of the following values:
@@ -275,23 +273,23 @@
 
 # IMPORTANT: colors have to be defined in quotation marks.
 # Otherwise the "#" and following would be interpreted as a comment.
-frame_color = "#61afef"
-separator_color = "#61afef"
+frame_color = "coco"
+separator_color = "#d5c4a1"
 
 [base16_low]
     msg_urgency = low
-    background = "#282c34"
-    foreground = "#abb2bf"
+    background = "#1d2021"
+    foreground = "#d5c4a1"
 
 [base16_normal]
     msg_urgency = normal
-    background = "#282c34"
-    foreground = "#abb2bf"
+    background = "#1d2021"
+    foreground = "#d5c4a1"
 
 [base16_critical]
     msg_urgency = critical
-    background = "#282c34"
-    foreground = "#abb2bf"
+    background = "#1d2021"
+
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

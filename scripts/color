@@ -1,0 +1,49 @@
+#!/bin/zsh
+
+icon=""
+qt_cols_desc=12
+qt_cols_banner=$(( ($COLUMNS - (($qt_cols_desc * 3)+6)) / 3))
+echo
+print -P "%F{black}%B$(printf '%'$qt_cols_desc's' "") %K{black}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{red}%B$(printf '%'$qt_cols_desc's' "") %K{red}$(printf '%'$qt_cols_banner's' "")%k%f%b  \
+%F{green}%B$(printf '%'$qt_cols_desc's' "") %K{green}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+print -P "%F{black}%B$(printf '%'$qt_cols_desc's' "black") %K{black}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{red}%B$(printf '%'$qt_cols_desc's' "red") %K{red}$(printf '%'$qt_cols_banner's' "")%k%f%b  \
+%F{green}%B$(printf '%'$qt_cols_desc's' "green") %K{green}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+print -P "%F{black}%B$(printf '%'$qt_cols_desc's' "") %K{black}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{red}%B$(printf '%'$qt_cols_desc's' "") %K{red}$(printf '%'$qt_cols_banner's' "")%k%f%b  \
+%F{green}%B$(printf '%'$qt_cols_desc's' "") %K{green}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+echo
+print -P "%F{yellow}%B$(printf '%'$qt_cols_desc's' "") %K{yellow}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{blue}%B$(printf '%'$qt_cols_desc's' "") %K{blue}$(printf '%'$qt_cols_banner's' "")%k%f%b  \
+%F{magenta}%B$(printf '%'$qt_cols_desc's' "") %K{magenta}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+print -P "%F{yellow}%B$(printf '%'$qt_cols_desc's' "yellow") %K{yellow}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{blue}%B$(printf '%'$qt_cols_desc's' "blue") %K{blue}$(printf '%'$qt_cols_banner's' "")%k%f%b  \
+%F{magenta}%B$(printf '%'$qt_cols_desc's' "magenta") %K{magenta}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+print -P "%F{yellow}%B$(printf '%'$qt_cols_desc's' "") %K{yellow}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{blue}%B$(printf '%'$qt_cols_desc's' "") %K{blue}$(printf '%'$qt_cols_banner's' "")%k%f%b  \
+%F{magenta}%B$(printf '%'$qt_cols_desc's' "") %K{magenta}$(printf '%'$qt_cols_banner's' "")%k%f%b"
+echo
+print -P "%F{cyan}%B$(printf '%'$qt_cols_desc's' "") %K{cyan}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{white}%B$(printf '%'$qt_cols_desc's' "") %K{white}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{$cursor}%B$(printf '%'$qt_cols_desc's' "") %K{$cursor}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+print -P "%F{cyan}%B$(printf '%'$qt_cols_desc's' "cyan") %K{cyan}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{white}%B$(printf '%'$qt_cols_desc's' "white") %K{white}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{$cursor}%B$(printf '%'$qt_cols_desc's' "  cursor ") %K{$cursor}$(printf '%'$qt_cols_banner's' "")%k%f%b" 
+print -P "%F{cyan}%B$(printf '%'$qt_cols_desc's' "") %K{cyan}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{white}%B$(printf '%'$qt_cols_desc's' "") %K{white}$(printf '%'$qt_cols_banner's' "")%k%f%b \
+%F{$cursor}%B$(printf '%'$qt_cols_desc's' "") %K{$cursor}$(printf '%'$qt_cols_banner's' "")%k%f%b"
+echo
+echo
+if [[ -n $color0 ]]; then
+	print -P "$(printf '%'$qt_cols_desc's' ) %K{$color0}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' ) %K{$background}%F{$foreground}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' "") %K{$foreground}%F{$foreground}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b"
+	print -P "$(printf '%'$qt_cols_desc's' \$color0) %K{$color0}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' \$background) %K{$background}%F{$foreground}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' \$foreground) %K{$foreground}%F{$foreground}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b"
+	print -P "$(printf '%'$qt_cols_desc's' ) %K{$color0}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' ) %K{$background}%F{$foreground}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' "") %K{$foreground}%F{$foreground}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b"
+	echo
+	for (( b = 1; b <= 5; b++ )); do
+	    print -P "$(printf '%'$qt_cols_desc's' "") %K{$color$b}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' "") %K{$color$(($b+5))}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' "") %K{$color$(($b+10))}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b"
+	    print -P "$(printf '%'$qt_cols_desc's' \$color$b) %K{$color$b}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' \$color$(($b+5))) %K{$color$(($b+5))}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' \$color$(($b+10))) %K{$color$(($b+10))}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b"
+	    print -P "$(printf '%'$qt_cols_desc's' "") %K{$color$b}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' "") %K{$color$(($b+5))}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b $(printf '%'$qt_cols_desc's' "") %K{$color$(($b+10))}%F{$background}%B$(printf '%-'$qt_cols_banner's' "")%f%k%b"
+	    echo
+	done
+fi

@@ -1,0 +1,94 @@
+#!/bin/zsh
+gencores ()
+{
+	unset cursor background foreground color0 color1 color2 color3 color4 color5 color6 color7 color8 color9 color10 color 11 color12 color13 color14 color15 color16 color17 color18
+	
+	# O tema precisa vir no padrao do oomox ou xresouces '*color: #000000'
+	# while IFS=':' read var val; do
+	    # var=${var#\*}
+	    # val=${val// }
+	    # printf -v $var '%s' "$val"
+	# done < $base_file
+
+	while read line ;do
+		<<< "declare -x $line" >> /tmp/themetest
+	done < $base_file
+	cp /tmp/themetest $shell_file
+	rm /tmp/themetest
+}
+
+genkitty ()
+{
+	. $shell_file
+	echo -e "background  $background\nforeground  $foreground\ncursor $color6 \ncolor0  $color0\ncolor1  $color1\ncolor2  $color2\ncolor3  $color3\ncolor4  $color4\ncolor5  $color5\ncolor6  $color6\ncolor7  $color7\ncolor8  $color8\ncolor9  $color9\ncolor10 $color10\ncolor11 $color11\ncolor12 $color12\ncolor13 $color13\ncolor14 $color14\ncolor15 $color15" >| $kitty_file
+}
+
+gennotify ()
+{
+	. $shell_file
+	sed -i 's/background\ \= \"\#.*/background\ \= \"'$background'\"/g;
+			s/foreground\ \= \"\#.*/foreground\ \= \"'$foreground'\"/g;
+			s/frame_color\ \= \"\#.*/frame_color\ \= \"'$foreground'"/g;
+			s/separator_color\ \= \"#.*/separator_color\ \= \"'$foreground'\"/g' $notify_file
+}
+
+vars ()
+{
+	notify_file=$path_dots/dunst/dunstrc
+	shell_file=$path_colors/colors.zsh
+	resources_file=$path_colors/.Xresources
+	kitty_file=$path_colors/colors-kitty.conf
+}
+
+theme.run ()
+{
+	vars
+	gencores &&
+	# genshell &&
+	genkitty &&
+	gennotify &&
+	redshift -x &&
+	sleep 0.2
+	killall redsfhit &&
+	sleep 0.2
+	killall polybar &&
+	sleep 0.2
+	killall dunst &&
+	sleep 0.2
+	killall picom && 
+	sleep 0.2
+	taskbar stop
+	sleep 0.2
+	gpuinfo stop
+	sleep 0.2
+	weatcher stop
+	sleep 0.2
+	pulseaudio-equalizer disable &
+	sleep 1
+	$path_dots/bspwmrc &>/dev/null
+	echo ${base_file} > $path_colors/history
+	dunstify -t 5000 "Theme
+$theme
+aplicado!" &
+}
+
+sel ()
+{
+	if [[ -z $@ ]]; then
+		base_file="$(cmd sf "$path_colors/themes")"
+		if [[ -n $base_file ]];then
+			theme=${base_file//*\//}
+			theme.run
+		else
+			dunstify -t 5000 -i "scripts" "$(echo -e "Nenhum arquivo selecionado!\nsem alterações no theme atual!")"
+		fi
+	else
+		base_file="$@"
+		theme=${base_file//*\//}
+		tput setaf 10; tput setab 8; echo "$base_file selecionado!"
+		theme.run
+	fi
+	
+	echo "$theme aplicado com sucesso!"
+}
+$@

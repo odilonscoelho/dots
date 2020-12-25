@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+ssr ()
+{
+	if { ! grep '[s]implescreenrecorder --start-hidden --no-systray' <<< `ps aux` }; then
+		simplescreenrecorder --start-hidden --no-systray --start-recording &
+		sleep 0.5
+		notify "simplescreenrecorder-recording" 5000 "Recording Started" &
+	else
+		notify "simplescreenrecorder-recording" 5000 "Recording Stoped" &
+		sleep 1
+		nohup $(sleep 2 && pkill simplescreenrec) &
+		exec xdotool key super+shift+alt+ctrl+r
+	fi
+}
+
+ssr

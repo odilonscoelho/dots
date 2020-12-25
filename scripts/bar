@@ -1,0 +1,43 @@
+#!/bin/zsh
+relogio () {
+hour=$(date +%H%M)
+for (( i = 1; i <= 4; i++ )); do
+  case `echo $hour |cut -c$i` in
+   0)icons[$i]="";;
+   1)icons[$i]="";;
+   2)icons[$i]="";;
+   3)icons[$i]="";;
+   4)icons[$i]="";;
+   5)icons[$i]="";;
+   6)icons[$i]="";;
+   7)icons[$i]="";;
+   8)icons[$i]="";;
+   9)icons[$i]="";;
+  esac
+done
+# echo "%{T4} %{T9}$icons[1]$icons[2]:$icons[3]$icons[4] "
+echo "%{T$calendarfontlabelhour} $icons[1]$icons[2]:$icons[3]$icons[4]"
+}
+
+relogio.extenso () {
+dayweek=$(date |awk {'print $1'})
+date=$(date +%d%m)
+for (( i = 1; i <= 4; i++ )); do
+  case `echo $date |cut -c$i` in
+   0)icons[$i]="";;
+   1)icons[$i]="";;
+   2)icons[$i]="";;
+   3)icons[$i]="";;
+   4)icons[$i]="";;
+   5)icons[$i]="";;
+   6)icons[$i]="";;
+   7)icons[$i]="";;
+   8)icons[$i]="";;
+   9)icons[$i]="";;
+  esac
+done
+# echo "$icons[1]$icons[2]/$icons[3]$icons[4] %{T2}$dayweek %{T4}%{T-}"
+echo "%{T$calendarfontlabelday} $dayweek,%{T$calendarfontlabeldate}$icons[1]$icons[2]/$icons[3]$icons[4] "
+}
+
+$@

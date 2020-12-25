@@ -1,0 +1,10 @@
+#!/bin/zsh
+sel ()
+{
+  trans -b "$(xclip -s xclipboard -o)"
+}
+args ()
+{
+  trans -b "$@"
+}
+$@

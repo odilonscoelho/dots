@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+if ps aux|awk '{print $11}'|grep --silent '[p]icom'; then
+  dunstify -t 5000 "Picom Stoped!"
+  pkill picom
+else
+  dunstify -t 5000 "Picom Started!"
+  picom --config $path_dots/picom.conf -b --experimental-backends
+fi
+
+#--experimental-backends

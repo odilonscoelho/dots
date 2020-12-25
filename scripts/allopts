@@ -1,0 +1,132 @@
+#!/bin/zsh
+##################################################################################################################################
+ajuda ()
+{
+	clear;
+	<<- doc
+
+	`tput rev; tput bold`allopts `tput setab 1;`®`tput sgr0;tput rev;tput bold`AllScripts`tput setab 1;`®`tput sgr0;`
+	Por `tput bold;`Odilon Coelho`tput sgr0;`
+	odilon.coelho@oulook.com
+	@t.me/losaoall
+	$(tput bold; tput setaf 3)USO:$(tput sgr0;) 
+	No script pai, no qual deseja fazer a análise dos parâmetros, adicione a linha de comando abaixo, ela vai importar o allopts® e fazer a validação dos parâmetros de acordo com o informado pela linha de comando, nela é parametrizado quais são as flags que devem ser analisadas e se elas requerem valores adicionais, todas as flags são salvas no array ARGUMENTOS[@], e podem ser requisitadas a qualquer momento na execução do script:
+
+	$(echo -e '\t')$(tput bold; tput setaf 2) . /path/allopts -cod: -nome: -a! \$@$(tput sgr0;)
+
+	no exemplo acima todos os parâmetros que serão passados para o script pai serão analisados de acordo com os sinais : e ! no final de cada `tput setaf 2; tput bold`--flag`tput sgr0` ou `tput setaf 2; tput bold`-flag`tput sgr0`:
+
+	as --flags podem requerer argumentos :
+	$(echo -e '\t')$(tput bold; tput setaf 2)-flag:$(tput sgr0;)
+	ou apenas setar status:
+	$(echo -e '\t')$(tput bold; tput setaf 2)-flag!$(tput sgr0;)
+	Nesse caso o valor do parametro \$ARGUMENTOS[flag] será "true", não será atribuído valor "false" para as -flag's não utilizdas, elas não serão atribuídas, logo, $(tput bold; tput setaf 3)[[ -z \$ARGUMENTOS[flag] ]]$(tput sgr0;) , será verdadeiro.
+
+	Ao chamar o script pai, é necessário um espaço entre a -flag, e o valor que será atribuído à ela :
+
+	$(echo -e '\t')$(tput bold; tput setaf 2) script_pai.zsh -flag value$(tput sgr0;)
+
+	$(echo -e '\t')$(tput bold; tput setaf 2) script_pai.zsh -cod 904 -nome 'Fulano de Taizicio' $(tput sgr0;)
+
+	$(tput bold; tput setaf 3)MODELO DE IMPLEMENTAÇÃO DAS FUNÇÕES PARA DESCARTE E USO DOS PARÂMETROS PASSADOS AO SCRIPT:$(tput sgr0;)
+
+	No script pai crie a estrutura para limpar os argumentos que foram atribuidos em variáveis:
+
+	`tput bold; tput setaf 2; echo -e '\t'`for i in \$@
+	`echo '\t'`{
+		`echo '\t\t'`[[ "\$ARGREFUSED" =~ "\$i" ]] && shift
+	`echo '\t'`}`tput sgr0`
+
+	E a estrutura para ações com base nos argumentos atribuídos, o array \$ARGUMENTOS[@] foi declarado globalmente, então o parametro vai estar disponível por todo o script durante a execução:
+
+	`tput bold; tput setaf 2; echo -e '\t'`for x in \$ARGUMENTOS[@] 
+	`echo -e '\t'`{  
+		`echo -e '\t\t'`case \$x in
+			`echo -e '\t\t\t'`\$ARGUMENTOS[cod] ) print "O codigo cadastrado foi = \$ARGUMENTOS[cod]" ;;
+			`echo -e '\t\t\t'`\$ARGUMENTOS[nome] ) print "O nome cadastrado foi = \$ARGUMENTOS[nome]" ;;
+			`echo -e '\t\t\t'`\$ARGUMENTOS[a] ) print "status ativo informado como = \$ARGUMENTOS[a]" ;;
+			`echo -e '\t\t\t'`* ) print "OPÇÃO INVÁLIDA \$x" ;;
+		`echo -e '\t\t'`esac
+	`echo -e '\t'`}`tput sgr0`
+
+	`echo -e '\t'`
+	`tput bold; tput setaf 3;`USANDO COM SCRIPTS BASH`tput sgr0;`
+	Diferente do zsh que importa o codigo de allopts no script pai e a executa, no bash é necessário executar o script allopts e importar os arrays `tput setaf 2`\${ARGUMENTOS[@]}`tput sgr0` onde estão os argumentos coletados e `tput setaf 2`\${ARGREFUSED[@]}`tput sgr0` onde estão os parâmetros posicionais que precisam ser descartados, do arquivo `tput bold; tput setaf 4`/tmp/allopts`tput sgr0` , há um bug na passagem dos parâmetros entre zsh e bash, que faz com que o bash ignore os argumentos que contenham espaços, dessa forma ao passar algo como `tput setaf 2; tput bold`bash script.sh -nome 'Fulano de Tal'`tput sgr0` o bash envia apenas `tput setaf 2; tput bold`'Fulano'`tput sgr0` como parâmetro posicional para o zsh, infelizmente não consegui contornar isso no código do allopts, mas há como contornar substituindo o espaço por algum caractere que não seja '-', no exemplo abaixo usaremos o '.' como separador de palavras ao chamar o script bash:
+
+	Use a linha de comando abaixo no início do seu script bash:
+
+	`tput bold; tput setaf 2; echo -e '\t'`zsh /path/allopts -nome: -cod: -active! \$@ && . /tmp/allopts`tput sgr0`
+
+	Adicione a trativa para ajustar o valor dos argumentos salvos no array `tput bold; tput setaf 2`\${ARGUMENTOS[@]}`tput sgr0`
+
+	`tput bold; tput setaf 2; echo -e '\t'`for x in \${!ARGUMENTOS[@]}
+	`echo -e '\t'`{
+	`echo -e '\t'`	[[ \${ARGUMENTOS[\$x]} =~ '.'  ]] && ARGUMENTOS[\$x]=\${ARGUMENTOS[\$x]//\./ }
+	`echo -e '\t'`}`tput sgr0`
+
+Adicione a estrutura descartar as os parâmetros indesejados:
+
+	`tput bold; tput setaf 2; echo -e '\t'`for i in \$@
+	`echo -e '\t'`{
+	`echo -e '\t'`	`echo -e '\t'`[[ "\$ARGREFUSED" =~ "\$i" ]] && shift
+	`echo -e '\t'`}`tput sgr0`
+
+Assim como no zsh , para tratar e coletar os argumentos:
+
+	`tput bold; tput setaf 2; echo -e '\t'`for x in \$ARGUMENTOS[@] 
+	`echo -e '\t'`{  
+		`echo -e '\t\t'`case \$x in
+			`echo -e '\t\t\t'`\$ARGUMENTOS[cod] ) print "O codigo cadastrado foi = \$ARGUMENTOS[cod]" ;;
+			`echo -e '\t\t\t'`\$ARGUMENTOS[nome] ) print "O nome cadastrado foi = \$ARGUMENTOS[nome]" ;;
+			`echo -e '\t\t\t'`\$ARGUMENTOS[a] ) print "status ativo informado como = \$ARGUMENTOS[a]" ;;
+			`echo -e '\t\t\t'`* ) print "OPÇÃO INVÁLIDA \$x" ;;
+		`echo -e '\t\t'`esac
+	`echo -e '\t'`}`tput sgr0`
+
+Passando argumentos com espaços:
+
+	$(echo -e '\t')$(tput bold; tput setaf 2; tput setaf 2)bash script_pai.sh -cod 904 -nome 'Fulano.de.Taizicio'$(tput sgr0;)
+
+	Salvará um array com os valores `tput setaf 2; tput bold`\${ARGUMENTOS[cod]=904} \${ARGUMENTOS[nome]='Fulano de Taizicio'}`tput sgr0`
+
+
+
+	doc
+}
+##################################################################################################################################
+# case i in ${SHELL}
+if [[ $# -gt 1 || $1 != "ajuda" ]]; then
+	declare -xA ARGUMENTOS
+	print "declare -A ARGUMENTOS" > /tmp/allopts 
+	for i in $@
+	{
+		control=$(($control+1))
+		if [[ $i =~ ^[-.*] ]]; then
+			if [[ $i =~ [.*!]$ ]]; then
+				PARAMETROS_CONF+=("${i//!/}")
+				ARGREFUSED+=([$control]="${(P)control}")
+				print "ARGREFUSED+=([$control]="${(P)control}")" >> /tmp/allopts
+			elif [[ $i =~ [.*:]$ ]]; then
+				PARAMETROS_ARG+=("${i//:/}")
+				ARGREFUSED+=([$control]="${(P)control}")
+				print "ARGREFUSED+=([$control]="${(P)control}")" >> /tmp/allopts
+			else
+				if [[ "$PARAMETROS_ARG[@]" =~ "${i}" ]]; then
+					ARGUMENTOS+=([${i//-}]="${(P)$(($control+1))}")
+					print "ARGUMENTOS+=([${i//-}]="${(P)$(($control+1))}")" >> /tmp/allopts
+					ARGREFUSED+=([$control]="${(P)control}")
+					print "ARGREFUSED+=([$control]="${(P)control}")" >> /tmp/allopts
+					ARGREFUSED+=([$(($control+1))]="${(P)$(($control+1))}")
+					print "ARGREFUSED+=([$(($control+1))]="${(P)$(($control+1))}")" >> /tmp/allopts
+				elif [[ "$PARAMETROS_CONF[@]" =~ "${i}" ]]; then
+					ARGUMENTOS+=([${i//-}]="true")
+					print "ARGUMENTOS+=([${i//-}]="true")" >> /tmp/allopts
+					ARGREFUSED+=([$control]="${(P)control}")
+					print "ARGREFUSED+=([$control]='"${(P)control}"')" >> /tmp/allopts
+				fi
+			fi
+		fi
+	}
+else
+	[[ $1 == "ajuda" ]] && ajuda; exit 0
+fi

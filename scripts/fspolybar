@@ -1,0 +1,28 @@
+#!/bin/zsh
+. icons
+# A ordem em que as partições são especificadas definem a ordem que os $iconS e $colorFSIconS 
+# correspondentes a cada partição tem que ser informado
+# Especificar as partições que quer imprimir separadas por espaços;
+partitionS=("/dev/sdb4" "/dev/sdb7" "/dev/sda3")
+# Especificar os ícones em ordem com a $partitionS, separadas por espaços;
+FSiconS=("" "" "") #       🖴
+# Especificar as cores em ordem com os $iconS, separadas por espaços;
+# colorFSIconS=("$color10" "$color9" "$color8")
+# Espefificar as fontes que quer Usar, a polybar é baseada em font-0
+# para fonte-1 escolha "2";
+fontFSIconS=("13" "12" "12")
+# Altere [ sed 's/\/home\/losaoall//g ] por [ sed 's/\/home\/SeuUser//g ] 
+base="$(df -h $partitionS[@] |awk '{print " "$6" "$5" "$3}'|sed '1d'|sed 's/\/home\/losaoall\///g')"
+
+for (( i = 1; i <= $((${#FSiconS[@]})); i++ ))
+{
+	echo -ne " %{F${colorFSIconS[${i}]}}%{T${fontFSIconS[${i}]}}${FSiconS[$i]}%{F- T-}$(sed -n ''$i'p' <<< "$base") "
+}
+#
+#  Modelo de configuração do módulo na config da polybar
+# [module/filesystem]
+# type = custom/script
+# interval = 120
+# exec = bash ~/caminho/fspolybar.sh
+# tail = true
+# format-padding = 1

@@ -2,68 +2,10 @@
 include-file = ~/hdbkp/dots/polybar/taskbar
 include-file = ~/hdbkp/dots/polybar/modules
 
-[bar/taskbar1]
-font-0 = Iosevka Term SS07:Bold:size=13;5
-font-1 = Arimo Nerd Font:size=14;6
-;font-0 = "Ubuntu:style=Bold:antialias=true:pixelsize=10,1"
-;font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
-font-2 = Arimo Nerd Font:size=18;6
-font-3 = Arimo Nerd Font:size=15;4
-font-4 = mPlus Nerd Font:bold:size=16;5
-font-5 = Arimo Nerd Font:regular:size=11;4
-font-6 = Arimo Nerd Font:size=16;5
-font-7 = mPlus Nerd Font:medium:size=10;3
-font-8 = Nova Square:Book:size=13;3
-font-9 = Arimo Nerd Font:Regular:size=10;6
-
-
-modules-left = ws x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
-modules-right = mpv translate uptime
-
-monitor = ${env:monitor1}
-width = 100%
-height = 2.8%
-offset-x = 0
-offset-y = 0
-override-redirect = false
-fixed-center = true
-scroll-up = bspc node -d next -f
-scroll-down = bspc node -d prev -f
-click-left = bspc node -f next
-click-right = bspc node -f -c
-click-middle = wq launch
-cursor-click = pointer
-cursor-scroll = ns-resize
-module-margin = 0
-padding-right = 0
-padding-left = 5
-border-size = 0
-border-top-size = 8
-border-bottom-size = 8
-line-size = 1
-background = ${env:background}
-foreground = ${env:color16}
-border-color = ${env:background}
-bottom = false
-radius = 0
-wm-name = bspwm
-dpi-x = 130
-dpi-y = 130
-enable-ipc = true
-separator = " "
-;separator = |
-tray-offset-x = 0
-tray-offset-y = 0
-tray-position = right
-tray-background = ${env:background}
-tray-transparent = true
-tray-scale = 1
-tray-padding = 0
-
-
 [bar/dock]
 font-0 = Iosevka Term SS07:Bold:size=12.25;2
 font-1 = Arimo Nerd Font:size=11;2
+;font-1 = Awesome:size=25;2
 font-2 = Arimo Nerd Font:size=12;2
 font-3 = Arimo Nerd Font:size=13;2
 font-4 = Arimo Nerd Font:size=14;3
@@ -75,16 +17,19 @@ font-9 = Arimo Nerd Font:Bold:size=18;3
 font-10 = Arimo Nerd Font:size=15;2
 font-11 = Arimo Nerd Font:size=16;4
 font-12 = Arimo Nerd Font:size=16;5
+font-13 = Arimo Nerd Font:Regular:size=21;6
+font-14 = Arimo Nerd Font:size=16;6
+font-15 = Arimo Nerd Font:size=20;6
 
-modules-right  = memory cpu temperaturecpu gpuinfo volume
+modules-right  = eth temperaturecpu memory cpu gpuinfo translate volume
 modules-center = filesystem
-modules-left = calendar weatcher xkeyboard eth
+modules-left = calendar weatcher xkeyboard quake
 
 monitor = HDMI-0
 width = 100%
-height = 2.8%
-offset-x = 0
-offset-y = 0
+height = 2%
+offset-x = 0%
+offset-y = 0%
 override-redirect = false
 fixed-center = true
 scroll-up = bspc node -t tiled
@@ -95,15 +40,15 @@ click-middle = wq launch
 cursor-click = default
 cursor-scroll = ns-resize
 module-margin = 0
-padding-right = 5
-padding-left = 5
-border-size = 0
-border-top-size = 8
-border-bottom-size = 8
+padding-right = 3
+padding-left = 3
+border-size = 3
+border-top-size = 3
+border-bottom-size = 3
 line-size = 1
-background = ${env:background}
-foreground = ${env:color16}
-border-color = ${env:background}
+background = ${env:backgroundDock}
+foreground = ${env:foregroundDock}
+border-color = ${env:backgroundDock}
 bottom = true
 radius = 0
 wm-name = bspwm
@@ -111,3 +56,58 @@ dpi-x = 130
 dpi-y = 130
 enable-ipc = true
 separator = " "
+pseudo-transparency = true
+
+[bar/taskbar]
+font-0 = Iosevka Term SS07:Bold:size=13;5
+font-1 = Arimo Nerd Font:regular:size=16;6
+font-2 = Arimo Nerd Font:Regular:size=18;7
+;font-0 = "Ubuntu:style=Bold:antialias=true:pixelsize=10,1"
+;font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-3 = Arimo Nerd Font:size=15;4
+font-4 = mPlus Nerd Font:bold:size=16;5
+font-5 = Arimo Nerd Font:regular:size=11;4
+font-6 = Arimo Nerd Font:size=16;5
+font-7 = FontAwesome5Brands:style=Solid:antialias=false:pixelsize=25;4
+font-8 = FontAwesome5Free:style=Solid:antialias=false:pixelsize=18;4
+font-9 = Arimo Nerd Font:Regular:size=10;6
+font-10 = Arimo Nerd Font:Regular:size=20;7
+
+
+modules-left = ws x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
+modules-right = mpv
+
+monitor = ${env:monitor1}
+width = 100%
+height = 3%
+offset-x = 0%
+offset-y = 0%
+override-redirect = false
+fixed-center = true
+scroll-up = bspc node -d next -f
+scroll-down = bspc node -d prev -f
+click-left = bspc node -f next
+click-right = bspc node -f -c
+click-middle = wq launch
+cursor-click = pointer
+cursor-scroll = ns-resize
+module-margin = 0
+padding-right = 3
+padding-left = 3
+border-size = 3
+border-top-size = 8
+border-bottom-size = 8
+line-size = 1
+background = ${env:backgroundTaskbar}
+foreground = ${env:foregroundTaskbar}
+border-color = ${env:backgroundTaskbar}
+bottom = false
+radius = 0
+wm-name = bspwm
+dpi-x = 130
+dpi-y = 130
+enable-ipc = true
+separator = " "
+pseudo-transparency = true
+
+

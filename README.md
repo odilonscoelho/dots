@@ -43,7 +43,7 @@ wallpapers|[nitrogen](http://projects.l3ib.org/nitrogen/)/[hsetroot](https://git
 * **[ttf-nova](http://openfontlibrary.org/font/nova)**
 
 ##### polybar
-![screenshoot](bars.png)
+![screenshot](bars.png)
 
 Módulos da polybar | Argumentos | Descrição | Dependências | scripts/files
 :--:|:-------:|:------:|:-----:|:-----:
