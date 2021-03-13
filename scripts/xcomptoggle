@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+if pidof xcompmgr; then
+    pkill xcompmgr && dunstify -t 5000 xcompmgr stoped
+else
+    xcompmgr -cCfF -r5 -o 0.85 -l-15 -t-15 -D8 -I 0.20 -O 0.20 &
+    dunstify -t 5000 xcompmgr stoped 
+fi

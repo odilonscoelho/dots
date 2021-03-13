@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/hdbkp/projetos/shell/mp'
+let g:netrw_dirhist_6='/home/losao/.config/nvim/plugged/vim-airline-themes/autoload/airline/themes'
+let g:netrw_dirhist_5='/home/losao/.config/nvim/plugged/vim-airline-themes/autoload/airline'
+let g:netrw_dirhist_4='/home/losao/.config/nvim/plugged/vim-airline-themes/autoload'
+let g:netrw_dirhist_3='/home/losao/.config/nvim/plugged/vim-airline-themes'
+let g:netrw_dirhist_2='/home/losao/.config'
+let g:netrw_dirhist_1='/home/losao/.config/nvim'
+let g:netrw_dirhist_0='/home/losao/.config'
+let g:netrw_dirhist_9='/home/losao/.config/nvim'
+let g:netrw_dirhist_8='/home/losao/.config'

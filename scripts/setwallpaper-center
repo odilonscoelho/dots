@@ -1,0 +1,2 @@
+#!/bin/zsh
+nitrogen  --set-color=$background --set-center --save "$PWD/$@"

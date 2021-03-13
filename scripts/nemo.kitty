@@ -1,0 +1,4 @@
+#!/bin/zsh
+bspc rule -a kitty -o state=floating follow=on
+pwd=$PWD
+kitty --directory "$pwd"

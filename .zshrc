@@ -1,25 +1,58 @@
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+_ ()
+{
+    
+    # zsh-autocomplelte 
+    . $HOME/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
-# bin local
-PATH=$PATH:/home/losaoall/hdbkp/taskbar.test
-PATH=$PATH:/home/losaoall/hdbkp/dots/scripts
-PATH=$PATH:/home/losaoall/hdbkp/projetos/shell/mp
-PATH=$PATH:/home/losaoall/.cargo/bin
-PATH=$PATH:/usr/lib/dbeaver/jre/bin/java
+    bindkey $key[Up] up-line-or-history
+    bindkey $key[Down] down-line-or-history
+    bindkey $key[ControlSpace] set-mark-command
+    bindkey -M menuselect $key[Return] accept-line
 
-# Declaração dos $path_*
-declare -x path_dots=$HOME/hdbkp/dots
-declare -x path_scripts=$path_dots/scripts
-declare -x path_polybar=$path_dots/polybar
-declare -x path_colors=$path_dots/temas
+    alias 'suffix'="\n"
 
-# Import das funções dispostas em arquivos externos
-. $path_scripts/allfunctions # Todas as funções criadas para o shell
-. $path_scripts/lst # Um ls bonitinho
-. $path_colors/colors.zsh # Import das cores do tema.
-. $path_scripts/icons # Para Polybar
+    zstyle ':autocomplete:*' config off
+    zstyle ':completion:*' verbose no
+    #zstyle ':autocomplete:*' default-context                      # history-incremental-search-backward
+    zstyle ':autocomplete:tab:*' insert-unambiguous yes
+    zstyle ':autocomplete:tab:*' widget-style menu-select
+    zstyle ':autocomplete:tab:*' widget-style menu-complete
+    zstyle ':autocomplete:tab:*' fzf-completion yes
 
-#export PATH=${PATH}:~/.local
+    local h1=$'%{\e[01;02;39m%}' end=$'%{\e[0m%}' hint=$'%{\e[22;02;39m%}' kbd=$'%{\e[22;39m%}'
+      zstyle ':completion:*:descriptions' format "$h1%d$end"
+      zstyle ':completion:*:messages' format "$h1%d$end"
+      
+    zstyle -e ':completion:*:warnings' format '
+      local d=${${(j:, :)_lastdescr[@]:#}/(#m)*, /$MATCH[1,-3] or }
+      reply=( "'$h1'No ${tail:+matching }$d completions found.'$end'" )'
+      
+    zstyle ':completion:*:(alias-expansions|requoted|unambiguous)' format \
+      "$h1%d$hint  (press ${kbd}Shift${hint}+${kbd}Tab$hint to insert)$end"
+      
+    zstyle ':completion:*' auto-description '%d'
+}
+__ ()
+{
+    # Section zsh-completion zsh-users
+    zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
+    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
+    zstyle ':completion:*' rehash true                              # automatically find new executables in path
+    #|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+    # Speed up completions
+    zstyle ':completion:*' accept-exact '*(N)'
+    zstyle ':completion:*' use-cache on
+    zstyle ':completion:*' cache-path ~/.zsh/cache
+    #|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+}
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+. $path_colors/colors.zsh 2>/dev/null # Import das cores do tema.
+. $path_scripts/icons 2>/dev/null # Para Polybar
 
+export LANG="pt_BR.UTF-8"
+export LC_ALL="pt_BR.UTF-8"
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 setopt correct                                                  # Auto correct mistakes
 setopt extendedglob                                             # Extended globbing. Allows using regular expressions with *
 setopt nocaseglob                                               # Case insensitive globbing
@@ -30,22 +63,15 @@ setopt nobeep                                                   # No beep
 setopt appendhistory                                            # Immediately append history instead of overwriting
 setopt histignorealldups                                        # If a new command is a duplicate, remove the older one
 setopt autocd                                                   # if only directory path is entered, cd there.
-
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
-zstyle ':completion:*' rehash true                              # automatically find new executables in path
-# Speed up completions
-zstyle ':completion:*' accept-exact '*(N)'
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 HISTFILE=~/.zhistory
 HISTSIZE=1000
 SAVEHIST=500
-export EDITOR=/usr/bin/subl3
-export VISUAL=/usr/bin/subl3
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+export EDITOR=nvim
+export VISUAL=vim
 WORDCHARS=${WORDCHARS//\/[&.;]}                                 # Don't consider certain characters part of the word
-
-
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 ## Keybindings section
 bindkey -e
 bindkey '^[[7~' beginning-of-line                               # Home key
@@ -64,7 +90,6 @@ bindkey '^[[C'  forward-char                                    # Right key
 bindkey '^[[D'  backward-char                                   # Left key
 bindkey '^[[5~' history-beginning-search-backward               # Page up key
 bindkey '^[[6~' history-beginning-search-forward                # Page down key
-
 # Navigate words with ctrl+arrow keys
 bindkey '^[Oc' forward-word                                     #
 bindkey '^[Od' backward-word                                    #
@@ -72,9 +97,8 @@ bindkey '^[[1;5D' backward-word                                 #
 bindkey '^[[1;5C' forward-word                                  #
 bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
-
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 ## Alias section
-#alias cp="cp -i"                                                # Confirm before overwriting something
 alias df='df -h'                                                # Human-readable sizes
 alias free='free -m'                                            # Show sizes in MB
 alias gitu='git add . && git commit && git push'
@@ -85,99 +109,72 @@ alias bar="$path_polybar"
 alias pacinstall="sudo pacman -S"
 alias pacinstalled="sudo pacman -Qe"
 alias pacremove="sudo pacman -R"
-alias pacremovecomplete="sudo pacman -Rsn"
+alias pacremovefull="sudo pacman -Rsn"
 alias pacorfaos="sudo pacman -Qdt |awk {'print $1'}"
 alias aurinstalled='sudo pacman -Qm'
 alias aursearch='yay -Ss'
 alias aurinstall='yay -S'
 alias aurremove='yay -R'
-alias aurremovecomplete='yay -Rsn'
-alias fetch='clear;{wq fetch quadro 11};{wq colorfetch}'
+alias aurremovefull='yay -Rsn'
 alias equalizer='pulseaudio-equalizer enable'
 alias ls='ls --color=auto'
 alias nn='nano'
-
+alias n='nvim'
+alias m='micro'
+alias hd='/hdbkp/'
+alias dots='$path_dots'
+alias temas='$path_colors'
+alias scripts='$path_scripts'
+alias polybar='$path_polybar'
+alias kittysettitle='kitty @set-window-title $@'
+alias kittydetachwindow='kitty @detach-window'
+alias volume='pulsemixer'
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+# Section zsh-completion zsh-users
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
+zstyle ':completion:*' rehash true                              # automatically find new executables in path
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+# Speed up completions
+zstyle ':completion:*' accept-exact '*(N)'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 # Theming section
-autoload -U compinit colors zcalc
-compinit -d
-colors
+[[ $UID == 1000 ]] && 
+    {
+        autoload -U compinit colors zcalc 
+        compinit -d
+    } || 
+        {
+            autoload -U colors zcalc
+        }
 
-# enable substitution for prompt
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
+# enable substitution for prompt    
 setopt prompt_subst
-
-# Prompt (on left side) similar to default bash prompt, or redhat zsh prompt with colors
- #PROMPT="%(!.%{$fg[red]%}[%n@%m %1~]%{$reset_color%}# .%{$fg[green]%}[%n@%m %1~]%{$reset_color%}$ "
-# Maia prompt
-# PROMPT="%B%{$fg[cyan]%}%(4~|%-1~/.../%2~|%~)%u%b >%{$fg[cyan]%}>%B%(?.%{$fg[cyan]%}.%{$fg[red]%})>%{$reset_color%}%b "
-
-# "%(?.%{$fg[green]%}✓ %{$reset_color%}.%{$fg[red]%}✗ %{$reset_color%})"
-PROMPT="%B%{$fg[magenta]%}%(4~|%-1~/.../%2~|%~)%u%b %{$fg[blue]%}  %{$reset_color%}%b "
-# 盧   ➲   
-# Modify the colors and symbols in these variables as desired.
-GIT_PROMPT_SYMBOL="%{$fg[blue]%}±"                              # plus/minus     - clean repo
-GIT_PROMPT_PREFIX="%{$fg[green]%}[%{$reset_color%}"
-GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
-GIT_PROMPT_AHEAD="%{$fg[red]%}ANUM%{$reset_color%}"             # A"NUM"         - ahead by "NUM" commits
-GIT_PROMPT_BEHIND="%{$fg[cyan]%}BNUM%{$reset_color%}"           # B"NUM"         - behind by "NUM" commits
-GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"     # lightning bolt - merge conflict
-GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}●%{$reset_color%}"       # red circle     - untracked files
-GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}●%{$reset_color%}"     # yellow circle  - tracked files modified
-GIT_PROMPT_STAGED="%{$fg_bold[green]%}●%{$reset_color%}"        # green circle   - staged changes present = ready for "git push"
-
-parse_git_branch() {
-  # Show Git branch/tag, or name-rev if on detached head
-  ( git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD ) 2> /dev/null
+SeparatoR () <<< "%F{$@}"
+Jobs_Runn="%K{black}%F{magenta}  %F{white}%j "
+Hist_Numb="%K{white}%F{magenta} %F{black} %!"
+User_Prev="%(!|$(SeparatoR red)%F{white}%K{red}   %k%f|$(SeparatoR blue)%F{black}%K{blue}   %k%f)"
+Return_Cm="%(?|$(SeparatoR green)%F{black}%K{green}   %?|$(SeparatoR red)%F{black}%K{red}   %?)"
+Dir_Curre="%K{white}%F{black} %1~ %F{white}%K{black}"
+Icon_Pont="%(!|%K{black}%F{red}   %k%F{black}%f%k |%K{black}%F{blue}   %k%F{black}%f%k )"
+# RRPROMPT="$(SeparatoR black)$Jobs_Runn$(SeparatoR white)$Hist_Numb$Return_Cm$User_Prev"
+RRPROMPT="$(SeparatoR white)$Hist_Numb$Return_Cm$User_Prev"
+# job_status ()
+# {
+    # [[ %j -gt 0 ]] && RPROMPT="$(SeparatoR black)%K{black}%F{magenta}  %F{white}%j $RRPROMPT" || RPROMPT="$RRPROMPT"
+# }
+git_status ()
+{
+    git rev-parse --is-inside-work-tree &>/dev/null &&
+        RPROMPT="$(SeparatoR cyan)%K{cyan}%F{black} $(git name-rev --name-only --no-undefined --always HEAD)   $RRPROMPT" ||
+            RPROMPT="$RRPROMPT"
 }
-
-parse_git_state() {
-  # Show different symbols as appropriate for various Git repository states
-  # Compose this value via multiple conditional appends.
-  local GIT_STATE=""
-  local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
-  if [ "$NUM_AHEAD" -gt 0 ]; then
-    GIT_STATE=$GIT_STATE${GIT_PROMPT_AHEAD//NUM/$NUM_AHEAD}
-  fi
-  local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
-  if [ "$NUM_BEHIND" -gt 0 ]; then
-    GIT_STATE=$GIT_STATE${GIT_PROMPT_BEHIND//NUM/$NUM_BEHIND}
-  fi
-  local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
-  if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
-    GIT_STATE=$GIT_STATE$GIT_PROMPT_MERGING
-  fi
-  if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-    GIT_STATE=$GIT_STATE$GIT_PROMPT_UNTRACKED
-  fi
-  if ! git diff --quiet 2> /dev/null; then
-    GIT_STATE=$GIT_STATE$GIT_PROMPT_MODIFIED
-  fi
-  if ! git diff --cached --quiet 2> /dev/null; then
-    GIT_STATE=$GIT_STATE$GIT_PROMPT_STAGED
-  fi
-  if [[ -n $GIT_STATE ]]; then
-    echo "$GIT_PROMPT_PREFIX$GIT_STATE$GIT_PROMPT_SUFFIX"
-  fi
-}
-
-git_prompt_string() {
-  local git_where="$(parse_git_branch)"
-
-  # If inside a Git repository, print its branch and state
-  [ -n "$git_where" ] && \
-    echo "$GIT_PROMPT_SYMBOL$(parse_git_state)$GIT_PROMPT_PREFIX%{$fg[yellow]%}${git_where#(refs/heads/|tags/)}$GIT_PROMPT_SUFFIX" || \
-      echo "%B%(?.%{$fg[green]%}.%{$fg[red]%})   %K%*"
-      
-      #echo "%(?.%{$fg[green]%}✓ %{$reset_color%}.%{$fg[red]%}✗ %{$reset_color%})"
-
-  # If not inside the Git repo, print exit codes of last command (only if it failed)
-  # [ ! -n "$git_where" ] && echo "%{$fg[red]%} %(?..[%?])"
-}
-
-# Right prompt with exit status of previous command if not successful
- #RPROMPT="%{$fg[red]%} %(?..[%?])"
-# Right prompt with exit status of previous command marked with ✓ or ✗
-
-
+precmd_functions+=(git_status)
+PROMPT="$Dir_Curre$Icon_Pont"
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 # Color man pages
 export LESS_TERMCAP_mb=$'\E[01;32m'
 export LESS_TERMCAP_md=$'\E[01;32m'
@@ -187,46 +184,24 @@ export LESS_TERMCAP_so=$'\E[01;47;34m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;36m'
 export LESS=-r
-
-## Plugins section: Enable fish style features
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 # Use syntax highlighting
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 # Use history substring search
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND=fg=$background,bg=$foreground
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND=fg=black,bg=white,bold,underline
 # bind UP and DOWN arrow keys to history substring search
 zmodload zsh/terminfo
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 # autosuggestion
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$color16,bg=$foreground,bold,underline"
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=black,bg=white,bold,underline"
+#|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 
-# Apply different settigns for different terminals
-# case $(basename "$(cat "/proc/$PPID/comm")") in
-#   login)
-#       RPROMPT="%{$fg[red]%} %(?..[%?])"
-#       alias x='startx ~/.xinitrc'      # Type name of desired desktop after x, xinitrc is configured for it
-#     ;;
-#  'tmux: server')
-#       RPROMPT='$(git_prompt_string)'
-#       source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-#       ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-#       ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
-#     ;;
-#   *)
-#     RPROMPT='$(git_prompt_string)'
-#     # Use autosuggestion
-#     source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-#     ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-#     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$color16,bg=$foreground,bold,underline"
-#     ;;
-# esac
-
-# Vim - habilitar o atalho Ctrl + s|S para salvar
-stty -ixon
-
-
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

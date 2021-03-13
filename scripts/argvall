@@ -1,0 +1,56 @@
+#!/bin/zsh
+main ()
+{
+    local args bool nextArgv control ignoreds actions
+    args=("--format" "-fmt" "--formatgo" "-fmtgo" "--next" "-n" "--prev" "-p")
+    bool=("--help" "-h" "--program" "-p" "--controls" "-c" "--controlsr" "-cr")
+
+    for arg in $@
+    {
+    	(( control = control + 1 ))
+    	nextArgv="${(P)$((control+1))}"
+    	if [[  $args =~ $arg ]];then
+    		for ARG in $args[@]
+    		{
+    			[[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv); break }
+    		}
+    	elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
+    		for ARG in $args[@]
+    		{
+    			[[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; break }
+    		}
+    	fi
+    	if [[ $bool =~ $arg ]];then
+    	    for ARG in $bool[@]
+    	    {
+    	        [[ "$ARG" == "$arg" ]] && read "${arg//-/}" <<< "true"
+    	    }
+    	else
+            [[ "$ignoreds" =~ "$arg" ]] && continue || actions=("$arg")
+        fi
+    }
+}
+
+unset controls controlsr format formatgo help h program p
+
+main $@
+
+printf '%b' "
+control = $control
+controls = $controls
+controlsr = $controlsr
+format = $format
+formatgo = $formatgo
+help = $help
+h = $h
+"
+
+printf '%b' "
+ignoreds = $ignoreds
+actions = $actions
+"
+
+printf '%b' "
+$bool
+$args
+"

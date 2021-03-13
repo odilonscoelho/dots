@@ -1,0 +1,67 @@
+#!/bin/zsh
+_print_colors ()
+{
+
+	case $5 in
+		1)arraycolors=('black 0' 'red 1' 'green 2' 'yellow 3');;
+		2)arraycolors=('blue 4' 'magenta 5' 'cyan 6' 'white 7');;
+		3)arraycolors=('black 8' 'red 9' 'green 10' 'yellow 11');;
+		4)arraycolors=('blue 12' 'magenta 13' 'cyan 14' 'white 15');;
+	esac
+
+	tag1=$arraycolors[1]; tag2=$arraycolors[2]; tag3=$arraycolors[3]; tag4=$arraycolors[4]
+	
+	print -P "%F{$1}%B$(printf '%'$qt_cols_desc's' " ") %K{$1}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$2}%B$(printf '%'$qt_cols_desc's' " ") %K{$2}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$3}%B$(printf '%'$qt_cols_desc's' " ") %K{$3}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$4}%B$(printf '%'$qt_cols_desc's' " ") %K{$4}$(printf '%'$qt_cols_banner's' " ")%k%b%f\n%F{$1}%B$(printf '%'$qt_cols_desc's' "$tag1") %K{$1}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$2}%B$(printf '%'$qt_cols_desc's' "$tag2") %K{$2}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$3}%B$(printf '%'$qt_cols_desc's' "$tag3") %K{$3}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$4}%B$(printf '%'$qt_cols_desc's' "$tag4") %K{$4}$(printf '%'$qt_cols_banner's' " ")%k%b%f\n%F{$1}%B$(printf '%'$qt_cols_desc's' " ") %K{$1}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$2}%B$(printf '%'$qt_cols_desc's' " ") %K{$2}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$3}%B$(printf '%'$qt_cols_desc's' " ") %K{$3}$(printf '%'$qt_cols_banner's' " ")%k%b%f %F{$4}%B$(printf '%'$qt_cols_desc's' " ") %K{$4}$(printf '%'$qt_cols_banner's' " ")%k%b%f\n"
+}
+
+qt_cols_desc=13
+qt_cols_banner=$(( ($COLUMNS - (($qt_cols_desc * 4)+11+5)) / 4))
+	
+arrayargs=('-f' '--f' '-file' '--file')
+arraybool=('--help' '-h')
+for arg in $@
+{
+	(( control = control + 1 ))
+	nextArgv="${(P)$((control+1))}"
+	if [[  $arrayargs =~ $arg ]];then
+		for ARG in $arrayargs[@]
+		{
+			[[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv); break }
+		}
+	elif [[ $arrayargs =~ ${${(s:=:)arg}[1]} ]];then
+		for ARG in $arrayargs[@]
+		{
+			[[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; break }
+		}
+	elif [[ $arraybool == $arg ]];then
+			read ${arg//-/} <<< "true"
+	else
+		[[ "$ignoreds" =~ "$arg" ]] && continue || actions+=("$arg")
+	fi
+}
+
+[[ -n $f ]] && file=$f
+
+if [[ -n $file ]]; then
+	while read line; do
+		read ${${(s: :)line}[1]} <<< ${${(s: :)line}[2]}
+	done < "$file"
+fi
+
+_print_colors $color0 $color1 $color2 $color3 1
+_print_colors $color8 $color9 $color10 $color11 3
+_print_colors $color4 $color5 $color6 $color7 2
+_print_colors $color12 $color13 $color14 $color15 4
+print -P "\
+$(printf '%'$qt_cols_desc's' " ") %K{$selection_background}%F{$selection_foreground}%B$(printf '%-'$qt_cols_banner's' " selection")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$cursor}%F{$selection_foreground}%B$(printf '%'-$qt_cols_banner's' " ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$foreground}%F{$background}%B$(printf '%'$qt_cols_banner's' " ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$background}%F{$foreground}%B$(printf '%'$qt_cols_banner's' " ")%k%f%b"
+print -P "$(printf '%'$qt_cols_desc's' " ") %K{$selection_background}%F{$selection_foreground}%B$(printf '%'$qt_cols_banner's' " ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$cursor}%F{$selection_foreground}%B$(printf '%'-$qt_cols_banner's' " cursor")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$foreground}%F{$background}%B$(printf '%'$qt_cols_banner's' "foreground ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$background}%F{$foreground}%B$(printf '%'$qt_cols_banner's' "background ")%k%f%b"
+print -P "$(printf '%'$qt_cols_desc's' " ") %K{$selection_background}%F{$selection_foreground}%B$(printf '%'$qt_cols_banner's' "background ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$cursor}%F{$selection_foreground}%B$(printf '%-'$qt_cols_banner's' " ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$foreground}%F{$background}%B$(printf '%'$qt_cols_banner's' " ")%k%f%b \
+$(printf '%'$qt_cols_desc's' " ") %K{$background}%F{$foreground}%B$(printf '%'$qt_cols_banner's' " ")%k%f%b"

@@ -1,0 +1,9 @@
+#!/bin/zsh
+[[ -n $@ ]] && \
+    {
+        kitty --execute nvim $PWD/$@ &>/dev/null
+    } || \
+        {
+            kitty --execute nvim $PWD/* &>/dev/null
+        }
+

@@ -1,0 +1,430 @@
+#!/bin/zsh
+color ()
+{
+    help ()
+    {
+        printf '%b\n' "
+        Usage: 
+        script [options] <text>        
+        options:
+        -f\t--fg\t\t - Foreground color
+        -b\t--bg\t\t - Background color
+        -B\t--bold\t\t - Bold text
+        -i\t--italic\t - Italic text
+        -u\t--underline\t - Underline text
+        -a\t--alert\t\t - Alert text
+        -l\t--light\t\t - Light Text
+        -h\t--help\t\t - This dialog
+        
+        The options --fg and --bg require arguments in style :
+            white red green yellow blue magenta cyan white
+        all name of the colors have the bright option:
+            brightwhite brightred ..."   
+    }
+
+    args=('-f' '--fg' '-b' '--bg')
+    bool=('-r' '--reverse' '-B' '--bold' '-i' '--italic' '-u' '--underline' '-a' '--alert' '-l' '--light' '-h' '--help')
+
+    for arg in $@
+    {
+        (( control = control + 1 ))
+
+        nextArgv="${(P)$((control+1))}"
+
+        if [[  $args =~ $arg ]];then
+            for ARG in $args[@]
+            {
+                [[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv $arg); break }
+            }
+        elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
+            for ARG in $args[@]
+            {
+                [[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; ignoreds+=($arg); break }
+            }
+        fi
+
+        if [[ $bool =~ $arg ]];then
+            for ARG in $bool[@]
+            {
+                [[ "$ARG" == "$arg" ]] && { read "${arg//-/}" <<< "true"; ignoreds+=($arg) }
+            }
+        fi
+        
+        [[ "$ignoreds" =~ "$arg" ]] && continue || text+=("$arg")
+    }
+    reset="\E[0;38;5;8m" ; prefix="\E[" ; suffix="m"
+    local -A attribute 
+    local -A color
+    attribute=([normal]=0 [bold]=1 [light]=2 [italic]=3 [underline]=4 [alert]=5 [reverse]=7)
+    color=([black]=0 [red]=1 [green]=2 [yellow]=3 [blue]=4 [magenta]=5 [cyan]=6 [white]=7 [brightblack]=8 [brightred]=9 [brightgreen]=10 [brightyellow]=11 [brightblue]=12 [brightmagenta]=13 [brightcyan]=14 [brightwhite]=15)
+
+    [[ -n ${help:=$h} ]] && { help ; exit 0 }
+
+    attrs=""
+    [[ -n ${bold:=$B} ]] && attrs+=("$attribute[bold]")
+    [[ -n ${light:=$l} ]] && attrs+=("$attribute[light]")
+    [[ -n ${italic:=$i} ]] && attrs+=("$attribute[italic]")
+    [[ -n ${underline:=$u} ]] && attrs+=("$attribute[underline]")
+    [[ -n ${alert:=$a} ]] && attrs+=("$attribute[alert]")
+    [[ -n ${reverse:=$r} ]] && attrs+=("$attribute[reverse]")
+    [[ -z $attrs ]] && attrs="$attribute[normal]"
+
+    [[ -n ${b:=$bg} ]] && bg="48;5;$color[${b:-$bg}]"
+    [[ -n ${f:=$fg} ]] && fg="38;5;$color[${f:-$fg}]"
+
+    if [[ $#attrs -gt 1 ]]; then
+        for optn in $attrs
+        {
+            case ${optn} in
+                1) attr2+="$prefix"1m"" ;;
+                normal) 
+                    print "A opção normal não pode ser usada em conjunto com demais atributos, apenas com cores" ;;
+                2) attr2+="$prefix"2m"" ;;
+                3) attr2+="$prefix"3m"" ;;
+                4) attr2+="$prefix"4m"";;
+                5) attr2+="$prefix"5m"";; 
+                7) attr2+="$prefix"7m"" ;;
+            esac
+        }
+        attrs=""
+    fi
+    if [[ -n $bg && -n $fg ]]; then
+        middle="$attrs;$bg;$fg"
+    elif [[ -n $bg && -z $fg ]]; then
+        middle="$attrs;$bg"
+    elif [[ -z $bg && -n $fg ]]; then
+        middle="$attrs;$fg"
+    fi
+    [[ -z $attr2 ]] && 
+        print -P "$prefix;$middle$suffix$text$reset" || 
+            {
+                [[ -z $middle ]] && 
+                    print -P "$attr2$text$reset" ||
+                        {
+                            if [[ -n $bg && -n $fg ]]; then
+                                print -P "$attr2$prefix$bg;$fg$suffix$text$reset"
+                            elif [[ -n $bg && -z $fg ]]; then
+                                print -P "$attr2$prefix$bg$suffix$text$reset"
+                            elif [[ -z $bg && -n $fg ]]; then
+                                print -P "$attr2$prefix$fg$suffix$text$reset"
+                            fi                        
+                        }
+            }   
+}
+Clock ()
+{
+    attr.icon ()
+        case $@ in;
+            0) <<< " ";; 1) <<< " ";; 2) <<< " ";; 3) <<< " ";; 4) <<< " ";; 5) <<< " ";; 6) <<< " ";;
+            7) <<< " ";; 8) <<< " ";; 9) <<< " ";;
+        esac
+
+    attr.icon2 ()
+        case $@ in;
+            jan) <<< "    ";; fev) <<< "    ";; mar) <<< "    ";; abr) <<< "    ";; mai) <<< "    ";; jun) <<< "    ";; jul) <<< "    ";; ago) <<< "    ";; set) <<< "    ";; out) <<< "    ";; nov) <<< "    ";; dez) <<< "    ";;
+        esac
+
+    date_base=$(date '+%a %d %b %Y %H:%M:00 -04')
+    timeNew=$date_base
+    len=38
+    if [[ $timeOld != $timeNew ]]; then
+        timeOld=$timeNew
+        day_week=${${(s: :)date_base}[1]}
+        day_month=${${(s: :)date_base}[2]}
+        month=${${(s: :)date_base}[3]}
+        year=${${(s: :)date_base}[4]}
+        hour=${${(s#:#)${(s: :)date_base}[5]}[1]}
+        minute=${${(s#:#)${(s: :)date_base}[5]}[2]}
+        label_clock_numbers_hours="$(attr.icon ${hour[1]}) $(attr.icon ${hour[2]}) :$(attr.icon ${minute[1]}) $(attr.icon $minute[2])"
+        label_clock_numbers_mounth=$(attr.icon2 ${month})
+        label_clock_numbers_day="$(attr.icon ${day_month[1]}) $(attr.icon $day_month[2])"
+        label_time="$label_clock_numbers_hours  $day_week $label_clock_numbers_day /$label_clock_numbers_mounth"
+        printf '%'$(( (COLUMNS - len) / 2 ))'s %s' " " " $label_time"
+    else
+        printf '%'$(( (COLUMNS - len) / 2 ))'s %s' " " " $label_time"
+    fi
+}
+CpuStart ()
+{
+    Cpu.collect ()
+    {
+        scopeNew=${${(f)"$(< /proc/stat)"}[1]}
+        userNew=${${(s: :)scopeNew}[2]}
+        niceNew=${${(s: :)scopeNew}[3]}
+        systemNew=${${(s: :)scopeNew}[4]}
+        idleNew=${${(s: :)scopeNew}[5]}
+        iowaitNew=${${(s: :)scopeNew}[6]}
+    }
+    Cpu.define.old ()
+    {
+        scopeOld=${scopeNew:=0}
+        userOld=${userNew:=0}
+        niceOld=${niceNew:=0}
+        systemOld=${systemNew:=0}
+        idleOld=${idleNew:=0}
+        iowaitOld=${iowaitNew:=0}
+    }
+    Cpu.calculate ()
+    {
+        totalold=$(( userOld + niceOld + systemOld + idleOld ))
+        totalnew=$(( userNew + niceNew + systemNew + idleNew ))
+        percentage=$(( 100 * ( (totalnew - totalold) - (idleNew - idleOld) ) / (totalnew - totalold) ))
+    }
+
+    while true; do
+        Cpu.collect        
+        [[ $scopeNew != $scopeOld ]] && { Cpu.calculate; print $percentage > /tmp/cpuinfo; Cpu.define.old }
+        sleep 1
+    done
+}
+Cpu ()
+{
+    label_cpu=$(< /tmp/cpuinfo)
+    cpuNew=$label_cpu
+    if [[ $cpuOld != $cpuNew ]]; then
+        cpuOld=$cpuNew
+        c_label=$(print -f '%3s' "$label_cpu%")
+        typeset -F1 Tctl=$(( $(< /sys/class/hwmon/hwmon0/temp2_input) / 1000 ))
+        typeset -F1 Tdie=$(( $(< /sys/class/hwmon/hwmon0/temp1_input) / 1000 ))
+        c_label_temp="$c_label_temp_prefix_Tctl $Tctl ºC $c_label_temp_prefix_Tdie $Tdie ºC"
+        printf '%'$(( ( COLUMNS - 36 ) / 2 ))'s %s' " " "$c_icon $c_label $c_label_temp"
+    else
+        printf '%'$(( ( COLUMNS - 36 ) / 2 ))'s %s' " " "$c_icon $c_label $c_label_temp"
+    fi
+}
+WeatherStart () 
+{
+    # Depende de uma chave válida no openweathermap , alterar a var $chave na url abaixo:
+	while true; do
+        url='http://api.openweathermap.org/data/2.5/weather?id=3451241&units=metric&APPID=1d71e40cec5e1bbfea49be4518673b42'
+        wget --quiet $url --output-document /tmp/weatcher.base
+		sed -i 's/\,/'\\n'/g' /tmp/weatcher.base
+		temperatura=$(grep "feels_like" /tmp/weatcher.base |sed 's/.*\://'|sed 's/\"//g')
+		case $(grep icon /tmp/weatcher.base|sed 's/.*\:"//g;s/"}]//g') in
+			01d)icon="";;
+			02d)icon="";;
+			03d)icon="";;
+			04d)icon="";;
+			09d)icon="";;
+			10d)icon="";;
+			11d)icon="";;
+			13d)icon="";;
+			50d)icon="";;
+			01n)icon="";;
+			02n)icon="";;
+			03n)icon="";;
+			04n)icon="";;
+			09n)icon="";;
+			10n)icon="";;
+			11n)icon="";;
+			13n)icon="";;
+			50n)icon="";;
+		esac
+        <<< " $icon  $temperatura ºC" > /tmp/weatcher
+		sleep 600
+	done
+}
+Weatcher ()
+{
+    weatcherNew=$(< /tmp/weatcher)
+    if [[ $weatcherOld != $weatcherNew ]];then
+        weatcherOld=$weatcherNew
+        local base=$weatcherNew
+        len_weatcher=20
+        [[ $weatcher_icon1_Old != $weatcher_icon1 ]] && { weatcher_icon1=$(color -B -f yellow ${${(s: :)base}[1]}); weatcher_icon1_Old=$weatcher_icon1; weatcher_icon2=$(color -B -f yellow ${${(s: :)base}[3]}) }
+        temp="    ${${(s: :)base}[2]} "
+        printf '%'$(( (COLUMNS - $len_weatcher) / 2 ))'b %b' " " "$weatcher_icon1$temp$weatcher_icon2"
+    else
+        printf '%'$(( (COLUMNS - $len_weatcher) / 2 ))'b %b' " " "$weatcher_icon1$temp$weatcher_icon2"
+    fi
+}
+Memory ()
+{
+    base=$(free -h)
+    memoryNew=$base
+    if [[ $memoryOld != $memoryNew ]];then
+        memoryOld=$memoryNew
+        typeset -F2 mem_free=${${${${${(s: :)${(f)base}[2]}[4]}//Gi/}//Mi/}//,/.}
+        typeset -F2 mem_used=$(( ${${${${${(s: :)${(f)base}[2]}[2]}//Gi/}//Mi/}//,/.} - mem_free ))
+        c_mem_free=$(print -f '%5s' "$mem_free")
+        c_mem_used=$(print -f '%5s' "$mem_used")
+        suffix_mem_free="${${${${${(s: :)${(f)base}[2]}[4]}//*Gi/Gi}//*Mi/Mi}//,/}"
+        [[ $suffix_mem_free_Old != $suffix_mem_free ]] && { c_suffix_mem_free=$(color -f blue $suffix_mem_free); suffix_mem_free_Old=$suffix_mem_free }
+        [[ $suffix_mem_used_Old != $suffix_mem_used ]] && { c_suffix_mem_used=$(color -f blue $suffix_mem_used); suffix_mem_used_Old=$suffix_mem_used }
+        
+        if [[ $suffix_mem_free =~ "Mi" ]]; then
+            typeset -F2 mem_perc_used=$(( (( mem_used / 1024 ) / (mem_free + mem_used )) * 100 ))
+            c_mem_perc_used=$(print -f '%5s' "$mem_perc_used")
+        else
+            typeset -F2 mem_perc_used=$(( mem_used / (mem_free + mem_used) * 100 ))
+            c_mem_perc_used=$(print -f '%5s' "$mem_perc_used")
+        fi
+        label_memory="$icon_memory $c_mem_perc_used$c_suffix_perc_used_mem, $prefix_memory_free $c_mem_free$c_suffix_mem_free, $prefix_memory_used $c_mem_used$c_suffix_mem_used"
+        len_label_memory=$(( 22 + 22 ))
+        printf '%'$(( (COLUMNS - len_label_memory) / 2))'s %s' "" "$label_memory"
+    else
+        printf '%'$(( (COLUMNS - len_label_memory) / 2))'s %s' "" "$label_memory"
+    fi
+}
+GpuStart () 
+{
+    scope="$(nvidia-settings -q ThermalSensorReading -q GPUUtilization 2>/dev/null)"
+    temperature="${${(s: :)${(f)scope}[1]}[4]//./}"
+    graphics="${${${(s: :)${(f)scope}[5]}[4]//*=/}//,/}"
+    memory="${${${(s: :)${(f)scope}[5]}[5]//*=/}//,/}"
+    print "$temperature $memory $graphics" > /tmp/gpuinfo2
+    scopeOld=$scope
+    while true ;do
+        sleep 8
+        scope="$(nvidia-settings -q ThermalSensorReading -q GPUUtilization 2>/dev/null)"
+        [[ $scopeOld != $scope ]] && 
+            {
+                temperature="${${(s: :)${(f)scope}[1]}[4]//./}"
+                graphics="${${${(s: :)${(f)scope}[5]}[4]//*=/}//,/}"
+                memory="${${${(s: :)${(f)scope}[5]}[5]//*=/}//,/}"       
+                print "$temperature $memory $graphics" > /tmp/gpuinfo2
+                scopeOld=$scope
+            }
+    done
+    exit 0
+}
+Gpu ()
+{
+    local base=$(< /tmp/gpuinfo2)
+    gpuNew=$base
+    if [[ $gpuOld != $gpuNew ]];then
+        gpuOld=$gpuNew
+        label_gpu="$icon_gpu $icon_gpu_temp $(print -f '%3s' "${${(s: :)base}[1]}ºC") $icon_gpu_memory $(print -f '%3s' "${${(s: :)base}[2]}%")  $icon_gpu_usage $(print -f '%3s' "${${(s: :)base}[3]}%")"
+        len_label_gpu=31
+        len_impress_gpu=$(( (COLUMNS - len_label_gpu) / 2 ))
+        printf '%'$len_impress_gpu's %b' " " "$label_gpu"
+    else
+        printf '%'$len_impress_gpu's %b' " " "$label_gpu"
+    fi
+}
+Uptime ()
+{
+    uptimeNew=${${(s: :)$(uptime)}[3]//,/}
+    len_uptime=$(( (COLUMNS - ($#uptimeNew + 8)) / 2 ))
+    if [[ $uptimeOld != $uptimeNew ]]; then
+        uptimeOld=$uptimeNew
+        c_label_uptime="$uptime_icon $uptimeNew"
+        printf '%'$len_uptime's %s' " " "$c_label_uptime"
+    else
+        printf '%'$len_uptime's %s' " " "$c_label_uptime"
+    fi
+}
+NetStart ()
+{
+    baseOld=(${(f)"$(< /proc/net/dev)"})
+    icon=""
+    interface=${${(s#:#)baseOld[4]}[1]}
+    while true; do
+        sleep 1
+        baseNew=(${(f)"$(< /proc/net/dev)"})
+        if [[ $baseOld != $base ]]; then           
+            rxNew=${${(s: :)baseNew[4]}[2]}
+            rxOld=${${(s: :)baseOld[4]}[2]}
+            txNew=${${(s: :)baseNew[4]}[10]}
+            txOld=${${(s: :)baseOld[4]}[10]}
+            down=$(( (rxNew - rxOld) / 1024 ))
+            up=$(( (txNew - txOld) / 1024 ))
+            print "$icon $interface Down $down Up $up" > /tmp/netinfo
+            baseOld=(${baseNew[@]})
+        fi
+    done
+}
+Net ()
+{
+    base_net=$(< /tmp/netinfo)
+    [[ ${base_net_old:=0} != $base_net ]] && 
+        {
+            c_down="$(print -f '%4s' "${${(s: :)base_net}[4]}")"
+            c_up="$(print -f '%4s' "${${(s: :)base_net}[6]}")"
+            base_net_old=$base_net
+        }
+
+    [[ $(( (COLUMNS - 29) / 2 )) -ge 1 ]] && len_net=$(( (COLUMNS - 29) / 2 )) || len_net=$((COLUMNS - 29))
+    print -f '%'$len_net's %s' " " "$c_icon_interface $c_up $c_prefix_up $c_down $c_prefix_down"
+}
+main ()
+{
+    timeOld=""; cpuOld=""; memoryOld=""; weatcherOld=""; uptimeOld=""; ethOld=""; gpuOld=""; uptimeOld=""
+    len_hello () <<< $(( (COLUMNS - 30) / 2 ))
+    msg_hello=$(color -f green "Hi $USER, Welcome again!")
+    cols_ini=$COLUMNS
+    hello ()
+    {
+        [[ $cols_ini != $COLUMNS ]] && 
+            { 
+                len_hello_impress=$(len_hello)
+                cols_ini=$COLUMNS
+                printf '%'${len_hello_impress}'s %s' " " "$msg_hello" 
+            } || 
+                    { 
+                        printf '%'${len_hello_impress:=$(len_hello)}'s %s' " " "$msg_hello"              
+                    }
+    }
+    c_icon=$(color -f blue "   ")
+    c_label_temp_prefix_Tctl=$(color -f blue Tctl)
+    c_label_temp_prefix_Tdie=$(color -f blue Tdie)
+    uptime_icon=$(color -f red "   ")
+    icon_memory=$(color -f blue "$(print -f '%3s' " ")")
+    c_suffix_mem_used=$(color -f blue "Gi")
+    c_suffix_perc_used_mem=$(color -f blue "%%")
+    prefix_memory_free=$(color -f green "$(print -f '%5s' "Free:")")
+    prefix_memory_used=$(color -f red "$(print -f '%5s' "Used:")")
+    weatcherNew=$(< /tmp/weatcher)
+    weatcher_icon1=$(color -B -f yellow ${${(s: :)weatcherNew}[1]})
+    weatcher_icon2=$(color -B -f yellow ${${(s: :)weatcherNew}[3]})
+    icon_gpu=$(color -f blue "  ")
+    icon_gpu_temp=$(color -f green "  ")
+    icon_gpu_temp_suffix=$(color -f green " ºC") 
+    icon_gpu_memory=$(color -f yellow "  ")
+    icon_gpu_usage=$(color -f red "  ") 
+    c_icon_interface=$(color -f blue "$(print -f '%4s' " ")")
+    c_prefix_down=$(color -f red "$(print -f '%-5s' "Down")")
+    c_prefix_up=$(color -f green "$(print -f '%-3s' "Up")")
+    LineInWhite () 
+    { 
+        print -f '%s\n' " " 
+        print "$(for i in {1..$(( COLUMNS / 2 ))}; do; print -f '%s' "➖"; done)" 
+    }
+    while true; do
+        base="$(hello; LineInWhite; Uptime; LineInWhite; Memory; LineInWhite; Cpu; LineInWhite; Gpu; LineInWhite; Net; LineInWhite; Weatcher; LineInWhite; Clock)"
+        tput clear
+        print -f '%s' "$base"
+        sleep 1
+    done
+} 
+stop ()
+{
+    kill $(< /tmp/infosys.pid.gpu)
+    kill $(< /tmp/infosys.pid.cpu)
+    kill $(< /tmp/infosys.pid.weatcher)
+    kill $(< /tmp/infosys.pid.net)
+    rm /tmp/infosys.pid.gpu /tmp/infosys.pid.cpu /tmp/infosys.pid.weatcher /tmp/infosys.pid.net 
+    tput cnorm
+    exit 0
+}
+
+trap stop SIGINT SIGTERM
+
+[[ -z $@ ]] && 
+    {
+        tput civis
+        $0 GpuStart
+        $0 CpuStart
+        $0 WeatherStart
+        $0 NetStart
+        main 
+    } ||
+        {
+            case $@ in
+                GpuStart ) GpuStart &>/dev/null & <<< $! > /tmp/infosys.pid.gpu ;;
+                CpuStart ) CpuStart &>/dev/null & <<< $! > /tmp/infosys.pid.cpu ;;
+                WeatherStart ) WeatherStart &>/dev/null & <<< $! > /tmp/infosys.pid.weatcher ;;          
+                NetStart ) NetStart &>/dev/null & <<< $! > /tmp/infosys.pid.net ;;
+            esac
+        }
+

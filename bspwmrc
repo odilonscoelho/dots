@@ -1,32 +1,20 @@
 #!/bin/zsh
-
 #--------------------------------------------------------------------------------------
 # Configure shell envs
 #--------------------------------------------------------------------------------------
-declare -x path_dots=$HOME/hdbkp/dots
+declare -x XDG_CONFIG_HOME="$HOME/.config"
+declare -x path_dots=/hdbkp/dots
 declare -x path_scripts=$path_dots/scripts
 declare -x path_polybar=$path_dots/polybar
 declare -x path_colors=$path_dots/temas
-. $path_colors/colors.zsh
-. $path_scripts/icons # Icones e suas cores para polybar
-export colorgreen=#2CD776
-export color_focused_border_color
-export color_normal_border_color="#333333"
-export color_active_border_color="#333333"
-export color_presel_feedback_color="#333333"
-export TERM="xterm-256color"
-export LANG="pt_BR.UTF-8"
-export QT_QPA_PLATFORMTHEME="qt5ct"
-export QT_AUTO_SCREEN_SCALE_FACTORS="1.42"
-export PLASMA_USE_QT_SCALING="1.42"
-export QUTEWAL_DYNAMIC_LOADING="True"
-export XDG_CONFIG_HOME="$HOME/.config"
+. $path_colors/colors.zsh # Import das cores usadas nos ícones e scripts
+. $path_scripts/icons # Import do ícones e suas cores para polybar e scripts
 #--------------------------------------------------------------------------------------
 # Configure Displays
 #--------------------------------------------------------------------------------------
 # Capture of displays to envs
-export monitor1=$(xrandr |grep ' connected'|sed -n 1p|awk '{print $1}')
-export monitor2=$(xrandr |grep ' connected'|sed -n 2p|awk '{print $1}')
+declare -x monitor1=$(xrandr |grep ' connected'|sed -n 1p|awk '{print $1}')
+declare -x monitor2=$(xrandr |grep ' connected'|sed -n 2p|awk '{print $1}')
 # Xrandr for HDPI , alter mode for others reslutions
 mode=3840x2160
 if [[ -z $monitor2 ]]; then
@@ -46,65 +34,30 @@ bspc config remove_disabled_monitors true
 bspc config ignore_ewmh_focus true
 bspc config honor_size_hints false
 bspc config split_ratio 0.5
-bspc config border_width 3
+bspc config border_width 5
 bspc config status_prefix true
-#bspc config focused_border_color $color10
-#bspc config normal_border_color $color12 || bspc config normal_border_color $color_normal_border_color
-#bspc config active_border_color $color12 || bspc config normal_border_color $color_active_border_color
-#bspc config presel_feedback_color $color12 || bspc config normal_border_color $color_presel_feedback_color
 #--------------------------------------------------------------------------------------
 # Rules for programs
 #--------------------------------------------------------------------------------------
-# bspc external rules
-# bspc config external_rules_command $path_dots/external_rules
-# bspc rule -a Tilix state=floating follow=on center=false sticky=off
-# bspc rule -a kitty state=floating follow=off center=false sticky=off,
-# bspc rule -a tilda state=floating follow=on center=false sticky=on
-# bspc rule -a Alacritty state=floating follow=off center=false sticky=off
-# bspc rule -a Termite state=floating follow=on center=false sticky=off
-# bspc rule -a qutebrowser state=floating follow=on center=false sticky=off
-# bspc rule -a Google-chrome state=floating follow=on center=false sticky=off
-# bspc rule -a Pulseaudio-equalizer-gtk state=floating follow=on center=false sticky=off
-# bspc rule -a Nitrogen state=floating follow=on center=false
-# bspc rule -a Atom state=floating follow=on center=false
-# bspc rule -a Subl3 state=floating follow=on center=false
-# bspc rule -a Pamac-manager state=floating follow=on center=false
-# bspc rule -a Manjaro Settings Manager state=floating follow=on center=false
-# bspc rule -a Thunar state=floating follow=on center=false
-# bspc rule -a Nemo state=floating follow=on center=false
-# bspc rule -a nm-connection-editor state=floating follow=on center=false
-# bspc rule -a Nvidia-settings state=floating follow=on center=false
-# bspc rule -a qt5ct state=floating follow=on center=false
-# bspc rule -a Lxappearance state=floating follow=on center=false
-# bspc rule -a TelegramDesktop state=floating follow=on center=false
-# bspc rule -a whatsapp-nativefier-d52542 state=floating follow=on center=false
-# bspc rule -a smplayer state=floating follow=on center=false
-# bspc rule -a mpv state=floating follow=on center=true
-# bspc rule -a Xviewer state=floating follow=on center=false
-# bspc rule -a Nm-connection-editor state=floating follow=on center=false
-# bspc rule -a Pavucontrol state=floating follow=on center=true
-# bspc rule -a SimpleScreenRecorder state=floating follow=on center=false
-# bspc rule -a Code-oss #state=floating follow=on center=false
-# bspc rule -a Thunderbird state=floating follow=on center=false
-# bspc rule -a google-keep-nativefier-d04d04 state=floating follow=on center=false
 bspc rule -a Yad state=floating #follow=off center=false sticky=off
 bspc rule -a notifyconf state=floating follow=on center=true
 bspc rule -a Rofi state=floating follow=on center=false
-
+bspc rule -a kitty state=floating follow=on center=false
 #--------------------------------------------------------------------------------------
 # External Auto-Start
 #--------------------------------------------------------------------------------------
-xrdb -merge ~/.Xresources &
 sxhkd &
+dunst &
+xrdb -merge ~/.Xresources &
 lxqt-policykit-agent &
-nitrogen --restore &
-redshift &
-caffeine -a &
-xsetroot -cursor_name left_ptr
-pulseaudio-equalizer enable &
 keyboard br &
-weatcher start &
-gpuinfo start &
+#app hset &
+nitrogen --restore &
+redshift -l -21.80194:-54.54639 &
+xsetroot -cursor_name left_ptr &
+pulseaudio-equalizer enable &>/dev/null &
+# picomtoggle &
+#weatcher start &
+#gpuinfo start &
 launch &
 taskbar start &
-picomtoggle &&

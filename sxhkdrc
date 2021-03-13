@@ -50,6 +50,18 @@ super + {o,i}
 	bspc node {older,newer} -f; \
 	bspc wm -h on
 
+#KP_Up
+#	spc node north -f
+
+#KP_Down
+#	bspc node south -f
+
+#KP_Left
+#	bspc node west -f
+
+#KP_Right
+#	bspc node east -f
+
 #===========================================================================================================================#
 # FOCUS DESKTOP | SEND NODES TO DESKTOP
 # => Workspace focus | shift => Send node to desktop
@@ -60,6 +72,12 @@ super + {_,shift + }{1-9,0}
 
 #===========================================================================================================================#
 
+# Altera posição do node na grade
+super + alt + {Left,Right,Up,Down}
+	bspc node -f --to-node {prev.local,next.local,next,prev}	
+
+#===========================================================================================================================#
+# Verificar isso
 super + ctrl + {1-9}
 	bspc node -o 0.{1-9}
 
@@ -87,7 +105,7 @@ alt + {_,shift +}  button3
 
 #===========================================================================================================================#
 
-shift + Insert
+ctrl + super + Insert
 	var=$(tradutor sel) && notify -t 1000000 -i translator -m "$var"
 
 ctrl + shift + Insert
@@ -101,9 +119,16 @@ super + control + {button4,button5}
 	bspc node -d {next,prev}
 
 # Enviar node para outro desktop com escolha de focar ou não do desktop de destino que 
+#wm node.to.desktop
 alt + shift + Tab
-	wm node.to.desktop
-	
+    bspc wm -h off; \
+    bspc node older -f; \
+	bspc wm -h on
+
+alt + Tab
+    bspc wm -h off; \
+    bspc node newer -f; \
+	bspc wm -h on
 
 #===========================================================================================================================#
 
@@ -112,15 +137,16 @@ alt + shift + Tab
 shift + super + {button4,button5}
 	bspc desktop -f  {next,prev}
 
+# Altera posição do node na grade
+super + alt + {Left,Right,Up,Down}
+	bspc node -f --to-node {prev.local,next.local,next,prev}	
+
 #===========================================================================================================================#
 
 #Flutuante ou Tiled
 
 alt + {button4,button5,button8}
 	bspc node -t {tiled,floating,fullscreen}
-
-alt + {w,d}
-	bspc node -t {tiled,floating}
 
 #===========================================================================================================================#
 
@@ -133,6 +159,7 @@ shift + Print
 	app print.cut
 
 #===========================================================================================================================#
+# Media
 @XF86AudioPrev
 	mp -prev
 
@@ -142,17 +169,11 @@ shift + Print
 @XF86AudioPlay
 	mp -pause
 
-ctrl + shift + @XF86AudioPlay
-	app mpv
+@XF86AudioStop
+	mp -stop
 
 shift + @XF86AudioPlay
 	mp -x
-
-shift + F7
-	mp -x
-
-@XF86AudioStop
-	mp -stop
 
 F10
 	mp -x
@@ -162,10 +183,9 @@ shift + F10
 
 ctrl + F10
 	mp -plr
-	#lrofi player plistrofi -w 100 -f 'Iosevka Term SS07 Medium 17' -iD -lH -nW -l 2 -y 74
 
 shift + ctrl + F10
-	mp -controlsr
+	mp -controls
 #===========================================================================================================================#
 @XF86AudioLowerVolume
 	pulsemixer --change-volume -1
@@ -193,23 +213,20 @@ super + {v,c}
 
 #===========================================================================================================================#
 
-alt + Tab
-	lrofi -modi combi -show window -f 'Iosevka Term SS07 Bold 18' -lH -iD -w 90 -l 7 -yoffset -74 -xoffset 5 -terminal kitty -nW
+super + Return
+	. $path_scripts/themerofi && rofi -modi drun,window -show drun -width 10 -font 'M+ 1mn 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons
 
-shift + F12
-	lrofi -modi combi -show drun -w 90 -x 5 -f 'Iosevka Term SS07 Bold 22' -lH -iD -yoffset 74 -l 2 -nW -title "Menu"
-
+shift + F11
+    editor
+    
 F11 
-	lrofi cmd -f 'Iosevka Term SS07 Medium 18' -nW
-
-F12
-	lrofi main -f "Arimo Nerd Font 55" -w 45 -cl 5 -lines 2 -nW -iD -hS -padding 25
-
-	#lrofi -iD  -w 45 -lH -f 'Hack Nerd Font 41' -ft 'Iosevka Term SS07 Medium 17' -terminal kitty -yoffset 74 -l 2 -nW -radius 5 -title "Main"
+	/hdbkp/projetos/shell/bash/ytmpv2
+    #lrofi cmd -f 'M+ 2m 18' -nW
 
 button8
-	lrofi -modi combi -show drun -f 'Nova Flat 22' -w 15 -padding 25 -terminal kitty -nW
-
+	ktdraw2
+	
+	#. $path_scripts/themerofi && rofi -modi drun,window -show drun -width 10 -font 'M+ 1mn 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons
 #======================================================================================================================t=====#
 @button9
 	xdotool keydown super
@@ -225,27 +242,17 @@ ctrl + button 8
 
 #===========================================================================================================================#
 
-#F1
-	#wm tdrop
-#shift + F1
-	#wm tdrop open
-#===========================================================================================================================#
 
-
-	#lrofi -f 'Iosevka Term SS07 20' -lines 20 -columns 1 cmd
-#===========================================================================================================================#
-
-#super + c
-#	wq picom
-
-#===========================================================================================================================#
-super + Return
-	tilix |bspc node -f -t tiled
-XF86Calculator
-	bspc rule -a Tilix state=floating focus=on; tilix -q ; bspc rule -r Tilix:\*
+F12
+	ktdraw
 	
-#===========================================================================================================================#
-super + alt + {Left,Right,Up,Down}
-	bspc node -f --to-node {prev.local,next.local,next,prev}
+shift + F12
+    wm node.focus
 
-#===========================================================================================================================#
+ctrl + F12
+    bspc node -f --flag hidden=on
+
+
+	
+
+
