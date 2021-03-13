@@ -1,98 +1,44 @@
 #!/bin/zsh
-processbkp () {
-
-    if [[ $1 == real ]]; then
-        base="$(ps auxSf)"
-    else
-        base="$(ps auxf)"
-    fi
-
-    column \
-    	--table \
-    	--table-truncate=PROCESS \
-    	--separator "|" \
-        --table-columns PROCESS,"    PID",CPU%,MEM% \
-        -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
-        $(\
-    		awk '\
-    		/taskbar loop|taskbar start|taskbar.zsh start|weatcher|polybar *.|[g]pu/ \
-    		{print $11, $12, $13,$14"|",$2"|",$3"|",$4"|"}' <<< "$base"\
-    	)
-    echo
-        column \
-        --table \
-        --table-truncate=PROCESS \
-        --separator "|" \
-        --table-columns PROCESS,"    PID",CPU%,MEM% \
-        -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
-        $(\
-            awk '\
-            /[m]p \-mpd|[m]p plist|[b]asepl /\
-            {print $13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
-        )
-    echo
-    column \
-        --table \
-        --table-truncate=PROCESS \
-        --separator "|" \
-        --table-columns PROCESS,"    PID",CPU%,MEM% \
-        -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
-        $(\
-            awk '\
-            /[m]pv /\
-            {print $11,$12,$13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
-        )
-    echo
-    column \
-        --table \
-        --table-truncate=PROCESS \
-        --separator "|" \
-        --table-columns PROCESS,"    PID",CPU%,MEM% \
-        -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
-        $(\
-            awk '\
-            /[w]q process.*|[w]q fetch.*/\
-            {print $13,$14,$15,$16,$17"|",$2"|",$3"|",$4"|"}' <<< "$base"\
-        )
-
-   	sleep 3
-	clear
-    if [[ $1 == real ]]; then
-        processbkp real
-    else
-        processbkp
-    fi    
-}
-process () {
-
-    base="$(ps -axH -o pid,%cpu,%mem,command |grep -E '[t]askbar .*|[t]askbar.zsh .*|[w]eatcher.zsh .*|[p]olybar .*|[w]q gpu|[w]q process|[w]q |[m]p ')"
-    clear
-    column \
-        --table \
-        --table-truncate=PROCESS \
-        --separator "|" \
-        --table-columns "    PID",CPU%,MEM%,PROCESS \
-        -o "|" \
-        --table-order "    PID",MEM%,CPU%,PROCESS <<< \
-        $(for x in {1..$(wc -l <<< "$base")}
-        {
-            <<< "${${(s: :)${(f)base}[$x]}[1]}|${${(s: :)${(f)base}[$x]}[2]}|${${(s: :)${(f)base}[$x]}[3]}|${${(s: :)${(f)base}[$x]}[4,-1]}"
-        })
-    
-    sleep 3
-    clear
-    process
+prc ()
+{
+    base="$(ps auxSf)"        
+    grep -E ''$re'' <<< $base |sort -nrk3
 }
 
-clear
-if [[ $@ =~ "--d" || $@ =~ "--details" || $@ =~ "d" ]]; then
-    process
-elif [[ $@ == "real" ]]; then
-    processbkp "real"
-else
-    processbkp
-fi
+impress ()
+{
+    pid=10 ; mem=6 ; cpu=6 ; cmd=$(( COLUMNS - pid - mem - cpu - 5 )) ; tput clear
+    print "$bold$cyan$(printf '%-'$pid'b' " PID ")$reset $bold$yellow$(printf '%'$mem'b' " MEM% ")$reset $bold$green$(printf '%'$cpu'b' " CPU% ")$reset $bold$blue$(printf '%-'$cmd'b' " PROCESS ")$reset"
+    typeset -F 1 MEM CPU ADDMEM ADDCPU
+    while read line; do
+        (( control = control + 1 ))
+        ADDMEM=${${(s: :)line}[4]}
+        ADDCPU=${${(s: :)line}[3]}
+        print "$cyan$(printf '%-'$pid'b' " ${${(s: :)line}[2]}")$reset $yellow$(printf '%'$mem'b' "$ADDMEM ")$reset $green$(printf '%'$cpu'b' "$ADDCPU ")$reset $blue$(printf '%-'$cmd'b' " ${${${(s: :)line}[11,-1]}[1,$((cmd-1))]}")$reset"
+        MEM=$((MEM+$ADDMEM))
+        CPU=$((CPU+$ADDCPU))
+    done <<< "${scope_ini}"
+    printf '%b' "$bold$cyan$(printf '%-'$pid'b' " pids $control ")$reset $bold$yellow$(printf '%'$mem'b' " $MEM% ")$reset $bold$green$(printf '%'$cpu'b' " $CPU% ")$reset $bold$blue$(printf '%-'$cmd'b' " search $search  ")$reset"
+    unset control
+}
+
+stop () { tput cnorm; exit 0 }
+
+trap stop SIGINT SIGTERM
+
+green="\033[32m" ; blue="\033[34m" ; cyan="\033[36m" ; yellow="\033[33m" ; kgreen="\033[1;42m" ; kyellow="\033[1;43m" ; kblue="\033[1;44m" ; kcyan="\033[1;46m" 
+reset="\033[0;0m" ; bold="\033[1m"
+
+[[ -z $@ ]] && { re='\/bin\/zsh.*[m]p|\/bin\/zsh .*mp \-mpd start$|taskbar start|[p]olybar \-c|gpuinfo start|[w]eatcher start|[l]ocal\/bin\/infosys' ; search="scripts background" } || { re="$@" ; search=$re }
+scope_ini="$(prc)"
+tput civis
+base=$(impress)
+tput clear
+print -f '%s' "$base"
+while true; do
+    sleep 2
+    scope_new="$(prc)"
+    [[ "$scope_ini" == "$scope_new"  ]] && continue || { scope_ini=$scope_new; base=$(impress); tput clear; print -f '%s' "$base" }
+done
+
+exit 0

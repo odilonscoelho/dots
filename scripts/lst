@@ -32,7 +32,7 @@ lst.init ()
 	links="$colorReset$colorLinks ﰲ" #   ﰲ   ﰲ  ﰲ
 	pdfs="$colorReset$colorPdfs " #   
 	zips="$colorReset$colorZips " #
-	default="$colorReset$colorDefault " #➼   
+	default="$colorReset$colorDefault " #➼   
 	# declara situação default das vars
 	recursive="false"
 	column="false"
@@ -42,7 +42,7 @@ lst.init ()
 		recursive="false"
 		column="false"
 		argStatus="pesquisa"
-		all=false	
+		all=false
 	else
 		for i in $@
 		{
@@ -57,7 +57,7 @@ lst.init ()
 			else
 				pesquisa="$i"
 			fi
-		}		
+		}
 	fi
 	# Definir o tamanho máximo da label de cada arquivo, influencia na quantidade de colunas
 	# em que os dados serão dispostos;
@@ -120,7 +120,7 @@ lst.main ()
 		fi
 		directory="$PWD"
 		lst.print |xargs -0
-	fi	
+	fi
 }
 
 lst.print ()
@@ -169,7 +169,7 @@ lst.print ()
 						{ echo -n "$icon $label"; controller=$(($controller+1)) }
 			else
 				lst.case $i
-			fi	
+			fi
 		}
 	fi
 }
@@ -220,7 +220,7 @@ lst.case ()
 
 		*".sh" || *".zsh" || *".lua" || \
 		*".cpp" || *".c"* || *".c" || *".bash" )
-			
+
 			icon="$(printf '%-1s' $scripts)"
 			label="$(printf '%-'$(($limiteString-4))'s' $@)"
 			if [[ $(wc -c <<< "$label") -gt $limiteString ]]; then
@@ -234,15 +234,15 @@ lst.case ()
 		*".ini" || *".conf" || *".config" || *".txt" )
 			lst.print.format $textos "$@" ;;
 
-		* ) 
+		* )
 			TypeFile="$(file "$@")"
 			case "$TypeFile" in
 				*".mp4: "* || *".MP4: "* || *".wmv: "* || *".flv: "* || *".webm" || \
 				*".mov: "* || *".wmv: "*  || *".m4a: "*  || *".mkv: "*  || \
-				*"Video Media"* || *"MP4 Base Media"* || *".mpg: "* ) 
+				*"Video Media"* || *"MP4 Base Media"* || *".mpg: "* )
 					lst.print.format $videos "$@" ;;
 
-				*"Audio"* || *": data" || *".opus: "* || *".mp3: "* ) 
+				*"Audio"* || *": data" || *".opus: "* || *".mp3: "* )
 					lst.print.format $audios "$@" ;;
 
 				*"script, UTF-8 Unicode text executable"* || \
@@ -255,13 +255,13 @@ lst.case ()
 				*": UTF-8 Unicode text" || *".conf: UTF-8 Unicode text" || *": Non-ISO extended-ASCII text" )
 					lst.print.format $textos "$@" ;;
 
-				*" image data,"* || *"JPEG image data"* || *": PNG image data,"* ) 
+				*" image data,"* || *"JPEG image data"* || *": PNG image data,"* )
 					lst.print.format $imagens "$@" ;;
 
-				*": symbolic link"* ) 
+				*": symbolic link"* )
 					lst.print.format $links "$@" ;;
 
-				*) 
+				*)
 					lst.print.format $default "$@" ;;
 			esac
 	esac

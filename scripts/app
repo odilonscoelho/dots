@@ -1,47 +1,190 @@
 #!/bin/zsh
 
-qute ()
+info.node ()
+{
+    if [[ ! $@ =~ '[[:digit:]]' ]]; then
+        if [[ $(grep -E "$@" /tmp/taskbar |wc -l) -gt 1 ]]; then
+            id=$(grep -E "$@" /tmp/taskbar |sed -n '1p' |cut -d ' ' -f 2)
+            base=`bspc query -n $id -T |sed 's/{\|}\|"//g;s/,y/ y/g;s/,/\n/g;s/constraints:\|client://g;s/x://g;s/ y:/x/g'`
+        else
+            base=`bspc query -n "${${(s: :)$(grep -E "$@" /tmp/taskbar)}[2]}" -T |sed 's/{\|}\|"//g;s/,y/ y/g;s/,/\n/g;s/constraints:\|client://g;s/x://g;s/ y:/x/g'`
+        fi
+    else
+        base=`bspc query -n "${${(s: :)$(sed -n $@'p' /tmp/taskbar)}[2]}" -T |sed 's/{\|}\|"//g;s/,y/ y/g;s/,/\n/g;s/constraints:\|client://g;s/x://g;s/ y:/x/g'`
+    fi
+    
+    declare -xA info
+    for i in ${(f)base}
+        info[${${(s#:#)i}[1]}]=${${(s#:#)i}[2]}
+}
+
+info.node.keys ()
+{
+    # mostra as chaves do array
+    info.node $@    
+    print ${(k)info}
+}
+
+quteb ()
 {
 	qutebrowser --target window "$@"
 }
 
-paste ()
+paste () #
 {
 	xclip -selection clipboard -o
 }
 
-pastex ()
+pastex () #
 {
-	xclip -selection clipboard -o
+	xclip -o
 }
 
 csgo ()
 {
-	nohup steam steam://rungameid/730 /dev/null &
+	nohup steam steam://rungameid/730 /dev/null &> /dev/null &
 }
 
 print.full ()
 {
+	
 	if [[ -n $1  ]];then
-		notify -msg "screenshot $@.jpg" -t 5000 
-		import -window root -screen "$@.jpg"
+		import -window root -screen "$@.jpg" &
+		dunstify -t 5000 -I "$HOME/Pictures/$@.jpg" "Print :" "Now"
 	else
+		
 		var="$(date +%H%M%S).jpg"
-		notify -t 5000 -msg "screenshot saved in ~/Pictures"
+		sleep 0.25
+		mp -cmd "get.thumb $(mp -cmd trackget)"
 		sleep 0.5
 		import -quality 100 -window root "$HOME/Pictures/$var"
+		sleep 0.25
+		dunstify -t 5000 -I "$HOME/Pictures/$var" "Print :" "~/Pictures/$var"
+		sleep 0.25
+		import -quality 100 -window root "$HOME/Pictures/$var"		
 	fi
 }
 
 print.cut ()
 {
+	icon="/home/losao/.icons/oomox-gruvbox-dark-hard/apps/16/screenshot.svg"
 	file="$HOME/Pictures/$(yad --entry --title="screenshot =...")"
 	import $file
+	dunstify -t 5000 -i $icon "Screenshot" "Saved in ~/Pictures"
 }
 
 kitty.reload.colors ()
 {
-	kitty @set-colors --all --configured $path_dots/kitty/kitty.conf
+	kitty @set-colors --all --configured ~/.config/kitty/kitty.conf
+}
+
+kt () 
+{
+    if pidof kitty; then
+        info.node kitty
+        [[ "$info[hidden]" == "false" ]] &&            
+            {
+                [[ -z $@ ]] && 
+                    {
+                        bspc node $info[id] -f 
+                    } ||  
+                        {
+                            bspc node $info[id] -f
+                            kitty @ --to unix:/tmp/mykitty launch "$@"
+                            kitty @ --to unix:/tmp/mykitty detach-window  
+                        }
+            } ||
+                {
+                    [[ -z $@ ]] &&
+                        {
+                            bspc node $info[id] --flag hidden=off
+                            bspc node $info[id] -f                            
+                        } ||
+                            {
+                                bspc node $info[id] --flag hidden=off
+                                bspc node $info[id] -f
+                                kitty @ --to unix:/tmp/mykitty launch "$@"
+                                kitty @ --to unix:/tmp/mykitty detach-window                                
+                            }
+                }
+    else
+        bspc rule -a kitty state=floating rectangle=1910x1600+1000+480
+        [[ -z $@ ]] && kitty --listen-on=unix:/tmp/mykitty || kitty --listen-on=unix:/tmp/mykitty --execute "$@"
+        bspc rule -r kitty:\*
+    fi
+}
+
+qtb ()
+{
+    # Vetificar a compatibilidade com todos os apps
+    # source $path_scripts/icons # For tilix
+    if pidof qutebrowser; then
+        info.node qutebrowser
+        [[ "$info[hidden]" == "false" ]] &&
+            {
+                windowFocused=$(< /tmp/taskbar_id_focused)
+                [[ ${(s: :)$(grep $windowFocused /tmp/taskbar)[5]} == "qutebrowser" ]] &&
+                    {
+                        bspc node $info[id] --flag hidden=on
+                    } ||
+                        {
+                            bspc node $info[id] -f
+                        }
+            } ||
+                {
+                    bspc node $info[id] --flag hidden=off
+                    bspc node $info[id] -f
+                }
+        [[ -n $@ ]] && qutebrowser $@ &>/dev/null &
+    else
+        bspc rule -a qutebrowser state=floating rectangle=1910x1600+1000+480
+        [[ -z $@ ]] && { qutebrowser &>/dev/null & } || { qutebrowser $@ &>/dev/null & }
+        bspc rule -r qutebrowser:\*
+    fi
+} 
+
+quake ()
+{
+    # Vetificar a compatibilidade com todos os apps
+    # source $path_scripts/icons # For tilix
+    if pidof kitty; then
+        info.node $@
+        [[ "$info[hidden]" == "false" ]] &&
+            {
+                windowFocused=$(< /tmp/taskbar_id_focused)
+                [[ ${(s: :)$(grep $windowFocused /tmp/taskbar)[5]} == "kitty" ]] &&
+                    {
+                        bspc node $info[id] --flag hidden=on
+                    } ||
+                        {
+                            bspc node $info[id] -f
+                        }
+            } ||
+                {
+                    bspc node $info[id] --flag hidden=off
+                    bspc node $info[id] -f
+                }
+    else
+        bspc rule -a $@ state=floating rectangle=1910x1600+1000+480
+        $@
+        bspc rule -r $@:\*
+    fi
+}
+
+tilix.new ()
+{
+    case $@ in
+        session* )
+            if [[ $2 == "right" ]]; then
+                tilix --profile $THEME --action session-add-right
+            elif [[ $2 == "down"  ]]; then
+                tilix --profile $THEME --action session-add-down
+            elif [[ $2 == "new"  ]]; then
+                tilix --profile $THEME --action app-new-session
+            fi ;;
+        window )
+            tilix --profile $THEME --action app-new-window ;;
+    esac
 }
 
 hset ()
@@ -56,4 +199,227 @@ mpv ()
 			{ nohup mpv --no-config "$@" &>/dev/null & }
 }
 
+drop ()
+{
+	# Tratativa de argumentos;
+	unset help x y w h p a r program args ignoreds actions whitelist nextArgv ref
+	# Array que valida as possíveis opções para parâmetros posicionais;
+	whitelist+=('-x' '-y' '-w' '-h' '--help' '-p' '--program' '-a' '--args' '-r' '--ref')
+	# Atribuição de cada argumento;
+	for var in $@
+	{
+		control=$((control+1))
+		if [[ "$whitelist" =~ "${${(s:=:)var}[1]}" || "$whitelist" =~ "${${(s: :)var}[1]}" ]]; then
+			if [[ "$var" =~ '.=.' ]]; then
+				read ${${(s:=:)${var//-/}}[1]} <<< ${${(s:=:)var}[2,-1]}
+				continue
+			else
+				nextArgv="${(P)$((control+1))}"
+			fi
+			if [[ $nextArgv =~ "\.com.*" || $nextArgv =~ "\.com$" || $nextArgv =~ "^www\." || $nextArgv =~ "^http" && ! $ignoreds =~ "$nextArgv" ]]; then
+				read ${var//-/} <<< "$nextArgv"
+				ignoreds+=("$nextArgv")
+			elif [[ $whitelist =~ "$nextArgv" && ! $ignoreds =~ "$nextArgv" ]]; then
+				read ${var//-/} <<< "true"
+			elif [[ ! $whitelist =~ "$nextArgv" ]]; then
+				read ${var//-/} <<< "$nextArgv"
+				ignoreds+=("$nextArgv")
+			fi
+		else
+			[[ "$ignoreds" =~ "$var" ]] && continue || actions+=("$var")
+		fi
+	}
+	# Valida parâmetros mínimo para executar o script sem erro;
+	# [[ -z $program ]] && program=$p # Caso '--program' não tenha sido informado ele vai verificar '-p';
+	program=${program:-$p}
+	# Se '-p' também for nulo nao executa o script; no mínimo é necessário um programa para chamar o tdrop;
+	[[ -z $program ]] && { printf %b "parâmetro mínimo necessário -p | --program \n"; help; exit 1 }
+	# Verifica se '--args' foi informado, se for nulo, salva args como '-a', se esse for nulo a var args será valor "";
+	[[ -z $args ]] && args=$a
+	# Atribui à variável ref caso ela seja nula, o valor de '-r' , se esse for nulo a var red será valor "";
+	[[ -z $ref ]] && ref=$r
+	# Verifica se há instancia do programa já aberta e salva o pid em $pidStatus;
+	pidStatus=$(pidof "$program")
+
+	_qutebrowser ()
+	{
+		pidStatus=${${(s: :)$(pidof "QtWebEngineProcess")}[1]}
+		x=1; y=80; w=1300; h=2000
+		if pidof "QtWebEngineProcess"; then
+			bspc rule -a "$program" state=floating
+			if ! grep --ignore-case -E -q "qutebrowser" < <(wmctrl -lx); then # está minizado ?
+				tdrop -w $w -h $h -y $y -x $x $program
+				if [[ -n $args && -n $actions ]];then
+					qutebrowser "$actions $args"
+				elif [[ -n $args && -z $actions ]];then
+					qutebrowser "$args"
+				elif [[ -z $args && -n $actions ]];then
+					qutebrowser "$actions"
+				fi
+			else
+				if [[ -n $args && -n $actions ]];then
+					qutebrowser "$actions $args"
+				elif [[ -n $args && -z $actions ]];then
+					qutebrowser "$args"
+				elif [[ -z $args && -n $actions ]];then
+					qutebrowser "$actions"
+				else
+					tdrop -w $w -h $h -y $y -x $x $program
+				fi
+			fi
+			bspc rule -r "$program":\*
+		else
+			bspc rule -a "$program" state=floating
+			if [[ -n $args && -n $actions ]];then
+				tdrop -w $w -h $h -y $y -x $x $program $actions $args
+			elif [[ -n $args && -z $actions ]];then
+				tdrop -w $w -h $h -y $y -x $x $program $args
+			elif [[ -z $args && -n $actions ]];then
+				tdrop -w $w -h $h -y $y -x $x $program $actions
+			else
+				tdrop -w $w -h $h -y $y -x $x $program
+			fi
+			bspc rule -r "$program":\*
+		fi
+	}
+	_google-chrome-stable () #
+	{
+		x=29; y=5; w=70; h=70
+		bspc rule -a Google-chrome state=floating
+		if [[ -n $pidStatus ]];then
+			tdrop -w $w% -h $h% -y $y% -x $x% $program
+		else
+			tdrop -w $w% -h $h% -y $y% -x $x% $program
+		fi
+		bspc rule -r Google-chrome:\*
+	}
+	_telegram-desktop () #
+	{
+		x=1; y=5; w=30; h=90
+		bspc rule -a TelegramDesktop state=floating
+		if [[ -n $pidStatus ]]; then
+			tdrop -w $w% -h $h% -y $y% -x $x% $program
+		else
+			tdrop -w $w% -h $h% -y $y% -x $x% $program
+		fi
+		bspc rule -r TelegramDesktop:\*
+	}
+	_nemo () #
+	{
+		x=1; y=80; w=1300; h=2000
+		bspc rule -a Nemo state=floating
+		if [[ -n $pidStatus ]];then
+			tdrop -w $w -h $h -y $y -x $x $program
+		else
+			tdrop -w $w -h $h -y $y -x $x $program
+		fi
+		bspc rule -r Nemo:\*
+
+	}
+	_kitty () #
+	{
+		x=1005; y=480; w=1900; h=1600
+		bspc rule -a kitty state=floating
+		if pidof kitty;then
+			tdrop -w $w -h $h -y $y -x $x $program toggle_auto_hide
+		else
+			tdrop -w $w -h $h -y $y -x $x $program
+		fi
+		bspc rule -r kitty:\*
+	}
+	_micro () #
+    {
+        if pidof tilix; then
+            # bspc node ${${(s: :)$(< /tmp/taskbar |grep 'Google')}[2]} --flag hidden=off
+            if bspc node ${${(s: :)$(< /tmp/taskbar |grep 'Micro')}[2]} -f; then
+                return 0
+            else
+                bspc rule -a Tilix state=floating rectangle=1910x1600+1000+480
+                tilix -e 'micro '$@''
+                bspc rule -r Tilix:\*    
+            fi
+        else
+            bspc rule -a Tilix state=floating rectangle=1910x1600+1000+480
+            tilix -e 'micro '$@''
+            bspc rule -r Tilix:\*
+        fi
+    }
+    _quake () #
+    {
+        source $path_scripts/icons
+        if pidof tilix; then
+            info.node kitty
+            [[ "$info[hidden]" == "false" ]] &&            
+                {
+                    windowFocused=$(< /tmp/taskbar_id_focused)
+                    [[ ${(s: :)$(grep $windowFocused /tmp/taskbar)[5]} == "Tilix" ]] &&
+                        {
+                            bspc node $info[id] --flag hidden=on
+                        } ||
+                            {
+                                bspc node $info[id] -f
+                            }
+                } ||
+                    {
+                        bspc node $info[id] --flag hidden=off
+                        bspc node $info[id] -f                
+                    }
+        else
+            bspc rule -a Tilix state=floating rectangle=1910x1600+1000+480
+            tilix --profile $THEME
+            bspc rule -r Tilix:\*
+        fi
+    }
+	_mpv () #
+	{
+		x=1125; y=880; w=1900; h=1200
+		bspc rule -a mpv state=floating
+		
+		if pidof mpv;then
+			if ! grep --ignore-case -E -q "mpv" < <(wmctrl -lx); then # está minizado ?
+				if mp -cmd "playlist" |grep -q --ignore-case -E '"playing":true'; then # Está tocando no momento
+					mp -cmd "loadeds url $(mp -cmd trackget)" | read url
+					if [[ -e $url ]]; then
+						[[ $url =~ ~/hdbkp/Musica.* ]] && type_url=music || type_url=video
+					else
+						if [[ $url =~ https://spankbang\|https://.*xvideos\|/acervo/ ]]; then
+							type_url=video
+						elif [[ $url =~ //.*youtube ]]; then
+							type_url=music
+						fi
+					fi
+				fi
+			fi
+			[[ $type_url == video ]] && tdrop -w $w -h $h -y $y -x $x mpv toggle_auto_hide
+			#[[ -z $args && -z $actions ]] && 
+		else
+			tdrop -w $w -h $h -y $y -x $x mpv
+		fi
+
+		if [[ -z $args && -n $actions ]]; then
+			"$actions"
+		elif [[ -n $args && -z $actions ]]; then
+			"$args"
+		elif [[ -n $args && -n $actions ]]; then
+			"$actions" "$args"
+		fi
+		bspc rule -r mpv:\*
+	}	
+	_default () #
+	{
+		x=23; y=26; w=60; h=70
+		#bspc rule -a Nemo state=floating
+		if [[ -n $pidStatus ]];then
+			tdrop -w $w% -h $h% -y $y% -x $x% $program
+		else
+			tdrop -w $w% -h $h% -y $y% -x $x% $program
+		fi
+		#bspc rule -r Nemo:\*
+	}
+	# Executa a função de cada programa; se não há uma função definida para
+	# o programa, a função _default será executada;
+	_$program || _default
+} 2>/dev/null
+
 $@
+

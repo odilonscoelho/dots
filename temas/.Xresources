@@ -1,3 +1,24 @@
 
-Xcursor.size: 32
+
+Xcursor.size: 16
+
 Xft.dpi: 142
+
+*background: 
+*foreground: 
+*color0: 
+*color1: 
+*color2: 
+*color3: 
+*color4: 
+*color5: 
+*color6: 
+*color7: 
+*color8: 
+*color9: 
+*color10: 
+*color11: #ffa75d
+*color12: 
+*color13: 
+*color14: 
+*color15: 

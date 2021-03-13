@@ -1,64 +1,8 @@
 #!/bin/zsh
-
-#########################################################################################################
-#  DEFINIÇÕES DO USUÁRIO PARA USAR OS MODELOS DISPONÍVEIS
-#########################################################################################################
-
-declare -xA colors
-# Colors of gruvbox
-colors+=([background]="#1d2021" [foreground]="#d5c4a1" [color0]="#3c3836" [color1]="#fb4934" \
-[color2]="#b8bb26" [color3]="#fe8019" [color4]="#83a598" [color5]="#d3869b" [color6]="#8ec07c" \
-[color7]="#ebdbb2" [color8]="#504945" [color9]="#f56352" [color10]="#a4a700" [color11]="#fabd2f" \
-[color12]="#7ebaa3" [color13]="#a17682" [color14]="#7ba76c" [color15]="#efe7c5" [color16]="#7B7B7B" \
-[color17]="#383838" [color18]="#9B727D" [color19]="#B8E3B5" [color20]="#AF68AE")
-# as cores precisam alteradas de acordo com o esquema acima, no script há apenas o modo normal, e as cores
-# são do gruvbox listadas no array $colors, mas você pode usar #2d2d2d por exemplo para especificá-las:
-#   State:           'bg'		,     'fg'		 ,     'bgalt'		,  		'hlbg'	  ,   'hlfg'
-# colorNormal="$colors[background],$colors[color2],$colors[background],$colors[color12],$colors[background]"
-# colorActive="$colors[background],$colors[color20],$colors[background],$colors[color12],$colors[background]"
-# colorUrgent="$colors[background],$colors[color9],$colors[background],$colors[color12],$colors[background]"
-              # 'background'    ,    'border'
-# colorWindow="$colors[background],$colors[color12],$colors[background]"
-
-# themeCustom='* {
-# background:                  '$colors[background]';
-# background-color:            '$colors[background]';
-# foreground:                  '$colors[foreground]';
-# border-color:                '$colors[color4]';
-# separatorcolor:              '$colors[background]';
-# scrollbar-handle:            '$colors[color1]';
-
-# normal-background:           '$colors[background]';
-# normal-foreground:           '$colors[foreground]';
-# alternate-normal-background: '$colors[background]';
-# alternate-normal-foreground: '$colors[foreground]';
-# selected-normal-background:  '$colors[color4]';
-# selected-normal-foreground:  '$colors[background]';
-
-# active-background:           '$colors[color3]';
-# active-foreground:           '$colors[color16]';
-# alternate-active-background: '$colors[color3]';
-# alternate-active-foreground: '$colors[color16]';
-# selected-active-background:  '$colors[color4]';
-# selected-active-foreground:  '$colors[color16]';
-
-# urgent-background:           '$colors[color3]';
-# urgent-foreground:           '$colors[color16]';
-# alternate-urgent-background: '$colors[color3]';
-# alternate-urgent-foreground: '$colors[color16]';
-# selected-urgent-background:  '$colors[color4]';
-# selected-urgent-foreground:  '$colors[color16]';
-# }'
-
-# buttonSelected='button.selected {
-# background-color: '$colors[foreground]';
-# text-color:       '$colors[background]';
-# }'
-
 # Include cores externas
-. $HOME/hdbkp/dots/temas/colors.zsh
+. /hdbkp/dots/temas/colors.zsh
 
-themeCustom="* {
+ThemeCustom="* {
 background:                  $background ;
 background-color:            $background ;
 foreground:                  $foreground ;
@@ -93,92 +37,10 @@ background-color: $foreground;
 text-color:       $background;
 }"
 
-
-# Define o comando para executar resultado de busca no youtube:
-# exemplo para para mpv:
-# cmdSearchYT () { mpv $@ }
 cmdSearchYT () { mp $@ }
-# Define o comando de notificaçao
-ntfy () 
-{ 
-	dunstify -t 5000 "$@"
-	# notify-send -t 5000 "$@"
-}
-# Define comandos do player
-cmdPlayer ()
-{
-	Play="mp -pause"
-	Pause="mp -pause"
-	Add="mp -xclip"
-	Next="mp -next"
-	Prev="mp -prev"
-	Stop="mp -stop"
-	OpenFile="mp -sf"
-	# Custom
-	Format="mp -format"
-	Plist="mp -plistyad"
-}
-# Define o browser a ser usado para abrir os feeds e o youtube o que mais se fizer necessário
-browserDefs () { qutebrowser --target window $@ &>/dev/null & }
-# Define o aplicativo para email:
-mailDefs () { thunderbird }
-# Define o fileManager:
-fileManagerDefs () { nemo }
-# Define o editor:
-editor="subl3"
-editorDefs () { subl3 }
-# Define o Terminal:
-terminal="kitty"
-termDefs () { ${SHELL} -c ${terminal} }
-rofiIcon=""
 #########################################################################################################
 #  PROGRAMA MODELO
 #########################################################################################################
-main () 
-{	#ⁿ₁ⁿ₂ⁿ₃ⁿ₄ⁿ₅ⁿ₆ⁿ₇ⁿ₈ⁿ₉ ₁₂₃₄₅₆₇₈₉
-	
-	# lH="true"; iD="true"
-	struct "  ;  ;  ;  ;  ; ﬏ ;  ;  ;  ;  ; $rofiIcon " | read optn
-
-	case $optn in
-		"" ) cmd ;;
-		"" ) fileManagerDefs & ;;
-		"" )
-			# Caso tenha um terminal aberto dê foco, se não abra 
-			grep -E '[k]itty' <<< $(ps aux) && \
-				{
-					base=$(wmctrl -lx |grep 'kitty'| cut -d' ' -f1)
-					wmctrl -ia $base
-				} || \
-					{
-						termDefs &
-						exit 0
-					}
-			selRow=4
-			main  ;;
-		"﬏" )
-			# Caso o sublime esteja aberto dê foco, se não abra
-			grep -E '[s]ubl3' <<< $(ps aux) && \
-				{
-					base=$(wmctrl -lx |grep 'subl3'| cut -d' ' -f1)
-					wmctrl -ia $base
-				} || \
-					{
-						editorDefs &
-						exit 0
-					}
-			selRow=5
-			main ;;
-		"" ) feed; selRow=2; main ;;
-		"" ) ssr & selRow=6; main ;;
-		"" ) printscr; selRow=7; main ;;
-		"" ) libreOffice; selRow=8; main ;;
-		"" ) player 2>/dev/null ; selRow=1; main ;;
-		"" ) power; selRow=9; main ;;
-		"$rofiIcon" ) exit 0;;
-	esac
-}
-
 # Toggle para gravar a tela com simplescreenrecorder não configura nada, 
 # toda configuração para gravação é feita em ~/.ssr/settings.ini pelo user;
 # requer xdotool
@@ -194,149 +56,6 @@ ssr ()
 		exec xdotool key super+shift+alt+ctrl+r
 	fi
 }
-
-feed () 
-{
-	optnsA='0,1,8'
-	optnsU='1,2,3,4,5'
-	struct "  ;  ;  ;  ;  ;  ;  ;  ;  ; $rofiIcon " |read optn
-
-	case $optn in
-		"" ) telegram-desktop & ; exit 0 ;;
-		"" ) browserDefs 'https://twitter.com' & ; exit 0 ;;
-		"" ) browserDefs 'https://linkedin.com' & exit 0 ;;
-		"" ) browserDefs 'https://reddit.com' & exit 0 ;;
-		"" ) browserDefs 'https://github.com' & exit 0 ;;
-		"" ) mailDefs  & ; exit 0 ;;
-		"" ) browserDefs 'https://drive.google.com/drive' & ; exit 0 ;;
-		"" ) browserDefs 'https://www.youtube.com.br'  & ; exit 0 ;;
-		"" ) browserDefs  & ; exit 0 ;;
-	esac
-}
-
-libreOffice () 
-{
-	struct " Calc ; Writer ; Impress ; Draw ; Math ; $rofiIcon " | read optn
-
-	case $optn in
-		"Calc" ) libreoffice --calc  & ; exit 0 ;;
-		"Writer" ) libreoffice --writer  & ; exit 0 ;;
-		"Impress" ) libreoffice --impress  & ; exit 0 ;;
-		"Draw" ) libreoffice --draw  & ; exit 0 ;;
-		"Math" ) libreoffice --math  & ; exit 0 ;;
-	esac
-}
-
-
-printscr () 
-{
-	struct " Full ; Cut ; $rofiIcon " | read optn
-	case $optn in
-		Full ) 
-			struct |read Filename
-			[[ -n $Filename  ]] && \
-				{
-					ntfy "screenshot $Filename.jpg saved in $pathPictures"
-					import -window root -screen "$pathPictures/$Filename.jpg"
-					selRow=0
-					printscr
-				} || \
-					{
-						Filename="$(date +%H%M%S).jpg"
-						ntfy "screenshot $Filename.jpg saved in $pathPictures"
-						sleep 0.5
-						import -quality 100 -window root "$pathPictures/$Filename"
-						selRow=0
-						printscr
-					} ;;
-		Cut )
-			struct |read Filename
-			[[ -n $Filename  ]] && \
-				{
-					import "$pathPictures/$Filename.jpg"
-					ntfy "screenshot $Filename.jpg saved in $pathPictures"
-					selRow=1
-					printscr
-				} || \
-					{
-						Filename="$(date +%H%M%S).jpg"
-						import "$pathPictures/$Filename"
-						sleep 0.5
-						ntfy "screenshot $Filename.jpg saved in $pathPictures"
-						selRow=1
-						printscr
-					} ;;
-	esac
-}
-
-power () 
-{
-	[[ -n $fontText ]] && { fontOrigin=$font; font=$fontText }
-	struct " Reboot ; Quit-wm ; Logout ; Poweroff ; $rofiIcon " |read optn
-
-	case $optn in
-		Reboot ) reboot ;;
-		Quit* ) bspc quit ;;
-		Logout ) logout ;;
-		Power* ) poweroff ;;
-	esac
-
-	[[ -n $fontOrigin ]] && { font=$fontOrigin; unset fontOrigin }
-}
-
-player ()
-{
-	plistrofi ()
-	{
-		while read line; do
-			i=$(($i+1))
-			printf '%s %s' "$i" "$line ;"
-		done < /tmp/mptitlesDefault | read base
-
-		selRow=$(($(mp -trackget)-1))
-
-		[[ -n $width2 ]] && \
-			{ 
-				widthOrigin=$width
-				width=$width2 
-			}
-		
-		[[ -n $fontText ]] && \
-			{ 
-				fontOrigin=$font
-				font=$fontText
-			}
-		
-		while true; do
-			struct $base |read optn
-			[[ -n $optn ]] && { mp -track $(cut -d ' ' -f 1 <<< $optn) & } || { break ; exit 0 }
-		done
-	}
-	[[ -z $@ ]] && \
-		{
-			#            
-			cmdPlayer
-			struct "  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ; $rofiIcon " | read cmd
-			case $cmd in
-				"" ) mp -stop; selRow=6; player ;;
-				"" ) mp -Save; selRow=4; player ;;
-				"" ) zsh -c "$OpenFile" & selRow=3; player;;
-				"" ) zsh -c "$Prev" & selRow=10; player;;
-				"" ) zsh -c "$Stop" & selRow=7; player;;
-				"" ) zsh -c "$Pause" & selRow=8; player;;
-				"" ) zsh -c "$Play" & selRow=9; player;;
-				"" ) zsh -c "$Next" & selRow=11; player;;
-				"" ) mp -xclip ; selRow=2 ; player;;
-				"" ) zsh -c "$Format" & selRow=1; player;;
-				"" ) searchYT; selRow=0; player;;
-				"" ) mp -plr force ;;
-				"$rofiIcon" ) selRow=1; main;;
-			esac
-		} || \
-		{
-			$1
-		}
-}	
 
 searchYT ()
 {
@@ -417,27 +136,13 @@ searchYT ()
 
 cmd ()
 {
-	printResult ()
+	helpCMD () #
 	{
-		lines=$(wc -l < /tmp/cmdResults)
-		[[ $lines -gt 25 ]] && lines=25
-		columns=1
-		lH="false"
-		iD="true"
-		[[ -e /tmp/cmdResults && $(< /tmp/cmdResults |wc -l) -gt 0 ]] && \
-			{
-				struct $(< /tmp/cmdResults| sed 's/$/;/g')
-				rm -f /tmp/cmdResults
-			}
-	}
-
-	helpCMD ()
-	{
-	  funcoes=$(grep "()" $(print $path_scripts/*)|sed 's/() *{*//g'|sed 's/.*\///g;s/:/ /g')
+	  funcoes=$(grep "()" $(print ~/.local/bin/*)|sed 's/() *{*//g'|sed 's/.*\///g;s/:/ /g')
 	  <<< $funcoes|sort
 	}
-
-	if [[ ! -f /tmp/cmd ]]; then
+    source ~/.local/bin/allfunctions
+	if [[ ! -e /tmp/cmd ]]; then
 		< ~/.zhistory |sort --unique > /tmp/cmd
 		helpCMD >> /tmp/cmd
 		print -l /usr/bin/* >> /tmp/cmd
@@ -449,30 +154,16 @@ cmd ()
 	lH="true"
 	location=2
 	width=45
-	yoffset=76
+	yoffset=1990
 	iD="false"
 	[[ -n $fontText ]] && \
-		{ 
+		{
 			fontOrigin=$font
-			font=$fontText 
+			font=$fontText
 		}
 	struct $(< /tmp/cmd|sed 's/$/;/g') |read CMD
 	if [[ -n $CMD ]];then
-		# . $path_scripts/lst.zsh
-		# source $HOME/.zshrc
-		grep -q "${CMD}" "$(helpCMD)" && \
-			{ 
-				<<< "$CMD" >> ~/.zhistory 
-				${SHELL} $CMD &>/tmp/cmdResults
-				[[ $? != 0 ]] && ntfy " FALSE  => $? " || ntfy " TRUE  " 
-				printResult 
-			} || \
-				{ 
-					<<< "$CMD" >> ~/.zhistory 
-					${SHELL} -c $CMD &>/tmp/cmdResults
-					[[ $? != 0 ]] && ntfy " FALSE  => $? " || ntfy " TRUE  " 
-					printResult 
-				}
+		zsh -c $(source ~/.zprofile; ${CMD}) && ntfy " FALSE  => $CMD " || ntfy " TRUE   $CMD"
 	fi
 }
 
@@ -489,14 +180,14 @@ struct ()
 			{
 				# base+=(-kb-select-1 1 -kb-select-2 2 -kb-select-3 3 -kb-select-4 4 -kb-select-5 5 -kb-select-6 6 \
 				# -kb-select-7 7 -kb-select-8 8 -kb-select-9 9 -kb-select-10 0)
-				echo "$@" | rofi -dmenu -sep ';' -l $linesRet "$base[@]" -pid $pidFile -no-plugins -no-config -font "$font"
+				echo "$@" | rofi -dmenu -sep ';' -l $linesRet "$base[@]" -pid $pidFile -no-plugins -no-config -font "$font" -format 'f'
 			}
 }
 defs ()
 {
 	iconTheme=${${(s:=:)${(f)"$(< $HOME/.config/gtk-3.0/settings.ini)"}[3]}[2]}
-	[[ -z $font ]] && font="${${(s:=:)${(f)"$(< $HOME/.config/gtk-3.0/settings.ini)"}[4]}[2]}"
-	# [[ -z $font ]] && font="Arimo Nerd Font 25"
+	# [[ -z $font ]] && font="${${(s:=:)${(f)"$(< $HOME/.config/gtk-3.0/settings.ini)"}[4]}[2]}"
+	[[ -z $font ]] && font="M+ 2m 16"
 	rofiIcon=""
 	layoutHorizontal='#listview { layout: horizontal; }'
 	inputbarDisable='#inputbar { enabled: false; }'
@@ -511,30 +202,30 @@ defs ()
 	[[ -n $location ]] && base+=(-location $location)	 
 	[[ -n $prompt ]] && base+=(-p $prompt) 
 	[[ -n $padding ]] && base+=(-padding $padding) 
-	[[ -n $radius ]]&& base+=(-theme-str '#window { border-radius: '$radius'px; }') 
+	[[ -n $radius ]]&& base+=(-Theme-str '#window { border-radius: '$radius'px; }') 
 	[[ -n $selRow ]] && base+=(-selected-row $selRow) 
 	[[ -n $show ]] && base+=(-show $show) 
 	[[ -n $title ]] && base+=(-window-title $title) || base+=(-window-title lrofi)
 	[[ -z $terminal ]] && base+=(-terminal kitty) 
-	[[ -n $theme ]] && base+=(-theme $theme) || base+=(-theme-str ''$themeCustom'')
+	[[ -n $Ctheme ]] && base+=(-theme $Ctheme) || base+=(-Theme-str ''$ThemeCustom'')
 	[[ -n $urgent ]] && base+=(-u $urgent)
 	[[ -n $width ]] && base+=(-width $width) 
 	[[ -n $xoffset ]] && base+=(-xoffset "$xoffset") 
 	[[ -n $yoffset ]] && base+=(-yoffset "$yoffset") 
 	[[ $fullscreen == "true" ]] && base+=(-fullscreen)
 	[[ $hS == "true" ]] && base+=(-hide-scrollbar)
-	[[ $iD == "true" ]] && base+=(-theme-str "$inputbarDisable")
-	[[ $lH == "true" ]] && base+=(-theme-str ''$layoutHorizontal'' -hide-scrollbar) ; example+=(-theme-str ''$layoutHorizontal'' -hide-scrollbar)
+	[[ $iD == "true" ]] && base+=(-Theme-str "$inputbarDisable")
+	[[ $lH == "true" ]] && base+=(-Theme-str ''$layoutHorizontal'' -hide-scrollbar) ; example+=(-Theme-str ''$layoutHorizontal'' -hide-scrollbar)
 	[[ $nW == "true" ]] && base+=(-normal-window) ; example+=(-normal-window)
 	[[ $normalwindow == "true" ]] && base+=(-normal-window) 
-	[[ $si != "false" ]] && base+=(-show-icons -icon-theme $iconTheme) 
+	[[ $si != "false" ]] && base+=(-show-icons -icon-Theme $iconTheme) 
 }
 ##########################################################################################################
 #  TRATATIVA DE ARGUMENTOS
 #########################################################################################################
 . allopts --location: -l: -width: -w: -width2: -w2: -height: -eh: -bw: -xoffset: -x: -yoffset: -y: -padding: -p: -fontIcons: -fi: \
--fontEntry: -fe: -fontText: -ft: -font: -f: -theme: -t: -help! -h! -fullscreen! -fs! -lines: -ln: -columns: -cl: \
--themestr: -ts: -inputbarDisable! -iD! -layoutHorizontal! -lH! -normalwindow! -nW! -modi: -m: -show: -s: -showIcons: \
+-fontEntry: -fe: -fontText: -ft: -font: -f: -Theme: -t: -help! -h! -fullscreen! -fs! -lines: -ln: -columns: -cl: \
+-Themestr: -ts: -inputbarDisable! -iD! -layoutHorizontal! -lH! -normalwindow! -nW! -modi: -m: -show: -s: -showIcons: \
 -si: -prompt: -pt: -linepadding: -lnp: -radius: -r: -terminal: -tt: -active: -a: -urgent: -u: -selected-row: -selRow: \
 -sr: -ttl: -title: -hS! -hide-scrollbar! $@
 
@@ -573,7 +264,7 @@ for x in $ARGUMENTOS[@]
 		$ARGUMENTOS[selectedrow] || $ARGUMENTOS[selRow] || $ARGUMENTOS[sr] ) selRow="$x" ;;
 		$ARGUMENTOS[terminal] || $ARGUMENTOS[tt] ) terminal="$x" ;;
 		$ARGUMENTOS[title] || $ARGUMENTOS[ttl] ) title="$x" ;;
-		$ARGUMENTOS[theme] || $ARGUMENTOS[t] ) theme="$x" ;;
+		$ARGUMENTOS[theme] || $ARGUMENTOS[t] ) Ctheme="$x" ;;
 		$ARGUMENTOS[urgent] || $ARGUMENTOS[u] ) urgent="$x" ;;
 		$ARGUMENTOS[xoffset] || $ARGUMENTOS[x] ) xoffset="$x" ;;
 		$ARGUMENTOS[width] || $ARGUMENTOS[w] ) width="$x" ;;
@@ -588,11 +279,12 @@ for x in $ARGUMENTOS[@]
 # NEWS FUNCTIONS , SERÃO OS MODELOS:
 example_pl () { defs; lrofi -f $font -p 20 -l 0 -y 115 -x -92 -w 15 player plistrofi &>/dev/null & }
 example_player () { defs; lrofi -f $font -lH -iD -p 20 -l 0 -y 115 -x -92 -w 15 player &>/dev/null & }
-example_drun () { defs; lrofi -f $font -x -25 -y 92 -w 15 -bw 8 -radius 25 -modi combi -show drun } 
+example_drun () { defs; lrofi -f $font -x -25 -y 92 -w 15 -bw 8 -radius 25 -modi combi -show drun }
 
 pidFile=$(mktemp)
-. $path_scripts/icons
-. $path_colors/colors.zsh
+. ~/.zshrc
+# . $path_scripts/icons
+# . $path_colors/colors.zsh
 
 if [[ -z $args && -z $modi ]]; then
 	lH="true"; iD="true"; main
@@ -602,5 +294,7 @@ else
 	$args
 fi
 
-# Exclui o arquivo temporário
+# Exclui o arquivo temporario
 rm -f $pidFile
+
+

@@ -1,24 +1,30 @@
 #!/bin/zsh
 
-music ()
+music () #
 {
 	youtube-dl -c -x --audio-quality 0 "$line" --console-title "$url"
 }
 
-url ()
+url () #
 {
+	youtube-dl --get-filename "$line" | read outputFile
 	youtube-dl -f 'best' --console-title --continue --limit-rate ${limit}K "$url"
+	touch -m "$outputFile"
 }
 
-file ()
+file () #
 {
 	while read line; do
+		youtube-dl --get-filename "$line" | read outputFile
 		youtube-dl -f 'best' -c "$line" --limit "${limit}K" --console-title --continue
+		sleep 1
+		print -P "%K{green}%B Alterando timestamp de $outputFile %k%b"
+		touch -m "$outputFile"
 		sleep 1
 	done < $file
 }
 
-help ()
+help () #
 {
 	<<- doc
 	`tput setaf 1; tput bold`Use:`tput sgr0`

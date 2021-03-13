@@ -1,57 +1,141 @@
 #!/bin/zsh
-se ()
+    se ()
 {
 	test ${@} && testSucess || testError
 }
+
 testSucess ()
 {
-	bg 2;fg 16; tput bold; printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/7))}; do; echo -n " TRUE " ;done)"
+	#bg 2;fg 16; tput bold; printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/7))}; do; echo -n " TRUE " ;done)"
+    cor -f black -b green -B $(printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/8))}; do; echo -n " TRUE " ;done)")
 }
+
 testError ()
 {
-	bg 1;fg 16; tput bold; printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/8))}; do; echo -n " FALSE " ;done)"
-}
-bg ()
+	#bg 1;fg 16; tput bold; printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/8))}; do; echo -n " FALSE " ;done)"
+    cor -f black -b red -B $(printf '%'$COLUMNS's' "$(for i in {1..$(($COLUMNS/8))}; do; echo -n " FALSE " ;done)"
+)
+
+cor ()
 {
-	tput setab $@;
-}
-fg ()
-{
-	tput setaf $@;
-}
-retrate.mode ()
-{
-	base=$(cmd sf)
-	retrate.mode.aux
-}
-retrate.mode.aux ()
-{
-	for i in $base/**/*.jpg
-	{
-		clear
-		imagem "$i"
-		sleep 5
-	}
-	sleep 5
-	clear
-	retrate.mode.aux
+    help ()
+    {
+        printf '%b\n' "
+        Usage: 
+        script [options] <text>        
+        options:
+        -f\t--fg\t\t - Foreground color
+        -b\t--bg\t\t - Background color
+        -B\t--bold\t\t - Bold text
+        -i\t--italic\t - Italic text
+        -u\t--underline\t - Underline text
+        -a\t--alert\t\t - Alert text
+        -l\t--light\t\t - Light Text
+        -h\t--help\t\t - This dialog
+        
+        The options --fg and --bg require arguments in style :
+            white red green yellow blue magenta cyan white
+        all name of the colors have the bright option:
+            brightwhite brightred ..."   
+    }
+    local f fg b bg r remove B bold i italic u underline a alert l light h help ignoreds text
+    args=('-f' '--fg' '-b' '--bg')
+    bool=('-r' '--reverse' '-B' '--bold' '-i' '--italic' '-u' '--underline' '-a' '--alert' '-l' '--light' '-h' '--help')
+
+    for arg in $@
+    {
+        (( control = control + 1 ))
+
+        nextArgv="${(P)$((control+1))}"
+
+        if [[  $args =~ $arg ]];then
+            for ARG in $args[@]
+            {
+                [[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv $arg); break }
+            }
+        elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
+            for ARG in $args[@]
+            {
+                [[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; ignoreds+=($arg); break }
+            }
+        fi
+
+        if [[ $bool =~ $arg ]];then
+            for ARG in $bool[@]
+            {
+                [[ "$ARG" == "$arg" ]] && { read "${arg//-/}" <<< "true"; ignoreds+=($arg) }
+            }
+        fi
+        
+        [[ "$ignoreds" =~ "$arg" ]] && continue || text+=("$arg")
+    }
+
+    local reset='\033[0;0m' ; local prefix="\E[" ; local suffix="m"
+    local -A attribute color
+    attribute=([normal]=0 [bold]=1 [light]=2 [italic]=3 [underline]=4 [alert]=5 [reverse]=7)
+    color=(
+        [black]=0 [red]=1 [green]=2 [yellow]=3 [blue]=4 [magenta]=5 [cyan]=6 [white]=7 [brightblack]=8 
+        [brightred]=9 [brightgreen]=10 [brightyellow]=11 [brightblue]=12 [brightmagenta]=13 [brightcyan]=14 [brightwhite]=15
+    )
+
+    [[ -n ${help:-$h} ]] && { help ; exit 0 }
+
+    attrs=""
+    [[ -n ${bold:=$B} ]] && attrs+=("$attribute[bold]")
+    [[ -n ${light:=$l} ]] && attrs+=("$attribute[light]")
+    [[ -n ${italic:=$i} ]] && attrs+=("$attribute[italic]")
+    [[ -n ${underline:=$u} ]] && attrs+=("$attribute[underline]")
+    [[ -n ${alert:=$a} ]] && attrs+=("$attribute[alert]")
+    [[ -n ${reverse:=$r} ]] && attrs+=("$attribute[reverse]")
+    [[ -z $attrs ]] && attrs="$attribute[normal]"
+
+    [[ -n ${b:=$bg} ]] && bg="48;5;$color[${b:-$bg}]"
+    [[ -n ${f:=$fg} ]] && fg="38;5;$color[${f:-$fg}]"
+
+    if [[ $#attrs -gt 1 ]]; then
+        for optn in $attrs
+        {
+            case ${optn} in
+                1) attr2+="$prefix"1m"" ;;
+                normal) 
+                    print "A opção normal não pode ser usada em conjunto com demais atributos, apenas com cores" ;;
+                2) attr2+="$prefix"2m"" ;;
+                3) attr2+="$prefix"3m"" ;;
+                4) attr2+="$prefix"4m"";;
+                5) attr2+="$prefix"5m"";; 
+                7) attr2+="$prefix"7m"" ;;
+            esac
+        }
+        attrs=""
+    fi
+    if [[ -n $bg && -n $fg ]]; then
+        middle="$attrs;$bg;$fg"
+    elif [[ -n $bg && -z $fg ]]; then
+        middle="$attrs;$bg"
+    elif [[ -z $bg && -n $fg ]]; then
+        middle="$attrs;$fg"
+    fi
+    [[ -z $attr2 ]] && 
+        print -P "$prefix;$middle$suffix$text$reset" || 
+            {
+                [[ -z $middle ]] && 
+                    print -P "$attr2$text$reset" ||
+                        {
+                            if [[ -n $bg && -n $fg ]]; then
+                                print -P "$attr2$prefix$bg;$fg$suffix$text$reset"
+                            elif [[ -n $bg && -z $fg ]]; then
+                                print -P "$attr2$prefix$bg$suffix$text$reset"
+                            elif [[ -z $bg && -n $fg ]]; then
+                                print -P "$attr2$prefix$fg$suffix$text$reset"
+                            fi                        
+                        }
+            }   
 }
 
-imagem ()
-{
-	kitty +kitten icat "$@"
-}
-
-figtbsp ()
-{
-	export tputSGRO=$(tput sgr0)
-	export tputFg=$(tput setaf $1)
-	export tputBold=$(tput bold)
-	echo "$tputFg" "$tputBold" "$(figlet -"$2"S "bspwm" -f smslant)" "$tputSGRO"
 
 }
 
-paste.rs ()
+paste.rs () #
 {
 	local file=${1:-/dev/stdin}
 	case $file in
@@ -67,3 +151,45 @@ paste.rs ()
 
 	echo $url
 }
+
+cronfy ()
+{
+    parser ()
+    { 
+        local control ignoreds args nextArgv
+        args=("--help" "-h" "--time" "-t" "--time-fy" "-tf" "--msg" "-m" "--title" "-tl")
+    
+        for arg in $@
+        {
+        	(( control = control + 1 ))
+        	nextArgv="${(P)$((control+1))}"
+        	if [[  $args =~ $arg ]];then
+        		for ARG in $args[@]
+        		{
+        			[[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv); break }
+        		}
+        	elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
+        		for ARG in $args[@]
+        		{
+        			[[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; break }
+        		}
+        	fi
+        	if [[ $bool =~ $arg ]];then
+        	    for ARG in $bool[@]
+        	    {
+        	        [[ "$ARG" == "$arg" ]] && read "${arg//-/}" <<< "true"
+        	    }
+        	else
+                [[ "$ignoreds" =~ "$arg" ]] && continue || actions=("$arg")
+            fi
+        }
+    }
+    local time t timefy tf title tl msg m control
+    parser $@
+    [[ -n ${time:=$t} ]] && TIME="${time}" || TIME=5
+    [[ -n ${timefy:=$tf} ]] && TIMEFY="${timefy}" || TIMEFY=10000
+    [[ -n ${title:=$tl} ]] && TITLE="${title}" || TITLE="ATENÇÃO"
+    [[ -n ${msg:=$m} ]] && MSG="${msg}" || MSG="PRAZO DE $TIME ESGOTADO"
+    { sleep "$TIME" && dunstify -I $path_scripts/cronometro2.jpg -t "$TIMEFY" "$TITLE" "$MSG" } &> /dev/null
+} 
+

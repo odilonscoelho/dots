@@ -1,7 +1,13 @@
 #!/bin/zsh
-namewm=$(wmctrl -m |grep -i NAME|sed 's/.*: //')
-export config=$path_polybar/config.$namewm
-export bars=("dock") #altere para o nome suas bars ela precisam estar a posição bottom.
+#namewm=$(wmctrl -m |grep -i NAME|sed 's/.*: //')
+
+#config=$path_polybar/config.$namewm
+
+if [[ ${${(s: :)${(f)"$(wmctrl -m)"}[1]}[2]} == "bspwm" ]]; then
+	config=/hdbkp/dots/polybar/config.bspwm
+else
+	config=/hdbkp/dots/polybar/config.qtile
+fi
 
 pkill -9 polybar
 if [[ -n $monitor2 ]]; then
@@ -10,7 +16,7 @@ if [[ -n $monitor2 ]]; then
 	polybar -c $config taskbar2 -q -r &> /dev/null &
 	polybar -c $config dock2 -q -r &> /dev/null &
 else
-	polybar -c $config dock -r &> /dev/null &
+	#polybar -c $config dock -r &> /dev/null &
 	polybar -c $config taskbar -r &> /dev/null &
 fi
 

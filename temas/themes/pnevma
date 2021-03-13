@@ -1,24 +1,21 @@
-background="#1c1c1c"
-foreground="#d0d0d0"
-cursor="#e4c9af"
-color0="#afbea2"
-color1="#e4c9af"
-color2="#a1bdce"
-color3="#d7beda"
-color4="#b1e7dd"
-color5="#efefef"
-color6="#90a57d"
-color7="#d7af87"
-color8="#7fa5bd"
-color9="#c79ec4"
-color10="#8adbb4"
-color11="#d0d0d0"
-color12="#4a4845"
-color13="#d78787"
-color14="#1c1c1c"
-color15="#e5e5e5"
-color16="#e4c9af"
-color17="#000000"
-color18="#d0d0d0"
-color19="#ffffff"
-color20="#4d4d4d"
+color0 #2f2e2d
+color1 #a36666
+color2 #90a57d
+color3 #d7af87
+color4 #7fa5bd
+color5 #c79ec4
+color6 #8adbb4
+color7 #d0d0d0
+color8 #4a4845
+color9 #d78787
+color10 #afbea2
+color11 #e4c9af
+color12 #a1bdce
+color13 #d7beda
+color14 #b1e7dd
+color15 #efefef
+background #1c1c1c
+selection_foreground #1c1c1c
+cursor #e4c9af
+foreground #d0d0d0
+selection_background #d0d0d0

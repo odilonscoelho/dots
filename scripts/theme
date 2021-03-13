@@ -1,94 +1,270 @@
 #!/bin/zsh
-gencores ()
-{
-	unset cursor background foreground color0 color1 color2 color3 color4 color5 color6 color7 color8 color9 color10 color 11 color12 color13 color14 color15 color16 color17 color18
-	
-	# O tema precisa vir no padrao do oomox ou xresouces '*color: #000000'
-	# while IFS=':' read var val; do
-	    # var=${var#\*}
-	    # val=${val// }
-	    # printf -v $var '%s' "$val"
-	# done < $base_file
 
+gen.cores ()
+{
+	unset cursor background foreground color0 color1 color2 color3 color4 color5 color6 color7 color8 color9 color10 color 11 color12 color13 color14 color15 color16 color17 color18 selection_foreground selection_background 
 	while read line ;do
-		<<< "declare -x $line" >> /tmp/themetest
-	done < $base_file
+		<<< "declare -x ${line// /=}"
+	done < $base_file > /tmp/themetest
 	cp /tmp/themetest $shell_file
+	
+	. $shell_file
+		
+	print "base00 = \"$background\"\nbase01 = \"$color1\"\nbase02 = \"$color2\"\nbase03 = \"$color3\"\nbase04 = \"$color4\"\nbase05 = \"$color5\"\nbase06 = \"$color6\"\nbase07 = \"$color7\"\nbase08 = \"$color8\"\nbase09 = \"$color9\"\nbase0A = \"$color10\"\nbase0B = \"$color11\"\nbase0C = \"$color12\"\nbase0D = \"$color13\"\nbase0E = \"$color14\"\nbase0F = \"$color15\"" > /hdbkp/dots/qutebrowser/colors.py
+
 	rm /tmp/themetest
 }
 
-genkitty ()
+gen.tilix ()
 {
-	. $shell_file
-	echo -e "background  $background\nforeground  $foreground\ncursor $color6 \ncolor0  $color0\ncolor1  $color1\ncolor2  $color2\ncolor3  $color3\ncolor4  $color4\ncolor5  $color5\ncolor6  $color6\ncolor7  $color7\ncolor8  $color8\ncolor9  $color9\ncolor10 $color10\ncolor11 $color11\ncolor12 $color12\ncolor13 $color13\ncolor14 $color14\ncolor15 $color15" >| $kitty_file
+    . $shell_file
+    print "{
+    \"background-color\": \"$background\",
+    \"badge-color\": \"$foreground\",
+    \"bold-color\": \"$color2\",
+    \"comment\": \"$color0\",
+    \"cursor-background-color\": \"$foreground\",
+    \"cursor-foreground-color\": \"$background\",
+    \"foreground-color\": \"$foreground\",
+    \"highlight-background-color\": \"$background\",
+    \"highlight-foreground-color\": \"$foreground\",
+    \"name\": \"$Theme\",
+    \"palette\": [
+        \"$color0\",
+        \"$color1\",
+        \"$color2\",
+        \"$color3\",
+        \"$color4\",
+        \"$color5\",
+        \"$color6\",
+        \"$color7\",
+        \"$color8\",
+        \"$color9\",
+        \"$color10\",
+        \"$color11\",
+        \"$color12\",
+        \"$color13\",
+        \"$color14\",
+        \"$color15\"
+    ],
+    \"use-badge-color\": \"true\",
+    \"use-bold-color\": \"true\",
+    \"use-cursor-color\": \"true\",
+    \"use-highlight-color\": \"true\",
+    \"use-theme-colors\": \"true\"
+}" > $HOME/.config/tilix/schemes/$Theme.json
 }
 
-gennotify ()
+gen.kitty ()
+{
+	cp $base_file $kitty_file || print -p "%F{white}K%{green}%B Erro ao copiar $base_file para $kitty_file"
+}
+
+gen.notify ()
 {
 	. $shell_file
 	sed -i 's/background\ \= \"\#.*/background\ \= \"'$background'\"/g;
 			s/foreground\ \= \"\#.*/foreground\ \= \"'$foreground'\"/g;
 			s/frame_color\ \= \"\#.*/frame_color\ \= \"'$foreground'"/g;
-			s/separator_color\ \= \"#.*/separator_color\ \= \"'$foreground'\"/g' $notify_file
+			s/separator_color\ \= \"#.*/separator_color\ \= \"'$cursor'"\"/g' $notify_file
 }
 
-vars ()
+gen.qtile ()
 {
-	notify_file=$path_dots/dunst/dunstrc
-	shell_file=$path_colors/colors.zsh
-	resources_file=$path_colors/.Xresources
-	kitty_file=$path_colors/colors-kitty.conf
+	. $shell_file
+
+	sed -i 's/color0\ \=\ .*/color0\ \=\ '"'$color0'"'/g;s/color1\ \=\ .*/color1\ \=\ '"'$color1'"'/g;s/color2\ \=\ .*/color2\ \=\ '"'$color2'"'/g;s/color3\ \=\ .*/color3\ \=\ '"'$color3'"'/g;s/color4\ \=\ .*/color4\ \=\ '"'$color4'"'/g;s/color5\ \=\ .*/color5\ \=\ '"'$color5'"'/g;s/color6\ \=\ .*/color6\ \=\ '"'$color6'"'/g;s/color7\ \=\ .*/color7\ \=\ '"'$color7'"'/g;s/color8\ \=\ .*/color8\ \=\ '"'$color8'"'/g;s/color9\ \=\ .*/color9\ \=\ '"'$color9'"'/g;s/color10\ \=\ .*/color10\ \=\ '"'$color10'"'/g;s/color11\ \=\ .*/color11\ \=\ '"'$color11'"'/g;s/color12\ \=\ .*/color12\ \=\ '"'$color12'"'/g;s/color13\ \=\ .*/color13\ \=\ '"'$color13'"'/g;s/color14\ \=\ .*/color14\ \=\ '"'$color14'"'/g;s/color15\ \=\ .*/color15\ \=\ '"'$color15'"'/g;s/background\ \=\ .*/background\ \=\ '"'$background'"'/g;s/selection\_background\ \=\ .*/selection\_background\ \=\ '"'$selection_background'"'/g;s/foreground\ \=\ .*/foreground\ \=\ '"'$foreground'"'/g;s/cursor\ \=\ .*/cursor\ \=\ '"'$cursor'"'/g' $file_theme
+}
+
+gen.resource ()
+{
+	. $shell_file
+	sed -i 's/\*background\:\ \#.*/\*background\:\ '$background'/g;
+	s/\*foreground\:\ \#.*/\*foreground\:\ '$foreground'/g;
+	s/\*color0\:\ \#.*/\*color0\:\ '$color0'/g;
+	s/\*color1\:\ \#.*/\*color1\:\ '$color1'/g;
+	s/\*color2\:\ \#.*/\*color2\:\ '$color2'/g;
+	s/\*color3\:\ \#.*/\*color3\:\ '$color3'/g;
+	s/\*color4\:\ \#.*/\*color4\:\ '$color4'/g;
+	s/\*color5\:\ \#.*/\*color5\:\ '$color5'/g;
+	s/\*color6\:\ \#.*/\*color6\:\ '$color6'/g;
+	s/\*color7\:\ \#.*/\*color7\:\ '$color7'/g;
+	s/\*color8\:\ \#.*/\*color8\:\ '$color8'/g;
+	s/\*color9\:\ \#.*/\*color9\:\ '$color9'/g;
+	s/\*color10\:\ \#.*/\*color10\:\ '$color10'/g;
+	s/\*color11\:\ \#.*/\*color11\:\ '$color11'/g;
+	s/\*color12\:\ \#.*/\*color12\:\ '$color12'/g;
+	s/\*color13\:\ \#.*/\*color13\:\ '$color13'/g;
+	s/\*color14\:\ \#.*/\*color14\:\ '$color14'/g;
+	s/\*color15\:\ \#.*/\*color15\:\ '$color15'/g' $resources_file
+}
+
+gen.gtks ()
+{
+	if [[ -d $HOME/.themes/$theme ]]; then
+		altertheme="$Theme"
+		declare -x GTK_THEME="$Theme"
+		declare -x GTK2_RC_FILES="$HOME/.themes/$Theme/gtk-2.0/gtkrc"
+	else
+		declare -x GTK_THEME="n0tch2k"
+		declare -x GTK2_RC_FILES="$HOME/.themes/n0tch2k/gtk-2.0/gtkrc"
+		altertheme="n0tch2k"
+	fi
+
+	dunstify -t 10000 "Theme GTK" "$altertheme"
+	sed -i 's/gtk\-theme\-name\=\".*\"/gtk\-theme\-name\=\"'$altertheme'\"/g' $gtk2_file
+	sed -i 's/gtk\-theme\-name\=\".*\"/gtk\-theme\-name\=\"'$altertheme'\"/g' $gtk2_file_mine
+	sed -i 's/gtk\-theme\-name\=.*/gtk\-theme\-name\='$altertheme'/g' $gtk3_file
 }
 
 theme.run ()
 {
-	vars
-	gencores &&
-	# genshell &&
-	genkitty &&
-	gennotify &&
-	redshift -x &&
-	sleep 0.2
-	killall redsfhit &&
-	sleep 0.2
-	killall polybar &&
-	sleep 0.2
-	killall dunst &&
-	sleep 0.2
-	killall picom && 
-	sleep 0.2
-	taskbar stop
-	sleep 0.2
-	gpuinfo stop
-	sleep 0.2
-	weatcher stop
-	sleep 0.2
-	pulseaudio-equalizer disable &
-	sleep 1
-	$path_dots/bspwmrc &>/dev/null
-	echo ${base_file} > $path_colors/history
-	dunstify -t 5000 "Theme
-$theme
-aplicado!" &
-}
+	wm="${${(s: :)${(f)"$(wmctrl -m)"}[1]}[2]}"
+	gen.cores || print -P "%K{red}%F{white}%B Erro ao gerar cores no shell %k%f%b"
+	# gen.resource || print -P "%K{red}%F{white}%B Erro ao gerar Xresources %k%f%b"
+	# gen.tilix || print -P "%K{red}%F{white}%B Erro ao gerar cores pro Tilix %k%f%b"
+	gen.kitty || print -P "%K{red}%F{white}%B Erro ao gerar cores pro kitty %k%f%b"
+	gen.notify || print -P "%K{red}%F{white}%B Erro ao gerar cores no dunstrc %k%f%b"
+	# gen.gtks || print -P "%K{red}%F{white}%BERRO : gtks não gerados"
+	# gen.qtile || print -P "%K{red}%F{white}%BERRO : qtile não gerado"
 
-sel ()
-{
-	if [[ -z $@ ]]; then
-		base_file="$(cmd sf "$path_colors/themes")"
-		if [[ -n $base_file ]];then
-			theme=${base_file//*\//}
-			theme.run
-		else
-			dunstify -t 5000 -i "scripts" "$(echo -e "Nenhum arquivo selecionado!\nsem alterações no theme atual!")"
+	print ${base_file} > $path_colors/history
+
+	if [[ $wm == "bspwm" ]]; then	
+		redshift -x &>/dev/null &
+		sleep 0.2
+		taskbar stop &>/dev/null &&
+		sleep 0.2
+		# gpuinfo stop &>/dev/null &&
+		# sleep 0.2
+		# weatcher stop &>/dev/null &&
+		# sleep 0.2
+		if pidof redshift; then
+		    pkill redshift &>/dev/null || print -P "%K{red}%F{white}%BERRO : pkill redshift"
 		fi
-	else
-		base_file="$@"
-		theme=${base_file//*\//}
-		tput setaf 10; tput setab 8; echo "$base_file selecionado!"
-		theme.run
+		sleep 0.2
+		pkill polybar || print -P "%K{red}%F{white}%BERRO : pkill polybar"
+		sleep 0.2
+		pkill dunst || print -P "%K{red}%F{white}%BERRO : pkill dunst"
+		sleep 0.2
+		if pidof picom; then
+		    pkill picom || print -P "%K{red}%F{white}%BERRO : pkill picom"
+    		sleep 0.2
+        fi
+		pulseaudio-equalizer disable &>/dev/null
+		sleep 0.2
+		[[ $(pidof kitty) ]] && app kitty.reload.colors &>/dev/null
+		sleep 0.2
+		pkill sxhkd &> /dev/null
 	fi
 	
-	echo "$theme aplicado com sucesso!"
+	sleep 1
+
+	if [[ $wm == "bspwm" ]]; then
+		source ~/.zshrc
+		sleep 0.15
+		$path_dots/bspwmrc &> /dev/null
+	else
+		pkill dunst || print -P "%K{red}%F{white}%BERRO : pkill dunst"
+		sleep 0.25
+		source ~/.zshrc
+		dunst >/dev/null &
+		sleep 0.25
+		[[ $(pidof kitty) ]] && app kitty.reload.colors &>/dev/null
+		sleep 0.25
+		qtile-cmd -o cmd -f restart 2>/dev/null
+	fi
+
+	
+	dunstify -t 5000 "New Theme Applicated!" "$Theme"
+    . $shell_file
+	sleep 0.25	
+	case $Theme in
+		elemental) nitrogen --set-scaled --save /hdbkp/dots/Wallpapers/citycolor.jpg 2>/dev/null ;;
+		n0tch2k) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/birdsgray.png 2>/dev/null ;;
+		mirage) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/nature-3058859.jpg 2>/dev/null ;;
+		sundried) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/Brown_Lampada.jpg 2>/dev/null ;;
+		zenburn) nitrogen --set-scaled --save /hdbkp/dots/Wallpapers/eowek8.jpg 2>/dev/null ;;
+		monalisa) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/Brown_Space.jpg 2>/dev/null ;;
+		subliminal) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/betterlate.png 2>/dev/null ;;
+		pnevma) nitrogen --set-scaled --save /hdbkp/dots/Wallpapers/rosegray.png 2>/dev/null ;;
+		royal) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/royal2.jpg 2>/dev/null ;;
+		desert) nitrogen --set-scaled --save /hdbkp/dots/Wallpapers/citybits.jpg 2>/dev/null ;;
+		dimmedmonokai) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/kb.png 2>/dev/null ;;
+		challengerdeep) nitrogen --set-scaled --save /hdbkp/dots/Wallpapers/florest1.png 2>/dev/null ;;
+		chalk) nitrogen --set-scaled --save /hdbkp/dots/Wallpapers/graymoderado.png 2>/dev/null ;;
+		brogrammer) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/ficcao.png 2>/dev/null ;;
+		afterglow) nitrogen --set-auto --save /hdbkp/dots/Wallpapers/plane.jpg 2>/dev/null ;;
+		*) app hset;;
+	esac
+
+	[[ $wm == "LG3D" ]] && \
+	    { 
+	        source ~/.zshrc
+	        qtile-cmd -o cmd -f restart 2>/dev/null
+	        [[ $(pidof kitty) ]] && app kitty.reload.colors
+	        launch
+	        taskbar stop
+	        gpuinfo stop
+	        weatcher stop
+	        taskbar start
+	        gpuinfo start
+	        weatcher start
+        }
+    
+    # [[ $(pidof tilix) ]] && tilix --profile="$Theme" --action=app-new-session &>/dev/null
 }
-$@
+
+box ()
+{
+	themes=(
+	"afterglow"
+	"arthur"
+	"bananablueberry"
+	"brogrammer"
+	"chalk"
+	"challengerdeep"
+	"desert"
+	"dimmedmonokai"
+	"elemental"
+	"gruvbox_dark"
+	"gruvbox_light"
+	"mirage"
+	"monalisa"
+	"n0tch2k"
+	"pnevma"
+	"royal"
+	"subliminal"
+	"sundried"
+	"teerb"
+	"teste"
+	"zenburn"
+	)
+	select theme in $themes[@]; do
+		base_file="$path_colors/themes/$theme"
+		Theme=$theme
+		cp $kitty_file /tmp/kittyfile
+		cp $base_file $kitty_file
+		[[ $(pidof kitty) ]] && app kitty.reload.colors
+		clear
+		palettecolors -f $base_file
+		print "Aplicar o tema?"
+		select opt in sim não; do
+			[[ $opt == "sim" ]] && { theme.run; break } || { cp /tmp/kittyfile $kitty_file; rm /tmp/kittyfile; { [[ $(pidof kitty) ]] && app kitty.reload.colors }; break }
+		done
+		break
+	done
+	printf %b "q|Q - Exit\nEnter|Return - Continue\n =>  "
+	read opt
+	[[ $opt =~ "q|Q" ]] && { return 0 } || { clear; box }	
+}
+
+notify_file="$path_dots/dunst/dunstrc"
+shell_file="$path_colors/colors.zsh"
+resources_file="$path_colors/.Xresources"
+kitty_file="$path_colors/colors-kitty.conf"
+gtk2_file="$path_dots/.gtkrc-2.0"
+gtk2_file_mine="$path_dots/.gtkrc-2.0.mine"
+gtk3_file="$path_dots/gtk-3.0/settings.ini"
+file_theme="$path_dots/qtile/theme.py"
+box

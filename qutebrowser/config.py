@@ -3,14 +3,14 @@
 #   qute://help/configuring.html
 #   qute://help/settings.html
 
-c.statusbar.position = 'top'
+c.statusbar.position = 'bottom'
 
 # hidpi
 # c.qt.highdpi = true
 c.zoom.default = 142
 
 # Uncomment this to still load settings configured via autoconfig.yml
-# config.load_autoconfig()
+config.load_autoconfig(True)
 
 # Allow websites to request geolocations.
 # Type: BoolAsk
@@ -18,7 +18,7 @@ c.zoom.default = 142
 #   - true
 #   - false
 #   - ask
-config.set('content.geolocation', True, 'https://g1.globo.com')
+# config.set('content.geolocation', True, 'https://g1.globo.com')
 
 # Enable JavaScript.
 # Type: Bool
@@ -39,10 +39,14 @@ config.set('content.javascript.enabled', True, 'qute://*/*')
 #   - false
 #   - ask
 config.set('content.notifications', True, 'https://www.youtube.com')
+#config.set('content.notifications', True, 'https://twitter.com')
+#config.set('content.notifications', True, 'https://reddit.com')
+#config.set('content.notifications', True, 'https://gmail.com')
+#config.set('content.notifications', True, 'https://outlook.com')
 
 # Hide the statusbar unless a message is shown.
 # Type: Bool
-c.statusbar.show = 'never'
+c.statusbar.show = "never"
 
 # Mouse button with which to close tabs.
 # Type: String
@@ -54,7 +58,7 @@ c.tabs.close_mouse_button = 'right'
 
 # Padding (in pixels) around text for tabs.
 # Type: Padding
-c.tabs.padding = {'bottom': 2, 'left': 2, 'right': 2, 'top': 2}
+c.tabs.padding = {'bottom': 0, 'left': 50, 'right': 50, 'top': 0}
 
 # Position of the tab bar.
 # Type: Position
@@ -80,20 +84,20 @@ c.tabs.show = 'multiple'
 #   - left
 #   - right
 #   - center
-c.tabs.title.alignment = 'left'
+c.tabs.title.alignment = 'center'
 
 # Width (in pixels or as percentage of the window) of the tab bar if
 # it's vertical.
 # Type: PercOrInt
-c.tabs.width = '20%'
+c.tabs.width = 2
 
 # Width (in pixels) of the progress indicator (0 to disable).
 # Type: Int
-c.tabs.indicator.width = 2
+c.tabs.indicator.width = 0
 
 # Padding (in pixels) for tab indicators.
 # Type: Padding
-c.tabs.indicator.padding = {'bottom': 4, 'left': 4, 'right': 4, 'top': 4}
+c.tabs.indicator.padding = {'bottom': 0, 'left': 0, 'right': 0, 'top': 0}
 
 # Background color of the statusbar.
 # Type: QssColor
@@ -104,189 +108,83 @@ c.tabs.indicator.padding = {'bottom': 4, 'left': 4, 'right': 4, 'top': 4}
 # Type: Font
 # c.fonts.monospace = '"Iosevka Term SS07" "xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", Fixed, Consolas, Terminal'
 # c.fonts.monospace = 'Iosevka Term SS07'
-c.fonts.default_family = 'Bold Iosevka Term SS07'
+c.fonts.default_family = 'M+ 2m'
 
 # Font used in the completion widget.
 # Type: Font
-c.fonts.completion.entry = 'Bold 11pt Iosevka Term SS07'
+c.fonts.completion.entry = '8pt M+ 2m'
 
 # Font used in the completion categories.
 # Type: Font
-c.fonts.completion.category = 'Bold 11pt Iosevka Term SS07'
+c.fonts.completion.category = '8pt M+ 2m'
 
 # Font used for the debugging console.
 # Type: QtFont
-c.fonts.debug_console = 'Bold 10pt Iosevka Term SS07'
+c.fonts.debug_console = '8pt M+ 2m'
 
 # Font used for the downloadbar.
 # Type: Font
-c.fonts.downloads = 'Bold 10pt Iosevka Term SS07'
+c.fonts.downloads = '8pt M+ 2m'
 
 # Font used for the hints.
 # Type: Font
-c.fonts.hints = '10pt Iosevka Term SS07'
+c.fonts.hints = '8pt M+ 2m'
 
 # Font used in the keyhint widget.
 # Type: Font
-c.fonts.keyhint = '10pt Iosevka Term SS07'
+c.fonts.keyhint = '8pt M+ 2m'
 
 # Font used for error messages.
 # Type: Font
-c.fonts.messages.error = '10pt Iosevka Term SS07'
+c.fonts.messages.error = '8pt M+ 2m'
 
 # Font used for info messages.
 # Type: Font
-c.fonts.messages.info = '10pt Iosevka Term SS07'
+c.fonts.messages.info = '8pt M+ 2m'
 
 # Font used for warning messages.
 # Type: Font
-c.fonts.messages.warning = '10pt Iosevka Term SS07'
+c.fonts.messages.warning = '8pt M+ 2m'
 
 # Font used for prompts.
 # Type: Font
-c.fonts.prompts = '10pt Iosevka Term SS07'
+c.fonts.prompts = '8pt M+ 2m'
 
 # Font used in the statusbar.
 # Type: Font
-c.fonts.statusbar = '10pt Iosevka Term SS07'
+c.fonts.statusbar = '8pt M+ 2m'
 
 # Font used in the tab bar.
 # Type: QtFont
-c.fonts.tabs.selected = 'Bold 11.25pt Iosevka Term SS07'
-c.fonts.tabs.unselected = 'Bold 11.25pt Iosevka Term SS07'
+c.fonts.tabs.selected = 'Bold 7pt M+ 2m'
+c.fonts.tabs.unselected = 'Bold 7pt M+ 2m'
 
 # Default font size (in pixels) for Light text.
 # Type: Int
 c.fonts.web.size.default = 16
 
-#import dracula.draw
-
-# Load existing settings made via :set
-#config.load_autoconfig()
-
-#dracula.draw.blood(c, {
-#    'spacing': {
-#        'vertical': 2,
-#        'horizontal': 2
-#    }
-#})
-
-#script = $HOME/.config/qutebrowser/mpv.zsh
-#config.bind('<r>', 'hint --mode number links spawn mpv {hint-url})')
 config.bind('<c>', 'hint --mode number links yank')
-# config.bind('<r>', 'hint --mode number links spawn mpv --title="YouTube-{hint-url}" {hint-url}')
-#config.bind('<r>', 'hint --mode number links spawn mpv --x11-name="YouTube" {hint-url}')
-# config.bind('<r>', 'spawn --userscript /usr/bin/mp')
-config.bind('<r>', 'spawn /usr/bin/mp')
-config.bind('<shift+r>', 'spawn --userscript /usr/bin/wq mpurl')
-config.bind('<t>', 'hint --mode number links spawn smplayer -add-to-playlist QUTE_URL')
 config.bind('<f>', 'hint --mode number')
+config.bind('<t>', 'spawn -d tradutor sel')
 
-def gruvbox():
-	global base00
-	global base01
-	global base02
-	global base03
-	global base04
-	global base05
-	global base06
-	global base07
-	global base08
-	global base09
-	global base0A
-	global base0B
-	global base0C
-	global base0D
-	global base0E
-	global base0F
-	## gruvbox
-	base00 = "#1d2021"
-	base01 = "#3c3836"
-	base02 = "#504945"
-	base03 = "#797261"
-	base04 = "#090c0d"
-	base05 = "#d5c4a1"
-	base06 = "#ebdbb2"
-	base07 = "#efe7c5"
-	base08 = "#f56352"
-	base09 = "#fe8019"
-	base0A = "#fabd2f"
-	base0B = "#a4a700"
-	base0C = "#7ba76c"
-	base0D = "#7ebaa3"
-	base0E = "#a17682"
-	base0F = "#e55d21"
+import colors
 
-def materialdarker ():
-	global base00
-	global base01
-	global base02
-	global base03
-	global base04
-	global base05
-	global base06
-	global base07
-	global base08
-	global base09
-	global base0A
-	global base0B
-	global base0C
-	global base0D
-	global base0E
-	global base0F
-	## material-darker
-	base00 = "#212121"
-	base01 = "#303030"
-	base02 = "#353535"
-	base03 = "#879090"
-	base04 = "#0d0d0d"
-	base05 = "#eeffff"
-	base06 = "#eeffff"
-	base07 = "#b9b9b9"
-	base08 = "#f34a34"
-	base09 = "#f78c6c"
-	base0A = "#ffcb6b"
-	base0B = "#9ea102"
-	base0C = "#4acaff"
-	base0D = "#2882f9"
-	base0E = "#daa0ff"
-	base0F = "#e0573c"
-
-def pnevma () :
-	global base00
-	global base01
-	global base02
-	global base03
-	global base04
-	global base05
-	global base06
-	global base07
-	global base08
-	global base09
-	global base0A
-	global base0B
-	global base0C
-	global base0D
-	global base0E
-	global base0F
-	base00 = "#1c1c1c"
-	base01 = "#4a4845"
-	base02 = "#000000"
-	base03 = "#767676"
-	base04 = "#080808"
-	base05 = "#d0d0d0"
-	base06 = "#e6e6e6"
-	base07 = "#c8ccd4"
-	base08 = "#d7af87"
-	base09 = "#e4c9af"
-	base0A = "#e4c9af"
-	base0B = "#afbea2"
-	base0C = "#56b6c2"
-	base0D = "#7fa5bd"
-	base0E = "#c79ec4"
-	base0F = "#c9a887"
-
-gruvbox()
+base00 = colors.base00
+base01 = colors.base01
+base02 = colors.base02
+base03 = colors.base03
+base04 = colors.base04
+base05 = colors.base05
+base06 = colors.base06
+base07 = colors.base07
+base08 = colors.base08
+base09 = colors.base09
+base0A = colors.base0A
+base0B = colors.base0B
+base0C = colors.base0C
+base0D = colors.base0D
+base0E = colors.base0E
+base0F = colors.base0F
 
 # set qutebrowser colors
 
@@ -295,40 +193,40 @@ gruvbox()
 c.colors.completion.fg = base05
 
 # Background color of the completion widget for odd rows.
-c.colors.completion.odd.bg = base03
+c.colors.completion.odd.bg = base00
 
 # Background color of the completion widget for even rows.
 c.colors.completion.even.bg = base00
 
 # Foreground color of completion widget category headers.
-c.colors.completion.category.fg = base0A
+c.colors.completion.category.fg = base04
 
 # Background color of the completion widget category headers.
 c.colors.completion.category.bg = base00
 
 # Top border color of the completion widget category headers.
-c.colors.completion.category.border.top = base00
+c.colors.completion.category.border.top = base02
 
 # Bottom border color of the completion widget category headers.
-c.colors.completion.category.border.bottom = base00
+c.colors.completion.category.border.bottom = base02
 
 # Foreground color of the selected completion item.
-c.colors.completion.item.selected.fg = base01
+c.colors.completion.item.selected.fg = base07
 
 # Background color of the selected completion item.
 c.colors.completion.item.selected.bg = base0D
 
 # Top border color of the selected completion item.
-c.colors.completion.item.selected.border.top = base0A
+c.colors.completion.item.selected.border.top = base02
 
 # Bottom border color of the selected completion item.
-c.colors.completion.item.selected.border.bottom = base0A
+c.colors.completion.item.selected.border.bottom = base02
 
 # Foreground color of the matched text in the selected completion item.
 c.colors.completion.item.selected.match.fg = base08
 
 # Foreground color of the matched text in the completion.
-c.colors.completion.match.fg = base0B
+c.colors.completion.match.fg = base02
 
 # Color of the scrollbar handle in the completion view.
 c.colors.completion.scrollbar.fg = base05
@@ -343,7 +241,7 @@ c.colors.contextmenu.menu.bg = base00
 c.colors.contextmenu.menu.fg =  base05
 
 # Background color of the context menu’s selected item. If set to null, the Qt default is used.
-c.colors.contextmenu.selected.bg = base0A
+c.colors.contextmenu.selected.bg = base02
 
 #Foreground color of the context menu’s selected item. If set to null, the Qt default is used.
 c.colors.contextmenu.selected.fg = base01
@@ -371,7 +269,7 @@ c.colors.hints.fg = base00
 
 # Background color for hints. Note that you can use a `rgba(...)` value
 # for transparency.
-c.colors.hints.bg = base0A
+c.colors.hints.bg = base04
 
 # Font color for the matched part of hints.
 c.colors.hints.match.fg = base05
@@ -422,10 +320,10 @@ c.colors.prompts.border = base00
 c.colors.prompts.bg = base00
 
 # Background color for the selected item in filename prompts.
-c.colors.prompts.selected.bg = base0A
+c.colors.prompts.selected.bg = base04
 
 # Foreground color of the statusbar.
-c.colors.statusbar.normal.fg = base0B
+c.colors.statusbar.normal.fg = base04
 
 # Background color of the statusbar.
 c.colors.statusbar.normal.bg = base00
@@ -446,7 +344,7 @@ c.colors.statusbar.passthrough.bg = base0C
 c.colors.statusbar.private.fg = base00
 
 # Background color of the statusbar in private browsing mode.
-c.colors.statusbar.private.bg = base03
+c.colors.statusbar.private.bg = base04
 
 # Foreground color of the statusbar in command mode.
 c.colors.statusbar.command.fg = base05
@@ -476,24 +374,24 @@ c.colors.statusbar.caret.selection.bg = base0D
 c.colors.statusbar.progress.bg = base0D
 
 # Default foreground color of the URL in the statusbar.
-c.colors.statusbar.url.fg = base05
+c.colors.statusbar.url.fg = base02
 
 # Foreground color of the URL in the statusbar on error.
-c.colors.statusbar.url.error.fg = base08
+c.colors.statusbar.url.error.fg = base01
 
 # Foreground color of the URL in the statusbar for hovered links.
-c.colors.statusbar.url.hover.fg = base05
+c.colors.statusbar.url.hover.fg = base07
 
 # Foreground color of the URL in the statusbar on successful load
 # (http).
-c.colors.statusbar.url.success.http.fg = base0C
+c.colors.statusbar.url.success.http.fg = base02
 
 # Foreground color of the URL in the statusbar on successful load
 # (https).
-c.colors.statusbar.url.success.https.fg = base0B
+c.colors.statusbar.url.success.https.fg = base02
 
 # Foreground color of the URL in the statusbar when there's a warning.
-c.colors.statusbar.url.warn.fg = base0E
+c.colors.statusbar.url.warn.fg = base03
 
 # Background color of the tab bar.
 c.colors.tabs.bar.bg = base00

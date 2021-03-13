@@ -1,11 +1,26 @@
 [section/base]
-include-file = ~/hdbkp/dots/polybar/taskbar
-include-file = ~/hdbkp/dots/polybar/modules
+include-file = /hdbkp/dots/polybar/taskbar
+include-file = /hdbkp/dots/polybar/modules
+
+[bar/cal]
+font-0 = M+ 2m:medium:size=12;3
+modules-center = cal
+width = 25%
+height = 30%
+offset-x = 25%
+offset-y = 25%
+line = 8
+
+[module/cal]
+type = custom/script
+format-label = %output%
+exec = cal.polybar
+tail = true
+
 
 [bar/dock]
-font-0 = Iosevka Term SS07:Bold:size=12.25;2
+font-0 = M+ 2m:medium:size=12;3
 font-1 = Arimo Nerd Font:size=11;2
-;font-1 = Awesome:size=25;2
 font-2 = Arimo Nerd Font:size=12;2
 font-3 = Arimo Nerd Font:size=13;2
 font-4 = Arimo Nerd Font:size=14;3
@@ -17,17 +32,21 @@ font-9 = Arimo Nerd Font:Bold:size=18;3
 font-10 = Arimo Nerd Font:size=15;2
 font-11 = Arimo Nerd Font:size=16;4
 font-12 = Arimo Nerd Font:size=16;5
-font-13 = Arimo Nerd Font:Regular:size=21;6
-font-14 = Arimo Nerd Font:size=16;6
-font-15 = Arimo Nerd Font:size=20;6
+font-13 = Arimo Nerd Font:Regular:size=21;9
+font-14 = Arimo Nerd Font:size=15;6
+font-15 = Arimo Nerd Font:size=16;7
+font-16 = Arimo Nerd Font:size=16;5
+font-17 = Arimo Nerd Font:size=16;8
+font-18 = Arimo Nerd Font:Regular:size=21;7
+font-19 = Arimo Nerd Font:Bold:size=18;4
 
-modules-right  = eth temperaturecpu memory cpu gpuinfo translate volume
-modules-center = filesystem
-modules-left = calendar weatcher xkeyboard quake
+modules-right  = eth temperaturecpu memory cpu gpuinfo volume
+modules-center = translate quake telegram nemo chrome browser youtube
+modules-left = calendar weatcher xkeyboard filesystem updates
 
 monitor = HDMI-0
 width = 100%
-height = 2%
+height = 2.5%
 offset-x = 0%
 offset-y = 0%
 override-redirect = false
@@ -36,15 +55,12 @@ scroll-up = bspc node -t tiled
 scroll-down = bspc node -t floating
 click-left = bspc node -f next
 click-right = bspc node -f -c
-click-middle = wq launch
-cursor-click = default
-cursor-scroll = ns-resize
 module-margin = 0
 padding-right = 3
 padding-left = 3
 border-size = 3
-border-top-size = 3
-border-bottom-size = 3
+border-top-size = 8
+border-bottom-size = 8
 line-size = 1
 background = ${env:backgroundDock}
 foreground = ${env:foregroundDock}
@@ -59,23 +75,22 @@ separator = " "
 pseudo-transparency = true
 
 [bar/taskbar]
-font-0 = Iosevka Term SS07:Bold:size=13;5
+font-0 = M+ 2m:medium:size=13;5
 font-1 = Arimo Nerd Font:regular:size=16;6
 font-2 = Arimo Nerd Font:Regular:size=18;7
-;font-0 = "Ubuntu:style=Bold:antialias=true:pixelsize=10,1"
-;font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = Arimo Nerd Font:size=15;4
-font-4 = mPlus Nerd Font:bold:size=16;5
+font-4 = M+ 2m:size=13;5
 font-5 = Arimo Nerd Font:regular:size=11;4
-font-6 = Arimo Nerd Font:size=16;5
-font-7 = FontAwesome5Brands:style=Solid:antialias=false:pixelsize=25;4
-font-8 = FontAwesome5Free:style=Solid:antialias=false:pixelsize=18;4
+font-6 = Arimo Nerd Font:size=12;5
+font-7 = M+ 2m:size=15;6
+font-8 = M+ 2m:size=16;6
 font-9 = Arimo Nerd Font:Regular:size=10;6
 font-10 = Arimo Nerd Font:Regular:size=20;7
-
+font-11 = Arimo Nerd Font:Regular:size=25;9
+font-12 = Arimo Nerd Font:Regular:size=21;9
 
 modules-left = ws x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
-modules-right = mpv
+modules-right = mpv volume
 
 monitor = ${env:monitor1}
 width = 100%
@@ -86,11 +101,8 @@ override-redirect = false
 fixed-center = true
 scroll-up = bspc node -d next -f
 scroll-down = bspc node -d prev -f
-click-left = bspc node -f next
+click-left = . $path_scripts/themerofi && rofi -modi drun,window,run -show drun -width 10 -font 'M+ 2m 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons
 click-right = bspc node -f -c
-click-middle = wq launch
-cursor-click = pointer
-cursor-scroll = ns-resize
 module-margin = 0
 padding-right = 3
 padding-left = 3
@@ -109,5 +121,3 @@ dpi-y = 130
 enable-ipc = true
 separator = " "
 pseudo-transparency = true
-
-

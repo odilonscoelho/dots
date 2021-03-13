@@ -4,7 +4,7 @@ format-volume-suffix-foreground = ${env:volumecolorsuffix}
 format-volume-suffix-font = ${env:volumefontsuffix}
 type = internal/pulseaudio
 format-volume-padding = 1
-label-volume  = "%{T14}  %{A1:pavucontrol & disown:}%{A3:pulseaudio-equalizer-gtk & disown:}%percentage%%{A}  "
+label-volume  = "%{T8}  %{A1:pavucontrol & disown:}%{A3:pulseaudio-equalizer-gtk & disown:}%percentage%%{A}  "
 ;format-volume-background = ${env:background}
 format-volume-foreground = ${env:colorWSForeground}
 ;format-volume-underline = ${env:volumecolor}
@@ -15,17 +15,14 @@ click-left = pavucontrol &
 
 [module/calendar]
 type = custom/script
-interval = 5
+interval = 10
 format-prefix = ${env:calendarprefix}
 format-prefix-foreground = ${env:calendarcolorprefix}
 format-prefix-font = ${env:calendarfontprefix}
 exec = echo "$(relogio relogio) $(relogio relogio.extenso)"
 tail = true
 format-padding = 1
-;format-foreground = ${env:foreground}
-;format-background = ${env:background}
-;format-underline = ${env:calendarcolor}
-;format-overline = ${env:calendarcolor}
+click-left = yad --calendar --no-buttons
 
 [module/memory]
 type = internal/memory
@@ -89,10 +86,6 @@ format-connected-prefix = ${env:ethiconsuffix}
 format-connected-prefix-foreground = ${env:ethcoloricon}
 format-connected-prefix-font = ${env:ethfonticon}
 format-connected-padding = 1
-;format-connected-foreground = ${env:foreground}
-;format-connected-background = ${env:background}
-;format-connected-underline = ${env:ethcolor}
-;format-connected-overline = ${env:ethcolor}
 format-connected = <label-connected>
 label-connected-padding = 1
 label-connected = %downspeed%
@@ -104,8 +97,6 @@ format-disconnected-suffix-foreground = ${env:ethcolor}
 format-disconnected-suffix-font = ${env:ethfonticon}
 format-disconnected-foreground = ${env:color1}
 format-disconnected-background = ${env:background}
-;format-disconnected-underline = ${env:ethcolor}
-;format-disconnected-overline = ${env:ethcolor}
 format-disconnected = <label-disconnected>
 label-disconnected-padding = 1
 label-disconnected = " - "
@@ -143,8 +134,8 @@ label-layout = "%layout%"
 label-layout-padding = 1
 label-indicator = "%name%"
 label-indicator-padding = 1
-label-indicator-on-foreground = ${env:background}
-label-indicator-on-background = ${env:xkeyboardcoloricon}
+label-indicator-on-foreground = ${env:xkeyboardcoloricon}
+label-indicator-on-background = ${env:color0}
 label-indicator-on = " %name% "
 click-left = setxkbmap -model abnt2 -layout br -variant abnt2
 click-right = setxkbmap -model us -layout us
@@ -154,12 +145,12 @@ type = custom/ipc
 hook-0 = echo $translatelabel
 initial = 1
 click-left = disown $(cmd msg "$(tradutor sel)") &>/dev/null &
-click-right = disown $(notify -t 900000 -i translator -m "$(tradutor sel)") &>/dev/null &
-scroll-up = disown $(notify -t 900000 -i translator -m "$(tradutor sel)") &>/dev/null &
+click-right = disown $(notify -tm 900000 -i translator -tl "Translate" -m "$(tradutor sel)") &>/dev/null &
+scroll-up = disown $(notify -tm 900000 -i translator -tl "Translate" -m "$(tradutor sel)") &>/dev/null &
 scroll-down = disown $(cmd msg "$(tradutor sel)") &>/dev/null &
 format-padding = 0
 format-background = ${env:background}
-format-foreground = ${env:color7}
+format-foreground = ${env:background}
 
 [module/ws]
 type = custom/ipc
@@ -169,6 +160,7 @@ scroll-up =$(bspc desktop next -f; polybar-msg hook ws 1)
 scroll-down = $(bspc desktop prev -f; polybar-msg hook ws 1)
 click-left = $(wm node.to.desktop)
 format-prefix = ${env:wsicon}
+;format-prefix = %{T12} %{T-}
 format-padding = 0
 format-background = ${env:wscolorbg}
 format-foreground = ${env:wscoloricon}
@@ -177,14 +169,15 @@ format-foreground = ${env:wscoloricon}
 type = custom/ipc
 hook-0 = echo " gpuinfo off "
 hook-1 = echo "$(< /tmp/gpuinfo)"
-hook-2 = gpuinfo start
+hook-2 = gpuinfo impress polybar
 hook-3 = gpuinfo stop
 initial = 1
 click-left = gpuinfo start
 click-right = gpuinfo stop
 format-suffix = ${env:gpuinfosuffix}
-format-underline = ${env:gpuinfocolor}
-format-overline = ${env:gpuinfocolor}
+format-underline = ${env:gpuinfoSuffixColor}
+format-overline = ${env:gpuinfoSuffixColor}
+format-suffix-background = ${env:background}
 format-padding = 1
 
 [module/mpv]
@@ -192,48 +185,224 @@ type = custom/ipc
 ;hook-0 = echo $(< /tmp/mpinfo)
 ;hook-1 = echo $(< /tmp/mpinfo)
 hook-0 = mp -pb &
-hook-1 = mp -polybar &
+hook-1 = mp --polybar &
 initial = 1
 double-click-left = mp -sf &>/dev/null & 
-click-middle = mp select.file &>/dev/null & 
-;click-right = mp plistyad force &>/dev/null & 
-;click-right = lrofi -l 3 -f "Iosevka Term SS07 Bold 17" -iD -w 100 -iD -lH -y 74 player plistrofi &>/dev/null & 
+click-middle = /hdbkp/projetos/shell/bash/ytmpv2 &>/dev/null & 
 click-right = mp -plr &>/dev/null & 
 click-left = mp -console &> /dev/null &
-;click-left = lrofi -w 39 -w2 100 -location 3 -yoffset 74 -xoffset -5 -ft 'Iosevka Term SS07 Bold 17' -f "Arimo Nerd Font 35" -lH -iD player &>/dev/null & 
 scroll-down = mp -next &
 scroll-up = mp -prev &
+format-foreground = ${env:color4}
+foreground = ${env:color4}
 format-suffix-padding = 1
-format-label-font = 0
-format-background = ${env:mprefixcolorbg}
-format-foreground = ${env:foreground}
+format-suffix-font = 11
 format-suffix = ${env:mprefixicon}
 format-suffix-foreground=${env:mprefixcolor}
 format-suffix-background= ${env:mprefixcolorbg}
-format-suffix-font=${env:mprefixfont}
+;format-suffix-font=${env:mprefixfont}
 
 [module/filesystem]
 type = custom/script
 interval = 120
-;exec = echo "$(sh ~/hdbkp/projetos/shell/bash/fspolybar)"
-exec = zsh ~/hdbkp/dots/scripts/fspolybar
+;exec = echo "$(sh /hdbkp/projetos/shell/bash/fspolybar)"
+exec = zsh /hdbkp/dots/scripts/fspolybar
 tail = true
 format-padding = 1
 
-[module/xwindow]
-type = custom/ipc
-hook-0 = " "
-hook-1 = echo "$(< /tmp/xwindow)"
-initial = 1
-format-padding = 0
-
 [module/quake]
 type = custom/ipc
-hook-0 = echo "%{T16}    %{T-}"
+hook-0 = echo "%{T14} %{T-}"
 hook-1 = echo ""
 initial = 1
-format-padding = 10
-format-background = ${env:color0}
-format-foreground = ${env:background}
-click-left = $(bspc rule -a Tilix state=floating focus=on; tilix -q && bspc rule -r Tilix:\*) &>/dev/null &
+format-padding = 0
+format-foreground = #774321
+click-left = ktdraw &>/dev/null &
+click-right = app kt 'micro' &>/dev/null &
+
+[module/qquake]
+type = custom/ipc
+hook-0 = echo "%{T14} %{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = #774321
+click-left = kitty &>/dev/null &
 click-right = tilix -q &>/dev/null &
+
+[module/telegram]
+type = custom/ipc
+hook-0 = echo "%{T15}%{F#1F98DB} %{F-}%{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = ${env:color6}
+click-left = app drop -p telegram-desktop &>/dev/null &
+click-right = app drop -p telegram-desktop &>/dev/null &
+
+[module/qtelegram]
+type = custom/ipc
+hook-0 = echo "%{T15}%{F#1F98DB} %{F-}%{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = ${env:color6}
+click-left = telegram-desktop &>/dev/null &
+click-right = telegram-desktop &>/dev/null &
+
+[module/nemo]
+type = custom/ipc
+hook-0 = echo "%{T17} %{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = ${env:color4}
+click-left = app drop -p nemo &>/dev/null &
+click-right = app drop -p nemo &>/dev/null &
+
+[module/qnemo]
+type = custom/ipc
+hook-0 = echo "%{T17} %{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = ${env:color4}
+click-left = nemo &>/dev/null &
+click-right = nemo &>/dev/null &
+
+[module/chrome]
+type = custom/ipc
+hook-0 = echo "%{T15} %{T-}" 
+;/home/losao/hdbkp/dots/temas/Google_Chrome_icon-icons.com_66794.ico
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #F8D003
+click-left = app drop -p google-chrome-stable &>/dev/null &
+click-right = app drop -p google-chrome-stable &>/dev/null &
+
+[module/qchrome]
+type = custom/ipc
+hook-0 = echo "%{T15} %{T-}" 
+;/home/losao/hdbkp/dots/temas/Google_Chrome_icon-icons.com_66794.ico
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #F8D003
+click-left = google-chrome-stable &>/dev/null &
+click-right = google-chrome-stable &>/dev/null &
+
+[module/browser]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #C8DEF5
+click-left = app qtb &>/dev/null &
+click-right = app qtb &>/dev/null &
+
+[module/qbrowser]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #C8DEF5
+click-left = qutebrowser &>/dev/null &
+click-right = qutebrowser &>/dev/null &
+
+[module/youtube]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #FF0000
+click-left = app drop -p qutebrowser -a="youtube.com" ":open -t" &>/dev/null &
+click-right = mp -x &>/dev/null &
+
+[module/qyoutube]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #FF0000
+click-left = qutebrowser "youtube.com" &>/dev/null &
+click-right = mp -x &>/dev/null &
+
+[module/reddit]
+type = custom/ipc
+hook-0 = echo "%{T17} %{T-}"
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #FB4501
+click-left = app drop -p qutebrowser -a=":open -t www.reddit.com" &>/dev/null &
+click-right = app drop -p qutebrowser -a=":open -t www.reddit.com" &>/dev/null &
+
+[module/qreddit]
+type = custom/ipc
+hook-0 = echo "%{T17} %{T-}"
+hook-1 = echo ""
+initial =1
+format-padding = 0
+format-foreground = #FB4501
+click-left = qutebrowser www.reddit.com &>/dev/null &
+click-right = qutebrowser www.reddit.com &>/dev/null &
+
+[module/github]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = #EBF1F7
+click-left = app drop -p qutebrowser -a=":open -t www.github.com" &>/dev/null &
+click-right = app drop -p qutebrowser -a=":open -t www.github.com" &>/dev/null &
+
+[module/qgithub]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = #EBF1F7
+click-left = qutebrowser www.github.com &>/dev/null &
+click-right = qutebrowser www.github.com &>/dev/null &
+
+[module/cmd]
+type = custom/ipc
+hook-0 = echo "%{T18} %{T-}"
+hook-1 = echo ""
+initial = 1
+format-padding = 0
+format-foreground = ${color0}
+click-left = lrofi cmd -f 'Iosevka Term SS07 Medium 18' -nW
+
+[module/qlayout]
+type = custom/ipc
+initial = 1
+hook-0 = printf '%-50s' "$(< /tmp/qlayout)"
+hook-1 = echo ""
+format-padding = 0
+scroll-up = $(qlayout layout next && qlayout bar)
+scroll-down = $(qlayout layout prev && qlayout bar)
+
+[module/qws]
+type = custom/ipc
+hook-0 = taskbar labelws
+format-padding = 0
+format-background = ${env:wscolorbg}
+format-foreground = ${env:wscoloricon}
+initial = 1
+click-left = $(wm node.to.desktop)
+scroll-up = qtile-cmd -o screen -f next_group
+scroll-down = qtile-cmd -o screen -f prev_group
+
+[module/updates]
+type = custom/script
+interval = 600
+exec = updates
+click-left = updates
