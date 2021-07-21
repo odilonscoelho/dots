@@ -1,2 +1,3 @@
 #!/bin/zsh
-nitrogen  --set-color=$background --set-center --save "$PWD/$@"
+nitrogen --set-color=$background --set-centered --save "$PWD/$@"
+dunstify -t 5000 -u normal -I "$PWD/$@" "Wallpaper Centered" "$@"

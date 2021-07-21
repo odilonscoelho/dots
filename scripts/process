@@ -1,24 +1,31 @@
 #!/bin/zsh
 prc ()
 {
-    base="$(ps auxSf)"        
-    grep -E ''$re'' <<< $base |sort -nrk3
+    ps Sf -e O 'm_size,%cpu,m_trs' |grep -E ''$re'' | sort -nrk 3 #|head --lines=${limiReturn:-10}
 }
 
 impress ()
 {
-    pid=10 ; mem=6 ; cpu=6 ; cmd=$(( COLUMNS - pid - mem - cpu - 5 )) ; tput clear
-    print "$bold$cyan$(printf '%-'$pid'b' " PID ")$reset $bold$yellow$(printf '%'$mem'b' " MEM% ")$reset $bold$green$(printf '%'$cpu'b' " CPU% ")$reset $bold$blue$(printf '%-'$cmd'b' " PROCESS ")$reset"
-    typeset -F 1 MEM CPU ADDMEM ADDCPU
+    unset MEM CPU
+    pid=10 ; mem=12 ; cpu=6 ; cmd=$(( COLUMNS - pid - mem - cpu - 5 )) ; tput clear
+
+    print "$bold$cyan$(printf '%-'$pid'b' " PID ")$reset $bold$yellow$(printf '%'$mem'b' "  MEM")$reset $bold$green$(printf '%'$cpu'b' "CPU %")$reset $bold$blue$(printf '%-'$cmd'b' " PROCESS ")$reset"
+    typeset -F 1 CPU ADDCPU ; typeset -i MEM ADDMEM
     while read line; do
         (( control = control + 1 ))
-        ADDMEM=${${(s: :)line}[4]}
+        ADDMEM=$(( ${${(s: :)line}[2]} / 1024 ))
+       # (( ADDMEM >= 1024 )) && 
+       #     {
+       #         ADDMEM=$(( (${${(s: :)line}[4]} / 1024 / 1024)+0.$(( ${${(s: :)line}[4]} / 1024 % 1024)) )) ;
+       #         SUFFIX="GB" ;
+       #     } || SUFFIX="MB" ;
         ADDCPU=${${(s: :)line}[3]}
-        print "$cyan$(printf '%-'$pid'b' " ${${(s: :)line}[2]}")$reset $yellow$(printf '%'$mem'b' "$ADDMEM ")$reset $green$(printf '%'$cpu'b' "$ADDCPU ")$reset $blue$(printf '%-'$cmd'b' " ${${${(s: :)line}[11,-1]}[1,$((cmd-1))]}")$reset"
-        MEM=$((MEM+$ADDMEM))
-        CPU=$((CPU+$ADDCPU))
-    done <<< "${scope_ini}"
-    printf '%b' "$bold$cyan$(printf '%-'$pid'b' " pids $control ")$reset $bold$yellow$(printf '%'$mem'b' " $MEM% ")$reset $bold$green$(printf '%'$cpu'b' " $CPU% ")$reset $bold$blue$(printf '%-'$cmd'b' " search $search  ")$reset"
+        [[ -z $ADDCPU && -z $ADDMEM ]] && continue
+        print "$cyan$(printf '%-'$pid'b' " ${${(s: :)line}[1]}")$reset $yellow$(printf '%'$mem'b' "$ADDMEM")$reset $green$(printf '%'$cpu'b' "$ADDCPU ")$reset $blue$(printf '%-'$cmd'b' " ${${${(s: :)line}[8,-1]}[1,$((cmd-1))]}")$reset"
+        let MEM+="$ADDMEM"
+        let CPU+="$ADDCPU"
+    done <<< "$scope_ini";
+    printf '%b' "$bold$cyan$(printf '%-'$pid's' " pids $control ")$reset $bold$yellow$(printf '%'$mem's' " $MEM")$reset $bold$green$(printf '%'$cpu'b' " $CPU % ")$reset $bold$blue$(printf '%-'$cmd'b' " search ${search:-Null}  ")$reset"
     unset control
 }
 
@@ -29,7 +36,10 @@ trap stop SIGINT SIGTERM
 green="\033[32m" ; blue="\033[34m" ; cyan="\033[36m" ; yellow="\033[33m" ; kgreen="\033[1;42m" ; kyellow="\033[1;43m" ; kblue="\033[1;44m" ; kcyan="\033[1;46m" 
 reset="\033[0;0m" ; bold="\033[1m"
 
-[[ -z $@ ]] && { re='\/bin\/zsh.*[m]p|\/bin\/zsh .*mp \-mpd start$|taskbar start|[p]olybar \-c|gpuinfo start|[w]eatcher start|[l]ocal\/bin\/infosys' ; search="scripts background" } || { re="$@" ; search=$re }
+# [[ -z $@ ]] && { re='\/bin\/zsh.*[m]p|\/bin\/zsh .*mp \-mpd start$|taskbar start|[p]olybar \-c|gpuinfo start|[w]eatcher start|[l]ocal\/bin\/infosys' ; search="scripts background" } || { re="$@" ; search=$re }
+
+[[ -z "$@" ]] && re='[t]askbar|[i]nfosys|[p]olybar|[b]spwm|[b]ash|[tT]elegram|nvim|mpv|process' || re="$@"
+
 scope_ini="$(prc)"
 tput civis
 base=$(impress)
@@ -37,6 +47,7 @@ tput clear
 print -f '%s' "$base"
 while true; do
     sleep 2
+    limiReturn=$(( $LINES - 1 ))
     scope_new="$(prc)"
     [[ "$scope_ini" == "$scope_new"  ]] && continue || { scope_ini=$scope_new; base=$(impress); tput clear; print -f '%s' "$base" }
 done

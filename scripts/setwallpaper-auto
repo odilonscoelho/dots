@@ -1,3 +1,3 @@
 #!/bin/zsh
-
 nitrogen --set-color=$background --set-auto --save "$PWD/$@"
+dunstify -t 5000 -u normal -I "$PWD/$@" "Wallpaper Auto" "$@"

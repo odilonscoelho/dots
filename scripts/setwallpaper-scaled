@@ -1,2 +1,3 @@
 #!/bin/zsh
 nitrogen --set-scaled --save "$PWD/$@"
+dunstify -t 5000 -u normal -I "$PWD/$@" "Wallpaper Scaled" "$@"

@@ -1,5 +1,5 @@
 #!/bin/zsh
-    se ()
+se ()
 {
 	test ${@} && testSucess || testError
 }
@@ -152,44 +152,4 @@ paste.rs () #
 	echo $url
 }
 
-cronfy ()
-{
-    parser ()
-    { 
-        local control ignoreds args nextArgv
-        args=("--help" "-h" "--time" "-t" "--time-fy" "-tf" "--msg" "-m" "--title" "-tl")
-    
-        for arg in $@
-        {
-        	(( control = control + 1 ))
-        	nextArgv="${(P)$((control+1))}"
-        	if [[  $args =~ $arg ]];then
-        		for ARG in $args[@]
-        		{
-        			[[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv); break }
-        		}
-        	elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
-        		for ARG in $args[@]
-        		{
-        			[[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; break }
-        		}
-        	fi
-        	if [[ $bool =~ $arg ]];then
-        	    for ARG in $bool[@]
-        	    {
-        	        [[ "$ARG" == "$arg" ]] && read "${arg//-/}" <<< "true"
-        	    }
-        	else
-                [[ "$ignoreds" =~ "$arg" ]] && continue || actions=("$arg")
-            fi
-        }
-    }
-    local time t timefy tf title tl msg m control
-    parser $@
-    [[ -n ${time:=$t} ]] && TIME="${time}" || TIME=5
-    [[ -n ${timefy:=$tf} ]] && TIMEFY="${timefy}" || TIMEFY=10000
-    [[ -n ${title:=$tl} ]] && TITLE="${title}" || TITLE="ATENÇÃO"
-    [[ -n ${msg:=$m} ]] && MSG="${msg}" || MSG="PRAZO DE $TIME ESGOTADO"
-    { sleep "$TIME" && dunstify -I $path_scripts/cronometro2.jpg -t "$TIMEFY" "$TITLE" "$MSG" } &> /dev/null
-} 
 

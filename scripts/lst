@@ -223,7 +223,7 @@ lst.case ()
 
 			icon="$(printf '%-1s' $scripts)"
 			label="$(printf '%-'$(($limiteString-4))'s' $@)"
-			if [[ $(wc -c <<< "$label") -gt $limiteString ]]; then
+			if [[ "$#label" -gt $limiteString ]]; then
 				label=${label[1,$limiteString]}
 			fi
 

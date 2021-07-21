@@ -4,7 +4,7 @@ format-volume-suffix-foreground = ${env:volumecolorsuffix}
 format-volume-suffix-font = ${env:volumefontsuffix}
 type = internal/pulseaudio
 format-volume-padding = 1
-label-volume  = "%{T8}  %{A1:pavucontrol & disown:}%{A3:pulseaudio-equalizer-gtk & disown:}%percentage%%{A}  "
+label-volume  = "%{T8}%{A1:pavucontrol & disown:}%{A3:pulseaudio-equalizer-gtk & disown:}%percentage%%{A}"
 ;format-volume-background = ${env:background}
 format-volume-foreground = ${env:colorWSForeground}
 ;format-volume-underline = ${env:volumecolor}
@@ -15,7 +15,7 @@ click-left = pavucontrol &
 
 [module/calendar]
 type = custom/script
-interval = 10
+interval = 30
 format-prefix = ${env:calendarprefix}
 format-prefix-foreground = ${env:calendarcolorprefix}
 format-prefix-font = ${env:calendarfontprefix}
@@ -158,7 +158,7 @@ hook-0 = taskbar labelws
 initial = 1
 scroll-up =$(bspc desktop next -f; polybar-msg hook ws 1)
 scroll-down = $(bspc desktop prev -f; polybar-msg hook ws 1)
-click-left = $(wm node.to.desktop)
+click-left = rofiall
 format-prefix = ${env:wsicon}
 ;format-prefix = %{T12} %{T-}
 format-padding = 0

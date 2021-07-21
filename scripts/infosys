@@ -244,21 +244,32 @@ Memory ()
     memoryNew=$base
     if [[ $memoryOld != $memoryNew ]];then
         memoryOld=$memoryNew
-        typeset -F2 mem_free=${${${${${(s: :)${(f)base}[2]}[4]}//Gi/}//Mi/}//,/.}
-        typeset -F2 mem_used=$(( ${${${${${(s: :)${(f)base}[2]}[2]}//Gi/}//Mi/}//,/.} - mem_free ))
+        
+        typeset -F2 mem_used=${${${${${(s: :)${(f)base}[2]}[3]}//Gi/}//Mi/}//,/.}
+        suffix_mem_used="${${${${${(s: :)${(f)base}[2]}[3]}//*Gi/Gi}//*Mi/Mi}//,/}"
+        
+        [[ $suffix_mem_used == "Mi" ]] && 
+            typeset -F2 mem_free=$(( ${${${${${(s: :)${(f)base}[2]}[2]}//Gi/}//Mi/}//,/.} - ( mem_used / 1024 ) )) ||
+                typeset -F2 mem_free=$(( ${${${${${(s: :)${(f)base}[2]}[2]}//Gi/}//Mi/}//,/.} - mem_used ))
+        
+        [[ $mem_free -lt 1 ]] && { typeset -F2 mem_free=$((mem_free / 1024)); suffix_mem_free="Mi" } || { suffix_mem_free="Gi" }
+
         c_mem_free=$(print -f '%5s' "$mem_free")
         c_mem_used=$(print -f '%5s' "$mem_used")
-        suffix_mem_free="${${${${${(s: :)${(f)base}[2]}[4]}//*Gi/Gi}//*Mi/Mi}//,/}"
+        
         [[ $suffix_mem_free_Old != $suffix_mem_free ]] && { c_suffix_mem_free=$(color -f blue $suffix_mem_free); suffix_mem_free_Old=$suffix_mem_free }
         [[ $suffix_mem_used_Old != $suffix_mem_used ]] && { c_suffix_mem_used=$(color -f blue $suffix_mem_used); suffix_mem_used_Old=$suffix_mem_used }
         
-        if [[ $suffix_mem_free =~ "Mi" ]]; then
-            typeset -F2 mem_perc_used=$(( (( mem_used / 1024 ) / (mem_free + mem_used )) * 100 ))
-            c_mem_perc_used=$(print -f '%5s' "$mem_perc_used")
+        if [[ $suffix_mem_used == "Mi" && $suffix_mem_free == "Gi" ]]; then
+            typeset -F2 mem_perc_used=$(( 100 * ( (mem_used / 1024) / ((mem_used / 1024) + mem_free ) ) ))
+        elif [[ $suffix_mem_used == "Gi" && $suffix_mem_free == "Gi" ]]; then
+            typeset -F2 mem_perc_used=$(( 100 * ( mem_used / (mem_used + mem_free) ) ))
         else
-            typeset -F2 mem_perc_used=$(( mem_used / (mem_free + mem_used) * 100 ))
-            c_mem_perc_used=$(print -f '%5s' "$mem_perc_used")
+            typeset -F2 mem_perc_used=$(( 100 * ( mem_used / (mem_used + (mem_free / 1024)) ) ))
         fi
+        
+        c_mem_perc_used=$(print -f '%5s' "$mem_perc_used")
+        
         label_memory="$icon_memory $c_mem_perc_used$c_suffix_perc_used_mem, $prefix_memory_free $c_mem_free$c_suffix_mem_free, $prefix_memory_used $c_mem_used$c_suffix_mem_used"
         len_label_memory=$(( 22 + 22 ))
         printf '%'$(( (COLUMNS - len_label_memory) / 2))'s %s' "" "$label_memory"
@@ -370,7 +381,6 @@ main ()
     c_label_temp_prefix_Tdie=$(color -f blue Tdie)
     uptime_icon=$(color -f red "   ")
     icon_memory=$(color -f blue "$(print -f '%3s' " ")")
-    c_suffix_mem_used=$(color -f blue "Gi")
     c_suffix_perc_used_mem=$(color -f blue "%%")
     prefix_memory_free=$(color -f green "$(print -f '%5s' "Free:")")
     prefix_memory_used=$(color -f red "$(print -f '%5s' "Used:")")
@@ -393,7 +403,7 @@ main ()
     while true; do
         base="$(hello; LineInWhite; Uptime; LineInWhite; Memory; LineInWhite; Cpu; LineInWhite; Gpu; LineInWhite; Net; LineInWhite; Weatcher; LineInWhite; Clock)"
         tput clear
-        print -f '%s' "$base"
+        print -f '%s' "$base" 
         sleep 1
     done
 } 

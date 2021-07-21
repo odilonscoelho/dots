@@ -1,10 +1,12 @@
 #!/bin/zsh
-
-if ps aux|awk '{print $11}'|grep --silent '[p]icom'; then
-  dunstify -t 5000 "Picom Stoped!"
+path_dots=/hdbkp/dots
+if pidof picom; then
+  dunstify -t 5000 "Picom" "Stoped!" -i system-config-xfree
   pkill picom
 else
-  dunstify -t 5000 "Picom Started!"
-  picom --config $path_dots/picom.conf -b
-  # picom --config $path_dots/picom.conf -b --experimental-backends
+  dunstify -t 5000 "Picom" "Started!" -i system-config-xfree
+  # picom --config $path_dots/picom.conf -b
+  picom --config $path_dots/picom.conf -b --experimental-backends
 fi
+
+

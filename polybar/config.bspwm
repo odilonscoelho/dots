@@ -75,22 +75,24 @@ separator = " "
 pseudo-transparency = true
 
 [bar/taskbar]
-font-0 = M+ 2m:medium:size=13;5
+#font-0 = M+ 2m:medium:size=13;5
+font-0 = Iosevka Term SS07:Bold:size=13;5
 font-1 = Arimo Nerd Font:regular:size=16;6
 font-2 = Arimo Nerd Font:Regular:size=18;7
 font-3 = Arimo Nerd Font:size=15;4
-font-4 = M+ 2m:size=13;5
+font-4 = Iosevka Term SS07:medium:size=13;5
 font-5 = Arimo Nerd Font:regular:size=11;4
 font-6 = Arimo Nerd Font:size=12;5
-font-7 = M+ 2m:size=15;6
-font-8 = M+ 2m:size=16;6
+font-7 = Iosevka Term SS07:size=18;10
+font-8 = Iosevka Term SS07:size=13;8
 font-9 = Arimo Nerd Font:Regular:size=10;6
 font-10 = Arimo Nerd Font:Regular:size=20;7
 font-11 = Arimo Nerd Font:Regular:size=25;9
 font-12 = Arimo Nerd Font:Regular:size=21;9
+font-13 = Arimo Nerd Font:Regular:size=18;8
 
 modules-left = ws x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
-modules-right = mpv volume
+modules-right = calendar volume
 
 monitor = ${env:monitor1}
 width = 100%
@@ -101,7 +103,8 @@ override-redirect = false
 fixed-center = true
 scroll-up = bspc node -d next -f
 scroll-down = bspc node -d prev -f
-click-left = . $path_scripts/themerofi && rofi -modi drun,window,run -show drun -width 10 -font 'M+ 2m 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons
+;click-left = . $path_scripts/themerofi && rofi -modi drun,window -show drun -width 10 -font 'M+ 1mn 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons -icon-theme Revenge
+click-left = /hdbkp/projetos/shell/rofiall
 click-right = bspc node -f -c
 module-margin = 0
 padding-right = 3

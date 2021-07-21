@@ -29,11 +29,11 @@ fi
 #--------------------------------------------------------------------------------------
 # Configure bspwm envs
 #--------------------------------------------------------------------------------------
-bspc config window_gap 0
+bspc config window_gap 38
 bspc config remove_disabled_monitors true
 bspc config ignore_ewmh_focus true
 bspc config honor_size_hints false
-bspc config split_ratio 0.5
+bspc config split_ratio 0.35
 bspc config border_width 5
 bspc config status_prefix true
 #--------------------------------------------------------------------------------------
@@ -47,17 +47,15 @@ bspc rule -a kitty state=floating follow=on center=false
 # External Auto-Start
 #--------------------------------------------------------------------------------------
 sxhkd &
-dunst &
 xrdb -merge ~/.Xresources &
 lxqt-policykit-agent &
 keyboard br &
-#app hset &
-nitrogen --restore &
-redshift -l -21.80194:-54.54639 &
 xsetroot -cursor_name left_ptr &
-pulseaudio-equalizer enable &>/dev/null &
-# picomtoggle &
-#weatcher start &
-#gpuinfo start &
+pulseaudio-equalizer enable &>/dev/null & app hset &
+nitrogen --restore &
+dunstall &
 launch &
 taskbar start &
+redshiftall & # script valida se há instância em execução antes de iniciar o redshift
+picomtoggle & # mesma coisa do redshiftall mas para o picom
+# xcomptoggle & 

@@ -99,6 +99,7 @@ bindkey '^H' backward-kill-word                                 # delete previou
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
 #|/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/|#
 ## Alias section
+alias mpt='kittysettitle mpTui ;/hdbkp/projetos/shell/tui/depur'
 alias df='df -h'                                                # Human-readable sizes
 alias free='free -m'                                            # Show sizes in MB
 alias gitu='git add . && git commit && git push'
@@ -119,7 +120,7 @@ alias aurremovefull='yay -Rsn'
 alias equalizer='pulseaudio-equalizer enable'
 alias ls='ls --color=auto'
 alias nn='nano'
-alias n='nvim'
+alias n='kittysettitle "nvim"; nvim'
 alias m='micro'
 alias hd='/hdbkp/'
 alias dots='$path_dots'
@@ -161,7 +162,7 @@ Return_Cm="%(?|$(SeparatoR green)%F{black}%K{green}   %?|$(SeparatoR red)%F{b
 Dir_Curre="%K{white}%F{black} %1~ %F{white}%K{black}"
 Icon_Pont="%(!|%K{black}%F{red}   %k%F{black}%f%k |%K{black}%F{blue}   %k%F{black}%f%k )"
 # RRPROMPT="$(SeparatoR black)$Jobs_Runn$(SeparatoR white)$Hist_Numb$Return_Cm$User_Prev"
-RRPROMPT="$(SeparatoR white)$Hist_Numb$Return_Cm$User_Prev"
+RRPROMPT="$(SeparatoR white)$Hist_Numb$Return_Cm"
 # job_status ()
 # {
     # [[ %j -gt 0 ]] && RPROMPT="$(SeparatoR black)%K{black}%F{magenta}  %F{white}%j $RRPROMPT" || RPROMPT="$RRPROMPT"

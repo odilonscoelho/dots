@@ -1,2 +1,2 @@
 #!/bin/zsh
-app mpv $PWD/$@
+app mpv --no-config $PWD/$@
