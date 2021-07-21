@@ -67,8 +67,10 @@ super + {o,i}
 # => Workspace focus | shift => Send node to desktop
 #===========================================================================================================================#
 
-super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+super + {_,shift+} {1-9,0}
+    bspc {desktop -f,node -d} '^{1-9,0}' --follow
+
+# bspc {desktop -f,node -d} '^{1-9,10}'
 
 #===========================================================================================================================#
 
@@ -106,10 +108,10 @@ alt + {_,shift +}  button3
 #===========================================================================================================================#
 
 ctrl + super + Insert
-	var=$(tradutor sel) && notify -t 1000000 -i translator -m "$var"
+	var=$(tradutor sel) && dunstify -t 1000000 -i config-language "Tradução" "$var"
 
 ctrl + shift + Insert
-	var=$(tradutor sel) && cmd msg "$var"
+	tradutor window
 
 #===========================================================================================================================#
 
@@ -120,15 +122,6 @@ super + control + {button4,button5}
 
 # Enviar node para outro desktop com escolha de focar ou não do desktop de destino que 
 #wm node.to.desktop
-alt + shift + Tab
-    bspc wm -h off; \
-    bspc node older -f; \
-	bspc wm -h on
-
-alt + Tab
-    bspc wm -h off; \
-    bspc node newer -f; \
-	bspc wm -h on
 
 #===========================================================================================================================#
 
@@ -145,7 +138,7 @@ super + alt + {Left,Right,Up,Down}
 
 #Flutuante ou Tiled
 
-alt + {button4,button5,button8}
+super + {button4,button5,button8}
 	bspc node -t {tiled,floating,fullscreen}
 
 #===========================================================================================================================#
@@ -161,22 +154,26 @@ shift + Print
 #===========================================================================================================================#
 # Media
 @XF86AudioPrev
-	mp -prev
-
+    mpvcmd prev
+	#mp -prev && /hdbkp/projetos/shell/tui/depur -notification
 @XF86AudioNext
-	mp -next
-
+	mpvcmd next
+    #mp -next && /hdbkp/projetos/shell/tui/depur -notification
 @XF86AudioPlay
-	mp -pause
+    mpvcmd pause
+	#mp -pause
 
 @XF86AudioStop
-	mp -stop
+    mpvcmd stop
+	#mp -stop
 
 shift + @XF86AudioPlay
-	mp -x
+    mpvcmd xlip
+	#mp -x
 
 F10
-	mp -x
+    mpvcmd xclip
+	#/hdbkp/projetos/shell/tui/depur -x
 
 shift + F10
 	mp -console
@@ -201,7 +198,7 @@ shift + ctrl + F10
 #===========================================================================================================================#
 
 XF86HomePage
-	qutebrowser -R --target window youtube.com.br
+	qutebrowser -R --target window
 
 @shift + ctrl + XF86HomePage
 	qutebrowser -R --target window spankbang.com
@@ -213,20 +210,20 @@ super + {v,c}
 
 #===========================================================================================================================#
 
-super + Return
-	. $path_scripts/themerofi && rofi -modi drun,window -show drun -width 10 -font 'M+ 1mn 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons
+#super + Return
+	#. $path_scripts/themerofi && rofi -modi drun,window -show drun -width 10 -font 'M+ 1mn 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons -icon-theme Revenge
 
-shift + F11
-    editor
-    
+super + Return
+    rofiall
+
+    #/hdbkp/projetos/shell/rofiall
+
 F11 
 	/hdbkp/projetos/shell/bash/ytmpv2
-    #lrofi cmd -f 'M+ 2m 18' -nW
 
 button8
 	ktdraw2
 	
-	#. $path_scripts/themerofi && rofi -modi drun,window -show drun -width 10 -font 'M+ 1mn 19' -iD -yoffset -80 -l 6 -title "Menu" -Theme-str "$ThemeCustom" -show-icons
 #======================================================================================================================t=====#
 @button9
 	xdotool keydown super
@@ -244,9 +241,13 @@ ctrl + button 8
 
 
 F12
-	ktdraw
+	$path_scripts/menu
 	
+    #/hdbkp/projetos/shell/rofiall
 shift + F12
+    wm node.focus
+
+alt + Tab
     wm node.focus
 
 ctrl + F12
