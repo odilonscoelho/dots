@@ -1,0 +1,80 @@
+#!/bin/zsh
+uname_base=$(uname -a) ; hostname=${${(s: :)uname_base}[2]} ; kernel=${${(s: :)uname_base}[3]}
+uptime=${(s: :)$(uptime)[3]//,/}
+cpu=${${(s: :)${${(s#:#)${(f)"$(< /proc/cpuinfo |grep 'model name')"}[1]}[2]}/ /}[2,4]}
+gpu=${${(s: :)${${${(s#:#)"$(lspci |grep VGA)"}[3]/ /}//*\[/}//\]*/}[1,3]}
+shell=$(while read line; do; [[ $line =~ $USER ]] && print ${${${(s#:#)line}[6]}//\/bin\//}; done < /etc/passwd)
+pkgs=$(pacman -Q | wc -l)
+wm="bspwm"
+
+black="\033[30m" ;red="\033[31m"; green="\033[32m"; blue="\033[34m"; cyan="\033[36m"; magenta="\033[35m"; yellow="\033[33m"; white="\033[37m"
+brightblack="\033[0;38;5;8m" brightred="\033[0;38;5;9m"; brightgreen="\033[0;38;5;10m"; brightblue="\033[0;38;5;11m"; brightcyan="\033[0;38;5;12m"; brightmagenta="\033[0;38;5;13m"; brightyellow="\033[0;38;5;14m"; brightwhite="\033[0;38;5;15m"
+kblack="\033[40m"; kred="\033[41m"; kgreen="\033[42m"; kyellow="\033[43m"; kblue="\033[44m"; kmagenta="\033[45m"; kcyan="\033[46m"; kwhite="\033[47m"
+
+
+
+# blue_light="\e[5;12"
+blue_light="\033[0;38;5;12m"
+magenta_light="\033[0;38;5;13m"
+reset="\033[0;0m"
+bold="\033[1m"
+reverse="\033[7m"
+italic="\033[2m"
+
+infos ()
+{
+    _center_tupla () printf '%-'$dimensions_infos'b\n' "$@"
+    _center_tupla "$reset "    
+    _center_tupla "$reset$green  $yellow $wm "
+    _center_tupla "$reset$green  $yellow $shell "
+    _center_tupla "$reset$green  $yellow $hostname "
+    _center_tupla "$reset$green  $yellow $pkgs "
+    _center_tupla "$reset$green  $yellow $uptime"
+    _center_tupla "$reset$green  $yellow $kernel "
+    _center_tupla "$reset$green  $yellow $cpu "
+    _center_tupla "$reset$green  $yellow $gpu "    
+    _center_tupla "$reset "    
+}
+
+infos2 ()
+{
+    _center_desc () printf '%'$(( ( COLUMNS - dimensions_infos2) / 2 ))'b %b\n' " " "$@"
+     _center_desc "$reset$green  $yellow $wm"
+     _center_desc "$reset$green  $yellow $shell"
+     _center_desc "$reset$green  $yellow $hostname"
+     _center_desc "$reset$green  $yellow $pkgs"
+     _center_desc "$reset$green  $yellow $uptime"
+     _center_desc "$reset$green  $yellow $kernel"
+     _center_desc "$reset$green  $yellow $cpu"
+     _center_desc "$reset$green  $yellow $gpu"
+}
+
+graph ()
+{
+    _center () printf '%'$dimensions_graph'b\n' "$@"
+    _center "$brightblack                              "    
+    _center "$brightblack █████████ ████████ ██████████"
+    _center "$brightblack ███    ██ ███      ████    ██"
+    _center "$brightblack ███    ██ ███      ████    ██"
+    _center "$brightblack █████████ ████████ ██████████"
+    _center "$brightblack ███    ██       ██ ████      "
+    _center "$brightblack ███    ██       ██ ████      "
+    _center "$brightblack █████████ ████████ ████      "
+    _center "$brightblack █████████ ████████ ████      "
+    _center "$brightblack                              "
+}
+
+if [[ -z $@ ]]; then
+    dimensions=$(( COLUMNS / 3 ))
+    dimensions_infos=$dimensions
+    dimensions_graph=$(( dimensions * 2 ))
+
+    paste -- <(graph) <(infos)
+else
+    dimensions_infos2=22
+    dimensions_icons=6
+    infos2
+fi
+
+
+#    GeForce GTX 1060

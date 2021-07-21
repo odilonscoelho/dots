@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+Add () 
+{
+    if SockActive; then
+        for arg; do
+            echo '{ "command": ["loadfile", "'$arg'", "append-play"], "request_id": 0}' |socat - $sock &> /dev/null
+            >/tmp/mpvcmdTitles
+        done
+        sleep 0.5
+    else
+        mpv "$1" --input-ipc-server=$sock &>/dev/null & echo $! > /tmp/mpvcmd_Pid
+        sleep 0.5
+        #for (( arg = 2 ; arg <= "${#}" ; arg++ )); do
+        for arg in {2..${#}}; do
+            echo '{ "command": ["loadfile", "'${!arg}'", "append-play"], "request_id": 0}' |socat - $sock &> /dev/null
+        done
+        sleep 0.5
+    fi
+
+    Playlist >/dev/null
+}
+
+Xclip ()
+{
+    Add "$(xclip -selection clipboard -o)"
+}
+
+GetTitleYouTube ()
+{
+    : "${1//\//}" ; local fileTemp="$_"
+
+    wget --quiet --output-document="$fileTemp" "${1}"
+    
+    grep '^ytimg' $fileTemp|sed 's/.*<title>//;s/<\/title>.*//'
+
+    rm $fileTemp 2>/dev/null
+
+    return 0
+}
+
+Playlist ()
+{
+    : "$(echo '{ "command": ["get_property", "playlist"], "request_id": 0}' |socat - $sock)" 
+    : "${_//\"filename\":/$'\n'\"filename\":}"
+    : "${_//\"title\"/$'\n'\"title\"}"
+    : "${_//,\"id\"/$'\n'\"id\"}"
+    : "${_//'{"data":[{'''/}"
+    : "${_//['"'"'"\}\]\{\[\,$]/}"
+    : "${_//request_id*/}"
+    local fbase="${_//current:trueplaying:true/}"
+    
+    [[ -e /tmp/mpvcmdTitles ]] && source /tmp/mpvcmdTitles || >/tmp/mpvcmdTitles
+
+    while read line; do 
+        if [[ "$line" =~ ^filename: ]]; then
+            filenames+=("${line#*:}")
+        elif [[ "$line" =~ ^title: && -z "${titles[${controller:=0}]}" ]]; then
+            titles+=("${line#*: }")
+            echo "titles[${#titles[@]}]=\"${titles[-1]}\"" >>/tmp/mpvcmdTitles
+            let controller+=1
+        fi
+    done <<< "$fbase"
+
+    for line in "${filenames[@]}"; do let control+=1
+        if [[ -z "${titles[$control]}" ]]; then
+            titles[$control]="$(GetTitleYouTube "$line")"
+            echo "titles[$control]=\"${titles[$control]}\"" >> /tmp/mpvcmdTitles
+        fi
+        printf '%5s %'$lenTitles's\n' " $control " "| ${titles[$((control-1))]} "
+    done
+}
+
+Duration () 
+{
+    : $(echo '{ "command": ["get_property", "duration"], "request_id": 0}' |socat - $sock)
+    : ${_#*\:}; : ${_%%\.*}; local ref="$_" ; 
+    [[ $ref =~ 'unavailable' ]] && echo 0 || echo $ref
+}
+
+FilenameN ()
+{
+    : "$(echo '{ "command": ["get_property", "playlist/'"$@"'/filename"], "request_id": 0}' |socat - $sock)"
+    : "${_#*\":\"}" ; echo "${_//\"*/}" ;
+}
+
+Filename ()
+{
+    : "$(echo '{ "command": ["get_property", "filename"], "request_id": 0}' |socat - $sock)"
+    : "${_#*:\"}"; echo "${_%%\",*}"
+}
+
+Format ()
+{
+    Playlist >/dev/null
+    let current_track_id="$(TrackGet) - 1"
+
+    ref="$(youtube-dl --list-formats "${filenames[$current_track_id]}"| grep -Ev '\[youtube\]|\[info\]|format\ code|video only' \
+        | fzf --header="Format :" --pointer="->" --layout=reverse-list --margin=0,2,5,2)"
+    [[ -z $ref ]] && { return 0 ; } || { echo "set ytdl-format "${ref// */}"" |socat - $sock ; Track $(TrackGet) ; return 0 ; }
+}
+
+Next ()
+{
+	echo '{ "command": ["playlist-next", "force"], "request_id": 0}' |socat - $sock &> /dev/null
+}
+
+Pause ()
+{
+	if [[ $(echo '{ "command": ["get_property", "pause"] }' |socat - $sock |grep 'true') ]];then
+		echo '{ "command": ["set_property", "pause", false] }' |socat - $sock &> /dev/null
+	else
+		echo '{ "command": ["set_property", "pause", true] }' |socat - $sock &> /dev/null
+	fi
+}
+
+Prev ()
+{
+	echo '{ "command": ["playlist-prev", "force"], "request_id": 0}' |socat - $sock &> /dev/null
+}
+
+Position () 
+{
+    : "$(echo '{ "command": ["get_property", "time-pos"], "request_id": 0}' |socat - $sock)"
+    : "${_#*\:}"; : "${_%%\.*}"; echo "${_//,/}"
+}
+
+PositionGet ()
+{
+	echo '{ "command": ["set_property", "time-pos", '"$1"'], "request_id": 0}' |socat - $sock &> /dev/null 
+}
+
+SockActive ()
+{
+    : "$(Tracks)" 2>/dev/null
+    (( ${_:-0} > 0 )) && return 0 || return 1
+}
+
+Stop ()
+{
+	echo 'stop' |socat - $sock &> /dev/null
+}
+
+Track ()
+{
+	echo '{ "command": ["set_property", "playlist-pos-1", '"$1"'], "request_id": 0}' |socat - $sock &> /dev/null
+}
+
+TrackGet ()
+{
+    : "$(echo '{ "command": ["get_property", "playlist-pos-1"], "request_id": 0}' |socat - $sock)"
+    : "${_#*\":}"; local ref="${_%%,\"*}" ; 
+    [[ -z $ref ]] && { sleep 0.1 ; TrackGet ; } 
+    [[ "$ref" != "-1" ]] && echo "$ref" || Tracks
+}
+
+Tracks ()
+{
+    : "$(echo '{ "command": ["get_property_string", "playlist-count"], "request_id": 0}' |socat - $sock)"
+    : "${_#*\":\"}" ; echo "${_%%\",*}"
+}
+
+Title ()
+{
+    : "$(echo '{ "command": ["get_property", "media-title"], "reqsuest_id": 0}' |socat - $sock)"
+    : "${_#*:\"}"; echo "${_%%\",*}"
+}
+
+TitleN ()
+{
+    : "$(echo '{ "command": ["get_property_string", "playlist/'"$(($@ - 1))"'/media-title"], "request_id": 0}' |socat - $sock)"
+    # : "${_#*\":}"; echo "${_%%,\"*}"
+    echo "$_"
+}
+
+Reload ()
+{
+    PositionGet 0
+}
+
+Repeat ()
+{
+    : "$(echo '{ "command": ["get_property", "loop-file" ], "request_id": 0 }' |socat - $sock)"
+    grep -q "inf" <<< "$_" &&
+        {
+            echo '{ "command": ["set_property", "loop-file", "no"], "request_id": 0 }' |socat - $sock
+        } || 
+            {
+                echo '{ "command": ["set_property", "loop-file", "yes"], "request_id": 0 }' |socat - $sock
+            }
+}
+
+Remove ()
+{
+	echo "playlist-remove $(( $@ - 1 ))" |socat - $sock > /dev/null
+}
+
+Save ()
+{
+    clear ; tput setaf 2 ; printf '%s' "Salvar Como : " ; read file ; tput sgr0
+    
+    Playlist >/dev/null
+
+    [[ -n $file ]] &&
+    {
+        echo "#EXTM3U" > $file ;
+        for  (( i=0 ; i<=${#filenames[@]} ; i++ )); do
+            echo "#EXTINF: '" "', ${titles[$i]//\"/}" >> $file
+            echo "${filenames[$i]//\"/}" >> $file
+        done ;
+     }
+}
+
+Vol ()
+{
+	echo '{ "command": ["set_property", "volume", '"$@"'], "request_id": 0}' |socat - $sock > /dev/null
+}
+
+PlaylistClear () 
+{
+	echo "playlist-clear" |socat - $sock &> /dev/null
+}
+
+Help ()
+{
+    readarray FNS <<< $(grep -E '^.* \(\)$' $0)
+    
+    printf '%s\n' "Os comandos disponíveis:" \
+    `for fn in "${FNS[@]}" ; { : "${fn// */}" ; printf '%s\n' "${_,}" ;}`
+
+}
+
+sock=/tmp/mpvcmd
+
+action="${1^}"; shift 1
+$action $@

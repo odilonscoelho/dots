@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+pidof redshift && 
+    {
+        redshift -x 2>/dev/null &
+        pkill redshift 2>/dev/null &
+        dunstify -u normal -t 5000 -i system-config-xfree "Redshift" "Stop" &
+    } || 
+        {
+            redshift -l -21.80194:-54.54639 &>/dev/null &
+            dunstify -u normal -t 5000 -i system-config-xfree "Redshift" "Start" &
+        }
+
+
+

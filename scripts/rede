@@ -1,0 +1,41 @@
+#!/bin/zsh
+#rede () 
+#{
+#    con=($(head /proc/net/wireless |grep 000|awk {'print $1'}|sed 's/://g') $(head /proc/net/dev |grep -Ev 'wlp|lo|face|Inter'|awk {'print $1'}|sed 's/://g'))
+#    for (( i = 1; i <= ${#con[@]}; i++ )); do
+#      ativ=$(grep $con[$i] /proc/net/dev|awk {'print $2'})
+#      [[ $ativ -gt 0 ]]&&\
+#        case $con[$i] in
+#          enp* ) icon[$i]="";;
+#          wlp* ) icon[$i]="";;
+#          tun* ) icon[$i]="";;
+#          modem* ) icon[$i]="";;
+#          * ) icon[$i]="<?>";;
+#        esac || echo ""
+#    done
+#    echo $icon[@]
+#}
+
+rx.sx ()
+{
+    baseOld=(${(f)"$(< /proc/net/dev)"})
+    icon=""
+    interface=${${(s#:#)baseOld[4]}[1]}
+    while true; do
+        sleep 1
+        baseNew=(${(f)"$(< /proc/net/dev)"})
+        if [[ $baseOld != $base ]]; then           
+            rxNew=${${(s: :)baseNew[4]}[2]}
+            rxOld=${${(s: :)baseOld[4]}[2]}
+            txNew=${${(s: :)baseNew[4]}[10]}
+            txOld=${${(s: :)baseOld[4]}[10]}
+            down=$(( (rxNew - rxOld) / 1024 ))
+            up=$(( (txNew - txOld) / 1024 ))
+            clear
+            print -f '%-5b %-10s %-5s %4s %-5s %4s' "$icon" "$interface" "Down" "$down" "| Up" "$up"
+            baseOld=(${baseNew[@]})
+        fi
+    done
+}
+
+rx.sx

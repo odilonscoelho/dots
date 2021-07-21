@@ -1,0 +1,51 @@
+#!/bin/zsh
+
+help ()
+{
+    verde=$(tput setaf 2; tput bold) ; reset=$(tput setaf 7) 
+    printf '%b\n' "Exemplo: $verde cronfy -t$reset tempo de notificação $verde -a$reset tempo para despertar" "" \
+       "\t$verde --time/-t\t$reset tempo de notificação (parâmetro -t do dunstify)" \
+       "\t$verde --alarme/-a\t$reset tempo para acionar a notificação de alarme" "" \
+       "Demais parâmetros são tratados como título e corpo da notificação no formato" \
+       "\"Título\" \"Mensagem no corpo da notificação\""
+}
+unset ALARME alarme a TIME time t help h
+args=("--time" "-t" "--alarme" "-a")
+bool=("--help" "-h")
+for arg in $@
+{
+    (( control = control + 1 ))
+
+    nextArgv="${(P)$((control+1))}"
+
+    if [[  $args =~ $arg ]];then
+        for ARG in $args[@]
+        {
+            [[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=("$arg" "$nextArgv"); break ; }
+        }
+    elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
+        for ARG in $args[@]
+        {
+            [[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; ignoreds+=($arg) ; break ; }
+        }
+    fi
+
+    if [[ $bool =~ $arg ]];then
+        for ARG in $bool[@]
+        {
+            [[ "$ARG" == "$arg" ]] && { read "${arg//-/}" <<< "true"; ignoreds+=($arg) ; }
+        }
+    fi
+    
+    [[ "$ignoreds" =~ "$arg" ]] && continue || urls+=("$arg")
+}
+
+for i ; { [[ "${ignoreds[@]}" =~ "$i" ]] && shift 1 }
+
+[[ -n ${help:=$h} ]] && { help ; return 0 ;}
+
+[[ -n $@ ]] && { TITULO="$1" ; shift 1 ; }
+
+ALARME=${alarme:=$a} ; TIME=${time:=$t}
+
+nohup $(sleep "${ALARME:-5}" && dunstify -i clock -t "${TIME:-5000}" "${TITULO:-ALARME}" "${@:-EXEMPLO}") > /dev/null &

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+: "$(checkupdates 2> /dev/null)" ; readarray pacotes <<< "$_"
+
+if (( "${#pacotes[@]}" > 1 )); then
+    dunstify -t 5000 -u critical -i software-update-available "Atualizações Disponíveis !" "${#pacotes[@]} Disponíveis"
+else
+    dunstify -t 5000 -u normal -i software-update-available "Não há atualizações" "$(printf '%s\n%s' "Systema Atualizado" "Pacotes Atualizados")"
+fi

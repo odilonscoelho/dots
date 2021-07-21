@@ -1,0 +1,109 @@
+#!/bin/zsh
+#########################################################################################
+start () #
+{
+	dunstify -t 5000 "gpuinfo Start!" -i shellscript &
+	collect
+	print "$temperature $memory $graphics" > /tmp/gpuinfo2
+	scopeOld=$scope
+	polybar-msg hook gpuinfo 3 > /dev/null
+	backend
+}
+stop () #
+{
+	dunstify -t 5000 "gpuinfo Stop!" -i shellscript &
+	kill $(ps auxSf |grep -E '[g]puinfo start')
+	polybar-msg hook gpuinfo 1 > /dev/null &
+}
+backend () #
+{
+	while true ;do
+		sleep 5
+		collect
+		[[ $scopeOld != $scope ]] &&
+		    {
+    			print "$temperature $memory $graphics" > /tmp/gpuinfo2
+
+                if ps auxSf |grep -q '[p]olybar -c.*dock -r'; then
+                    polybar-msg hook gpuinfo 3 > /dev/null
+                fi
+
+    			scopeOld=$scope
+		    } || continue
+	done
+}
+collect ()
+{
+    scope="$(nvidia-settings -q ThermalSensorReading -q GPUUtilization 2>/dev/null)"
+    temperature="${${(s: :)${(f)scope}[1]}[4]//./}"
+    graphics="${${${(s: :)${(f)scope}[5]}[4]//*=/}//,/}"
+    memory="${${${(s: :)${(f)scope}[5]}[5]//*=/}//,/}"
+}
+impress ()
+{
+    local base=$(< /tmp/gpuinfo2)
+
+    impress.polybar ()
+        print "\
+%{F$gpuinfotempcolor}%{T$gpuinfotempfonticon}$gpuinfotempicon %{T-}%{F-}${${(s: :)base}[1]}%{F$gpuinfotempcolor}%{T$gpuinfotempfonticon2}$gpuinfotempicon2%{T-}%{F-} \
+%{F$gpuinfomemorycolor}%{T$gpuinfomemoryfonticon}$gpuinfomemoryicon%{T-}%{F-} ${${(s: :)base}[2]}% \
+%{F$gpuinfousagecolor}%{T$gpuinfousagefonticon}$gpuinfousageicon%{T-}%{F-} ${${(s: :)base}[3]}% "
+
+    impress.terminal ()
+        {
+            local label="$(print $(cor -f blue "    ") $(cor -f green " $gpuinfotempicon ") $(cor -f brightblack ${${(s: :)base}[1]})$(cor -f green "$gpuinfotempicon2") $(cor -f yellow "   ") $(cor -f brightblack ${${(s: :)base}[2]}%%) $(cor -f red " $gpuinfousageicon ") $(cor -f brightblack ${${(s: :)base}[3]}%%))"
+            local len_label=27
+            local len_impress=$(( (COLUMNS - len_label) / 2 ))
+            printf '\n'
+            printf '%'$len_impress's %b' " " "$label"
+            #printf '%b' "\n$label"
+
+        }
+
+    case $@ in
+        polybar || pb ) impress.polybar ;;
+        terminal || term ) impress.terminal ;;
+        * ) print -P %F{white}%K{red}%B$(printf '%'$COLUMNSs's\n' "use gpuinfo [impress|-i|--impress] [[polybar|pb]|[terminal|term]]")%f%k%b ;;
+    esac
+    
+}
+#########################################################################################
+
+args=('-i' '--impress' 'impress')
+bool=('stop' '--stop' 'start' '--start'  '-h' '--help')
+
+for arg in $@
+{
+	(( control = control + 1 ))
+
+	nextArgv="${(P)$((control+1))}"
+
+	if [[  $args =~ $arg ]];then
+		for ARG in $args[@]
+		{
+			[[ "$ARG" == "$arg" ]] && { read ${arg//-/} <<< $nextArgv; ignoreds+=($nextArgv $arg); break }
+		}
+	elif [[ $args =~ ${${(s:=:)arg}[1]} ]];then
+		for ARG in $args[@]
+		{
+			[[ "$ARG" == "${${(s:=:)arg}[1]}" ]] && { read "${${(s:=:)${arg//-/}}[1]}" <<< "${${(s:=:)arg}[2,-1]}"; ignoreds+=($arg); break }
+		}
+	fi
+
+	if [[ $bool =~ $arg ]];then
+	    for ARG in $bool[@]
+	    {
+	        [[ "$ARG" == "$arg" ]] && { read "${arg//-/}" <<< "true"; ignoreds+=($arg) }
+	    }
+	fi
+
+	[[ "$ignoreds" =~ "$arg" ]] && continue || argv+=("$arg")
+}
+
+#########################################################################################
+
+if [[ -n $start || -n $stop  ]];then
+    [[ -n $start ]] && { start 2>/dev/null & } || stop
+else
+    [[ -n $impress ]] && impress $impress
+fi

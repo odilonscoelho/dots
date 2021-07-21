@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+declare -A menuItens menuIcons menuColors
+
+menuItens=(
+    [Firefox]="firefox"
+    [Chrome]="google-chrome-stable"
+    [Qutebrowser]="qutebrowser"
+    [Google]="firefox https://google.com.br/"
+    [DuckDuckgo]="qutebrowser -R --target window https://duckduckgo.com/"
+    [Github]="firefox https://github.com"
+    [Poweroff]="poweroff"
+    [Terminal]="kitty"
+    [Files]="nemo"
+    [SpkBng]="qutebrowser --target tab spankbang.com"
+    [Reddit]="firefox https://www.reddit.com"
+    [Twitter]="qutebrowser --target tab https://twitter.com"
+    [Telegram]="kotatogram-desktop"
+    [YouTube]="qutebrowser --target tab https://www.youtube.com"
+    [Gcolor2]="gcolor2"
+    [Volume]="pavucontrol"
+    [Reboot]="reboot"
+    [Linkedin]="firefox https://www.linkedin.com"
+    [Mail]="thunderbird"
+    [Translate]="firefox https://translate.google.com.br/?hl=pt-BR"
+    [DicasL]="qutebrowser --target tab https://s2.dicas-l.com.br/ead/my/"
+    [CSGO]="app csgo"
+    [Steam]="steam"
+    [Wiki]="firefox https://wiki.archlinux.org"
+    [Netflix]="qutebrowser --target tab https://www.netflix.com/br-en/"
+    [Capture]="simplescreenrecorder"
+)
+
+menuIcons=(
+    [Firefox]=" "
+    [Chrome]=" "
+    [Qutebrowser]=""
+    [Google]=""
+    [DuckDuckgo]=" "
+    [Github]=""
+    [Poweroff]=""
+    [Terminal]=" "
+    [Files]=" "
+    [SpkBng]=" "
+    [Reddit]=" "
+    [Twitter]=" "
+    [Telegram]=" "
+    [YouTube]=" "
+    [Gcolor2]=" "
+    [Volume]="蓼"
+    [Reboot]=""
+    [Linkedin]=" "
+    [Mail]=" "
+    [Translate]=" "
+    [DicasL]=" "
+    [CSGO]=" "
+    [Steam]=" " 
+    [Wiki]=" "
+    [Netflix]="ﱄ"
+    [Capture]=" "
+)
+ 
+menuColors=(
+    [Firefox]="#5C4DC7"
+    [Chrome]="#B79D30"
+    [Qutebrowser]="#CAE0F7"
+    [Google]="#4285F4"
+    [DuckDuckgo]="#DE5833"
+    [Github]="#F0F6FC"
+    [Poweroff]="#7f7061"
+    [Terminal]="#774321"
+    [Files]="#78BB40"
+    [SpkBng]="#E43F5A"
+    [Reddit]="#FF4500"
+    [Twitter]="#3CC0E3"
+    [Telegram]="#29A0D9"
+    [YouTube]="#FF0000"
+    [Gcolor2]="#E9B435"
+    [Volume]="#7f7061"
+    [Reboot]="#7f7061"
+    [Linkedin]="#0A66C2"
+    [Mail]="#1F5EB9"
+    [Translate]="#4C566A"
+    [DicasL]="#5C655D"
+    [CSGO]="#125D8F"
+    [Steam]="#125D8F"
+    [Wiki]="#1793D1"
+    [Netflix]="#E50914"
+    [Capture]="#005B2F"
+)
+
+font="Iosevka Term SS07 12"
+
+ordemItens=($(for i in ${!menuItens[@]}; do echo $i; done| sort))
+
+: "$(                               \
+for item in ${ordemItens[@]}; do
+    printf '%s\n%s\n%s\n%s\n%s\n'   \
+    "${menuIcons[$item]}" "$item"   \
+    "${menuItens[$item]}" "$font"   \
+    "${menuColors[$item]}"
+done |                              \
+yad                                 \
+    --title="Bookmarks"             \
+    --list                          \
+        --no-headers                \
+        --column Icone              \
+        --column Descrição          \
+        --column Comando            \
+        --column @font@             \
+        --column @fore@             \
+        --hide-column=3             \
+        --search-column=2           \
+        --on-top                    \
+        --borders=15                \
+        --geometry=250x1020+40+120  \
+        --grid-lines both           \
+        --no-buttons 2>/dev/null    \
+)"
+
+: "${_%|*}" ; : "${_##*|}" ; [[ "$_" ]] && ${SHELL} -c "$_" &>/dev/null &
+
+

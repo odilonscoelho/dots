@@ -1,0 +1,74 @@
+#!/bin/zsh
+collect ()
+{
+    scope=${${(f)"$(< /proc/stat)"}[1]}
+    user=${${(s: :)scope}[2]}
+    nice=${${(s: :)scope}[3]}
+    system=${${(s: :)scope}[4]}
+    idle=${${(s: :)scope}[5]}
+    iowait=${${(s: :)scope}[6]}
+}
+define.new ()
+{
+    scopeNew=$scope
+    userNew=$user
+    niceNew=$nice
+    systemNew=$system
+    idleNew=$idle
+    iowaitNew=$iowait
+}
+define.old ()
+{
+    scopeOld=${scopeNew:-0}
+    userOld=${userNew:-0}
+    niceOld=${niceNew:-0}
+    systemOld=${systemNew:-0}
+    idleOld=${idleNew:-0}
+    iowaitOld=${iowaitNew:-0}
+}
+calculate ()
+{
+    totalold=$(( userOld + niceOld + systemOld + idleOld ))
+    totalnew=$(( userNew + niceNew + systemNew + idleNew ))
+    percentage=$(( 100 * ( (totalnew - totalold) - (idleNew - idleOld) ) / (totalnew - totalold) ))
+}
+
+start ()
+{
+    while true; do
+        define.old
+        collect
+        define.new
+        [[ $scopeNew != $scopeOld ]] && { calculate ; print $percentage > /tmp/cpuinfo }
+        sleep 1
+    done
+}
+
+stop ()
+{
+    kill $(ps aux |grep '[c]pu2')
+}
+
+impress ()
+{
+    temp
+    label=$(< /tmp/cpuinfo)
+    c_icon=$(cor -f blue "   ")
+    c_label=$(cor -f brightblack "$label%%")
+    printf '%'$(( ( COLUMNS - 32 ) / 2 ))'s %s' " " "$c_icon $c_label $c_label_temp"
+}
+
+temp ()
+{
+    typeset -F1 Tctl=$(( $(< /sys/class/hwmon/hwmon0/temp2_input) / 1000 ))
+    typeset -F1 Tdie=$(( $(< /sys/class/hwmon/hwmon0/temp1_input) / 1000 ))
+    
+    c_label_temp="$(cor -f blue Tctl) $(cor -f brightblack "$Tctl ºC") $(cor -f blue Tdie) $(cor -f brightblack "$Tdie ºC")"
+}
+
+case $@ in
+    start ) start &>/dev/null &;;
+    stop ) stop ;;
+    impress ) impress ;;
+esac
+

@@ -1,0 +1,88 @@
+#!/bin/zsh
+
+weather.stop () 
+{
+    polybar-msg hook weatcher 1 &>/dev/null &
+    pid_task=$(ps aux|grep '[w]eatcher start'|awk {'print $2'})
+    kill $pid_task 2>/dev/null
+} 2>/dev/null
+
+weather.start () 
+{
+	while true; do
+#		url='http://api.openweathermap.org/data/2.5/weather?id=3451241&units=metric&APPID=3deb24b1e28ec9ef065003e22ca11506'
+        url='http://api.openweathermap.org/data/2.5/weather?id=3451241&units=metric&APPID=1d71e40cec5e1bbfea49be4518673b42'
+        wget --quiet $url --output-document /tmp/weatcher.base
+		sed -i 's/\,/'\\n'/g' /tmp/weatcher.base
+		temperatura=$(grep "feels_like" /tmp/weatcher.base |sed 's/.*\://'|sed 's/\"//g')
+		case $(grep icon /tmp/weatcher.base|sed 's/.*\:"//g;s/"}]//g') in
+			01d)icon="";;
+			02d)icon="";;
+			03d)icon="";;
+			04d)icon="";;
+			09d)icon="";;
+			10d)icon="";;
+			11d)icon="";;
+			13d)icon="";;
+			50d)icon="";;
+			01n)icon="";;
+			02n)icon="";;
+			03n)icon="";;
+			04n)icon="";;
+			09n)icon="";;
+			10n)icon="";;
+			11n)icon="";;
+			13n)icon="";;
+			50n)icon="";;
+		esac
+		# <<< "$icon %{T-} $temperatura %{T1}ºC%{T-}" > /tmp/weatcher
+		#<<< "%{T"$weatcherfonticon"}%{F"$weatchercoloricon"} $icon %{T-}%{F-} $temperatura %{T1}%{F"$weatchercoloricon"}ºC%{T-}%{F-}" > /tmp/weatcher
+        <<< " $icon  $temperatura ºC" > /tmp/weatcher
+
+        if ps auxSf |grep -q '[p]olybar -c.*dock -r'; then
+            polybar-msg hook weatcher 2 &>/dev/null
+        fi
+		sleep 600
+	done
+}
+
+label.clear ()
+{
+    temperatura=$(grep "feels_like" /tmp/weatcher.base |sed 's/.*\://'|sed 's/\"//g')
+    case $(grep icon /tmp/weatcher.base|sed 's/.*\:"//g;s/"}]//g') in
+        01d)icon="";;
+        02d)icon="";;
+        03d)icon="";;
+        04d)icon="";;
+        09d)icon="";;
+        10d)icon="";;
+        11d)icon="";;
+        13d)icon="";;
+        50d)icon="";;
+        01n)icon="";;
+        02n)icon="";;
+        03n)icon="";;
+        04n)icon="";;
+        09n)icon="";;
+        10n)icon="";;
+        11n)icon="";;
+        13n)icon="";;
+        50n)icon="";;
+    esac
+
+    local base="$icon $temperatura ºC"
+    local len_weatcher=13
+    local icon1=$(cor -B -f yellow ${${(s: :)base}[1]})
+    local temp=$(cor -f brightblack "   ${${(s: :)base}[2]} ")
+    local icon2=$(cor -B -f yellow ${${(s: :)base}[3]})
+    printf '\n'
+    printf '%'$(( (COLUMNS - $len_weatcher) / 2 ))'b %b' " " "$icon1$temp$icon2"
+    #printf '%b' "\n$icon1$temp$icon2"
+
+}
+
+case $@ in
+	start) { weather.start &>/dev/null & ; dunstify -t 5000 "weatcher $@" -i gnome-mime-application-x-shellscript };;
+	stop) { weather.stop &>/dev/null & ; dunstify -t 5000 "weatcher $@" -i gnome-mime-application-x-shellscript };;
+	label.clear ) label.clear ;;
+esac

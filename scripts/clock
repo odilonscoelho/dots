@@ -1,0 +1,366 @@
+#!/bin/zsh
+# Create by Odilon Coelho (vulgo losaoall)
+# @t.me/losaoall
+two_points () { print "
+    
+    
+ ██ 
+    
+ ██ 
+    
+    
+    
+    "}
+    
+zero () { print "
+████████
+██    ██
+██      ██
+██      ██
+██      ██
+██    ██
+████████"}
+    
+zerobkp () { print "
+██████████
+███    ███
+███    ███
+███    ███
+███    ███
+███    ███
+██████████"}
+
+onebkp () { print "
+   ███   
+  ████   
+    ███   
+    ███   
+    ███   
+    ███   
+  ███████ "}
+
+onebkp2 () { print "
+   ███   
+    ███   
+    ███   
+    ███   
+    ███   
+    ███   
+   █████  "}   
+
+
+one () { print "
+   ██   
+  █ ██   
+    ██   
+     ██   
+     ██   
+     ██   
+   ████ "}
+
+two () { print "
+████████
+       ██
+        ██
+████████
+██        
+██       
+████████"}
+
+twobkp () { print "
+██████████
+       ███
+       ███
+██████████
+███       
+███       
+██████████"}
+
+three () { print "
+████████
+      ███
+       ██
+   ██████ 
+       ██
+      ███
+████████"}
+
+threebkp () { print "
+██████████
+       ███
+       ███
+██████████
+       ███
+       ███
+██████████"}
+
+four () { print "
+    ████
+█    ███
+██    ██
+██████████
+       ██
+        █
+         "}
+         
+four2 () { print "
+██    ███
+███    ███
+███    ███
+█████████
+       ███
+       ███
+       ███"}
+
+fourbkp () { print "
+███    ███
+███    ███
+███    ███
+██████████
+       ███
+       ███
+       ███"}       
+
+five () { print "
+████████
+██       
+██        
+████████
+        ██
+       ██
+████████"}
+
+fivebkp () { print "
+██████████
+███       
+███       
+██████████
+       ███
+       ███
+██████████"}
+
+six () { print "
+████████
+██      
+██        
+█████████
+██      ██
+██     ██
+████████"}
+
+sixbkp () { print "
+██████████
+███       
+███       
+██████████
+███    ███
+███    ███
+██████████"}
+
+seven () { print "
+█████████
+      ██
+        ██
+    █████
+        ██
+        ██
+       ██"}
+     
+sevenbkp () { print "
+██████████
+       ███
+       ███
+    █████
+       ███
+       ███
+       ███"}
+
+eigth () { print "
+████████
+██      ██
+██      ██
+██████████
+██      ██
+██      ██
+████████"}
+
+eigthbkp () { print "
+██████████
+███    ███
+███    ███
+██████████
+███    ███
+███    ███
+██████████"}
+
+nine () { print "
+████████
+██     ██
+██      ██
+█████████
+        ██
+      ██
+████████"}
+
+ninebkp () { print "
+██████████
+███    ███
+███    ███
+██████████
+       ███
+       ███
+██████████"}
+
+logo ()
+{
+    # ███
+    #          ▁ ▂ ▃ ▄ ▅ ▆ ▇ █ 
+    print "
+█████████████████████████████████
+██ ██   █   █   █   ██   █ ██ ███
+██ ██ █ █ ███ █ █ █ ██ █ █ ██ ███
+██ ██ █ █   █   █ █ ██   █ ██ ███
+██ ██ █ ███ █ █ █ █ ██ █ █ ██ ███
+██  █   █   █ █ █   ██ █ █  █  ██
+█████████████████████████████████
+"
+}
+
+fields ()
+{
+    date_base=$(date)
+    day_week=${${(s: :)date_base}[1]}
+    day_month=${${(s: :)date_base}[2]}
+    month=${${(s: :)date_base}[3]}
+    year=${${(s: :)date_base}[4]}
+    hour=${${(s#:#)${(s: :)date_base}[5]}[1]}
+    minute=${${(s#:#)${(s: :)date_base}[5]}[2]}
+    second=${${(s#:#)${(s: :)date_base}[5]}[3]}   
+    label="$day_week, $day_month $month $year"
+    len=15
+}
+
+clock_logo () 
+    paste -d ' ' <(tab_logo) <(effect_logo)
+
+effect_logo ()
+    while read line; do
+        cor -B -i -f green $line
+    done <<< $(logo)
+
+tab_logo ()
+    while read line; do
+        printf '%'$(( (COLUMNS - 34) / 2 ))'s\n' " "
+    done <<< $(logo)
+        
+clock_digital () 
+    paste -d ' ' <(tab_clock) <(pre_clock_digital_minute)
+
+tab_clock ()
+    while read line; do 
+        printf '%'$(( (COLUMNS - 2 - $max) / 2 ))'s\n' " "
+    done <<< $(grep -Ev '^$' <<< $(pre_clock_digital_minute))
+
+attr_fn ()
+    case $@ in
+        0 ) print zero ;; 1 ) print one ;; 2 ) print two ;; 3 ) print three ;;
+        4 ) print four ;; 5 ) print five ;; 6 ) print six ;; 7 ) print seven ;;
+        8 ) print eigth ;; 9 ) print nine ;;
+    esac
+
+pre_clock_digital_minute () 
+    cor -f $clock_color \
+    "$(paste -d '  ' \
+    <($(attr_fn $hour[1])) \
+    <($(attr_fn $hour[2])) \
+    <(two_points) \
+    <($(attr_fn ${"$(control_digit)"[1]})) \
+    <($(attr_fn ${"$(control_digit)"[2]})))"
+    
+pre_clock_digital_second () 
+    cor -f $clock_color \
+    "$(paste -d '  ' \
+    <($(attr_fn $hour[1])) \
+    <($(attr_fn $hour[2])) \
+    <(two_points) \
+    <($(attr_fn $minute[1])) \
+    <($(attr_fn $minute[2])) \
+    <(two_points) \
+    <($(attr_fn ${"$(control_digit)"[1]})) \
+    <($(attr_fn ${"$(control_digit)"[2]})))"    
+
+clock_text () 
+    cor -f brightblack \
+    "$(printf '%'$(( (COLUMNS - len) / 2 ))'s' "   ") $label"
+
+clock_welcome ()
+    cor -f red \
+    "$(printf '%'$(( (COLUMNS - $#label_welcome) / 2 ))'s' "   ") $label_welcome\n"
+
+clock_gpuinfo ()
+{
+    local gpuinfo="$(gpuinfo impress terminal)"
+    printf '%'$(( (COLUMNS - $#gpuinfo) / 2 ))'s %b %'$(( (COLUMNS - $#gpuinfo) / 2 ))'s\n' " " "$gpuinfo"
+}
+
+clock_underline_divisor () 
+    cor -u -f $@ "$(printf '%'$COLUMNS's' " ")"
+
+clock_weatcher ()
+{
+    local base="$(weatcher label.clear)"
+    local len_weatcher=13
+    local icon1=$(cor -B -f yellow ${${(s: :)base}[1]})
+    local temp=$(cor -f brightblack "   ${${(s: :)base}[2]} ")
+    local icon2=$(cor -B -f yellow ${${(s: :)base}[3]})
+    printf '%'$(( (COLUMNS - $len_weatcher) / 2 ))'b %b\n' " " "$icon1$temp$icon2\n"
+}
+
+clock_process ()
+{    
+    scope_ini="$(prc)"
+    impress
+}
+
+main () 
+{
+    clear
+    printf '%s\n\n'
+    # clock_weatcher
+    # clock_text
+    clock_digital
+    # gpuinfo impress term
+    # ftch clock
+    # process-one-shot
+}
+
+# Configurações
+label_welcome='Hi Losão ...'
+max=48
+control_digit () <<< $minute
+clock_color=${@:-yellow}
+uname_base=$(uname -a) ; hostname=${${(s: :)uname_base}[2]} ; kernel=${${(s: :)uname_base}[3]}
+uptime=${(s: :)$(uptime)[3]//,/}
+cpu=${${(s: :)${${(s#:#)${(f)"$(< /proc/cpuinfo |grep 'model name')"}[1]}[2]}/ /}[2,4]}
+gpu=${${(s: :)${${${(s#:#)"$(lspci |grep VGA)"}[3]/ /}//*\[/}//\]*/}[1,3]}
+shell=$(while read line; do; [[ $line =~ $USER ]] && print ${${${(s#:#)line}[6]}//\/bin\//}; done < /etc/passwd)
+pkgs=$(pacman -Q | wc -l)
+wm="bspwm"
+#                      
+
+# Start
+fields
+scopeold=$(control_digit)
+main $clock_color
+
+while true; do
+    sleep 3
+    fields
+    scopenew=$(control_digit)
+    [[ $scopenew != $scopeold ]] &&
+        {
+            main $clock_color
+            scopeold=$scopenew
+        } || continue
+done
+clear

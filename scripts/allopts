@@ -1,0 +1,32 @@
+#!/bin/zsh
+declare -xA ARGUMENTOS
+print "declare -A ARGUMENTOS" > /tmp/allopts
+for i in $@
+{
+	control=$(($control+1))
+	if [[ $i =~ ^[-.*] ]]; then
+		if [[ $i =~ [.*!]$ ]]; then
+			PARAMETROS_CONF+=("${i//!/}")
+			ARGREFUSED+=([$control]="${(P)control}")
+			print "ARGREFUSED+=([$control]="${(P)control}")" >> /tmp/allopts
+		elif [[ $i =~ [.*:]$ ]]; then
+			PARAMETROS_ARG+=("${i//:/}")
+			ARGREFUSED+=([$control]="${(P)control}")
+			print "ARGREFUSED+=([$control]="${(P)control}")" >> /tmp/allopts
+		else
+			if [[ "$PARAMETROS_ARG[@]" =~ "${i}" ]]; then
+				ARGUMENTOS+=([${i//-}]="${(P)$(($control+1))}")
+				print "ARGUMENTOS+=([${i//-}]="${(P)$(($control+1))}")" >> /tmp/allopts
+				ARGREFUSED+=([$control]="${(P)control}")
+				print "ARGREFUSED+=([$control]="${(P)control}")" >> /tmp/allopts
+				ARGREFUSED+=([$(($control+1))]="${(P)$(($control+1))}")
+				print "ARGREFUSED+=([$(($control+1))]="${(P)$(($control+1))}")" >> /tmp/allopts
+			elif [[ "$PARAMETROS_CONF[@]" =~ "${i}" ]]; then
+				ARGUMENTOS+=([${i//-}]="true")
+				print "ARGUMENTOS+=([${i//-}]="true")" >> /tmp/allopts
+				ARGREFUSED+=([$control]="${(P)control}")
+				print "ARGREFUSED+=([$control]='"${(P)control}"')" >> /tmp/allopts
+			fi
+		fi
+	fi
+}

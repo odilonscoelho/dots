@@ -1,0 +1,24 @@
+#!/bin/zsh
+base=$(free -h)
+typeset -F2 mem_total=${${${${${(s: :)${(f)base}[2]}[2]}//Gi/}//Mi/}//,/.}
+typeset -F2 mem_used=${${${${${(s: :)${(f)base}[2]}[3]}//Gi/}//Mi/}//,/.}
+c_mem_total=$(cor -f green "$mem_total")
+c_mem_used=$(cor -f red "$mem_used")
+suffix_mem_used="${${${${${(s: :)${(f)base}[2]}[3]}//*Gi/Gi}//*Mi/Mi}//,/}"
+suffix_mem_total="${${${${${(s: :)${(f)base}[2]}[2]}//*Gi/Gi}//*Mi/Mi}//,/}"
+c_suffix_mem_total=$(cor -f blue $suffix_mem_total)
+c_suffix_mem_used=$(cor -f blue $suffix_mem_used)
+c_suffix_perc_used=$(cor -f blue "%%")
+
+if [[ $suffix_mem_used =~ "Mi" ]]; then
+    typeset -F2 mem_perc_used=$(( (( mem_used / 1024 ) / mem_total ) * 100 ))
+    c_mem_perc_used=$(cor -f yellow "$mem_perc_used")
+else
+    typeset -F2 mem_perc_used=$(( mem_used / mem_total * 100 ))
+    c_mem_perc_used=$(cor -f yellow "$mem_perc_used")
+fi
+
+local label="$(cor -f blue "   ") $c_mem_perc_used$c_suffix_perc_used, total $c_mem_total$c_suffix_mem_total, used $c_mem_used$c_suffix_mem_used "
+len=$#label
+printf '\n'
+printf '%'$(( (COLUMNS - len + 124) / 2))'s %s' " " " $label "

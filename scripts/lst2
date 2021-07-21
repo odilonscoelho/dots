@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+for arg; do
+    if [[ $arg == @("-a"|"--all") ]]; then
+            all="true" 
+            shift 
+            continue
+    elif [[ $arg == @("-r"|"--recursive") ]]; then
+            recursive="true" 
+            shift 
+            continue
+    else
+        if [[ -d $arg ]]; then
+            diretorios+=("$arg")
+        else
+            files+=("$arg")
+        fi
+    fi
+done
+
+function DirLocal 
+    { printf '%s\n' "$PWD/*" ; }
+
+function DirLocalRecursivo 
+    { printf '%s\n' "$PWD/**/**/**/**/*" ; }
+
+function DirLocalOcultos  
+    { printf '%s\n' "$PWD/{*,.*}" ; }
+
+function DirLocalOcultosRecursivo 
+    { printf '%s\n' "$PWD/{*,.*}/{*,.*}/{*,.*}/{*,.*}/{*,.*}" ; }
+
+function DirInformado 
+    { printf '%s\n' "${diretorios[@]}/*" ; }
+
+function DirInformadoRecursivo 
+    { printf '%s\n' "${diretorios[@]}/**/**/**/**/*" ; }
+
+function DirInformadoOcultos 
+    { printf '%s\n' "${diretorios[@]}/{*,.*}" ; }
+
+function DirInformadoOcultosRecursivo 
+    { printf '%s\n' "${diretorios[@]}/{*,.*}/{*,.*}/{*,.*}/{*,.*}/{*,.*}" ; }
+
+function DirTipo
+    { 
+        if [[ -n ${diretorios[@]} ]]; then
+            return 0
+        else
+            return 1
+        fi
+    }
+
+function Append
+    {
+        
+    }
+    
+if [[ -n $all && -n $recursive ]]; then
+    DirTipo && DirInformadoOcultosRecursivo || DirLocalOcultosRecursivo
+elif [[ -n $all && -z $recursive ]]; then
+    DirTipo && DirInformadoOcultos || DirLocalOcultos
+elif [[ -z $all && -n $recursive ]]; then
+    DirTipo && DirInformado || DirLocal
+fi
+
+

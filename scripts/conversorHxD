@@ -1,0 +1,19 @@
+#!/bin/zsh
+typeset -A arrayHxD
+arrayHxD=([a]=10 [b]=11 [c]=12 [d]=13 [e]=14 [f]=15)
+
+hexadecimal="${@//0x/}"
+len="$#hexadecimal"
+
+for control in {$len..1}
+{
+	digit=${hexadecimal[$control]}
+	[[ $digit =~ '[[:alpha:]]' ]] && 
+	    { (( decimal = decimal + $(( arrayHxD[$digit] * (16**${control_calc:-0}) )) )) } || 
+	        { (( decimal = decimal + $(( digit * (16**${control_calc:-0}) )) )) }
+	
+	control_calc=$((++control_calc))
+}
+
+print $decimal
+

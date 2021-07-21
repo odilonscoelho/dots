@@ -1,0 +1,216 @@
+#!/usr/bin/env bash
+# Import das suas cores
+. /hdbkp/dots/temas/colors.zsh
+. /hdbkp/dots/scripts/allfunctions
+# location: 						$location;
+# show-icons:                     true;
+# icon-theme:                     \"/usr/share/icons/Revenge/128x128/apps\";
+Custom ()
+{
+echo "configuration {
+    lines:							15;
+    columns:						1;
+    font: 							\"$font\";
+    bw: 							0;
+    padding: 						10;
+    fixed-num-lines: 				true;
+    show-icons: 					true;
+    sidebar-mode: 					true;
+    separator-style: 				\"none\";
+    hide-scrollbar: 				true;
+    fullscreen: 					false;
+    fake-transparency: 				false;
+    scroll-method: 					0;
+    window-format: 					\"[{w}] ··· {c} ···   {t}\";
+    click-to-exit: 					true;
+    show-match: 					false;
+    combi-hide-mode-prefix: 		false;
+    display-window: 				\"\";
+    display-windowcd: 				\"\";
+    display-run: 					\"\";
+    display-ssh: 					\"\";
+    display-drun: 					\"\";
+    display-combi: 					\"\";
+}
+
+* {
+    background:                     $background;
+    background-alt:                 $color0;
+    foreground:                     $foreground;
+    border:               			$color2;
+    border-alt:               	    $color5;
+    selected:               		$foreground;
+    urgent:                         $color1;
+    accent:                         $cursor;
+    background-light:               $color0;
+    on:                             $color4;
+    off:                            $color8;
+}
+
+window {
+    border: 						0px;
+    border-color: 					$color2;
+    border-radius: 					0px;
+    padding: 						30;
+    width: 							15%;
+}
+
+prompt {
+    spacing: 						0;
+    border: 						0;
+    text-color: 					$color8;
+}
+
+textbox-prompt-colon {
+    expand: 						false;
+    str: 							\" \";
+    margin:							0px 4px 0px 0px;
+    text-color: 					inherit;
+}
+
+entry {
+    spacing:    					0;
+    text-color: 					$foreground;
+}
+
+case-indicator {
+    spacing:    					0;
+    text-color: 					$foreground;
+}
+
+inputbar {
+    spacing:    					0px;
+    text-color: 					$foreground;
+    padding:    					1px;
+    children: 						[ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+
+mainbox {
+    border: 						3px;
+    border-color: 					$color2;
+    padding: 						6;
+}
+
+listview {
+    fixed-height: 					5;
+    border: 						0px;
+    border-color: 					$color2;
+    spacing: 						4px;
+    scrollbar: 						false;
+    padding: 						5px 5px 5px 5px;
+}
+
+element {
+    border: 						0px;
+    border-radius: 					4px;
+    padding: 						5px;
+}
+element normal.normal {
+    background-color: 				$background;
+    text-color:       				$foreground;
+}
+element normal.urgent {
+    background-color: 				$background;
+    text-color:       				$color1;
+}
+element normal.active {
+    background-color: 				$color2;
+    text-color:       				$background;
+}
+element selected.normal {
+    background-color: 				$color2;
+    text-color:       				$background;
+}
+element selected.urgent {
+    background-color: 				$background;
+    text-color:       				$color1;
+}
+element selected.active {
+    background-color: 				$color1;
+    text-color:       				$background;
+}
+element alternate.normal {
+    background-color: 				$background;
+    text-color:       				$foreground;
+}
+element alternate.urgent {
+    background-color: 				$background;
+    text-color:       				$foreground;
+}
+element alternate.active {
+    background-color: 				$background;
+    text-color:       				$foreground;
+}
+
+sidebar {
+    border:       					0px;
+    border-color: 					$color2;
+    border-radius: 					0px;
+}
+
+button {
+    background-color:             	$color8;
+    margin: 						5px;
+    padding: 						5px;
+    text-color: 					$background;
+    border: 						0px;
+    border-radius: 					15px;
+    border-color: 					$color2;
+}
+
+button selected {
+    background-color:             	$color2;
+    text-color: 					$background;
+    border: 						4px;
+    border-radius: 					15px;
+    border-color: 					$color2;
+}
+
+scrollbar {
+    width:        					4px;
+    border:       					0px;
+    handle-color: 					$color2;
+    handle-width: 					8px;
+    padding:      					0;
+}
+
+message {
+    border: 						0px;
+    border-color: 					$color2;
+    padding: 						1px;
+}
+
+textbox {
+    text-color: 					$foreground;
+}"
+
+}
+
+
+fontIcons="Iosevka Term SS07 38"
+font="Iosevka Term SS07 Medium 18"
+radius=25
+layoutHorizontal='#listview { layout: horizontal; }'
+inputbarDisable='#inputbar { enabled: false; }'
+location=0
+
+drun () 
+{ 
+    rofi -no-lazy-grab -show drun -lines 0 -modi drun,window,run -terminal kitty \
+        -window-thumbnail -xoffset 0 -yoffset 80 -location 1 -theme-str "$(Custom)" ; 
+}
+
+menu ()
+{
+    font=$fontIcons
+    echo "  \n  \n  \n  \n  \n  "                                             | \
+        rofi -dmenu -p "Menu"                                                         \
+        -theme-str "$(Custom)"                                                        \
+        -theme-str '#window { border-radius: '$radius'px; }'                          \
+        -theme-str $inputbarDisable                                                   \
+        -theme-str $layoutHorizontal                                                  \
+        -font=$fontIcons -normal-window
+}
+
+[[ -z $@ ]] && drun || $@
+

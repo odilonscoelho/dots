@@ -1,0 +1,52 @@
+#!/bin/zsh
+
+attr.icon ()
+{
+	case $layout in
+		*treetab*) print "%{T11} ";;
+		*monadtall*) print "%{T12} ";;
+		*bsp*) print "%{T12} ";;
+		*max*) print "%{T11} ";;
+	esac		
+}
+
+bar ()
+{	
+	layout="$(qtile-cmd -o layout -f info | sed -n '/name/p'| sed 's/.*name.*\:\|\,\|\}//g'|sed s/\'//g)"
+	
+	printf %15s "%{F$color1}$(attr.icon)%{F$color6}%{T8}$layout%{F-}%{T-}" > /tmp/qlayout
+
+	polybar-msg hook qlayout 1
+}
+
+layout ()
+{		
+	if [[ "$@" == "next" ]]; then
+		qtile-cmd -o cmd -f next_layout
+	else
+		qtile-cmd -o cmd -f prev_layout
+	fi
+}
+
+actions ()
+{
+    groups=${#${(f)"$(qtile-cmd -o cmd -f groups |grep -E \^\ \'\|\^\{)"}}
+    actual=${${(s: :)$(grep $(< /tmp/taskbar_id_focused) < /tmp/taskbar)}[1]}
+    
+	if [[ "$1" == "next" ]]; then
+	    [[ $actual -lt $groups  ]] && foward_for=$(( $actual + 1 )) || foward_for=1
+		qtile-cmd -o window -f togroup --args $foward_for
+		qtile-cmd -o screen -f next_group
+	elif [[ "$1" == "prev" ]];then
+	    [[ $actual -gt 1  ]] && foward_for=$(( $actual - 1 )) || foward_for=$groups
+		qtile-cmd -o window -f togroup --args $foward_for
+		qtile-cmd -o screen -f prev_group
+	fi
+}
+
+case $@ in
+	bar ) bar;;
+	layout* ) layout $@;;
+	actions* ) $@;;	
+esac
+

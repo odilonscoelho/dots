@@ -1,0 +1,218 @@
+#!/bin/zsh
+
+# Unset variables for attribution new colors
+unset wscoloricon wscolorbg colorWSForeground colorWSBackground colorForegroundFocused colorForegroundUnFocused colorBackgroundFocused colorBackgroundUnFocused colorIconWorkspaceUnFocused colorIconWorkspaceFocused colorIconProgramUnFocused colorIconProgramFocused backgroundTaskbar backgroundDock foregroundTaskbar foregroundDock polybarBorderColor volumecolorsuffix calendarcolorprefix weatchercoloricon weatchercolor temperaturecpucolor temperaturecpucoloricon temperaturecpuwarncolor cpucoloricon ethcolor ethcoloricon xkeyboardcolor xkeyboardcoloricon memorycolor memorycoloricon gpuinfocolor gpuinfomemorycolor gpuinfotempcolor gpuinfousagecolor gpuinfoSuffixColor roficoloricon translatecoloricon mprefixcolor mprefixcolorbg mprefixcolorbg colorFSIconS volumecolor focused_border_color normal_border_color active_border_color presel_feedback_color
+
+# Import new colors
+. /hdbkp/dots/temas/colors.zsh
+
+# Verification what new theme applicated
+THEME="${$(< /hdbkp/dots/temas/history)//*\//}"
+
+case $THEME in
+    "nord.conf" )
+        export \
+        colorForegroundFocused=$foreground        colorForegroundUnFocused=$color14         colorIconProgramFocused=$color5      \
+        colorIconProgramUnFocused=$color8         colorWSForeground=$color14                colorIconWorkspaceFocused=$color14   \
+        colorIconWorkspaceUnFocused=$color8       wscoloricon=$color13                      volumecolorsuffix=$color13           \
+        calendarcolorprefix=$color13              calendarcolor=$color8
+        focused_border_color=$color2            ; normal_border_color=$color8              ; active_border_color=$color8           
+        presel_feedback_color=$color1
+        ;;
+    "Gruvbox Dark.conf" )
+         #  colorFSIconS=($color3 $color5) ethcolor=$color8 xkeyboardcolor=$color8 xkeyboardcoloricon=$color10 temperaturecpucoloricon=$color6 gpuinfotempcolor=$color6 ethcoloricon=$color2 memorycoloricon=$color12 gpuinfomemorycolor=$color12 weatchercoloricon=$color5 weatchercolor=$color8 foregroundDock=$color8
+        export \
+        colorBackgroundFocused=$color2              colorBackgroundUnFocused=$color8          colorIconProgramUnFocused=$background \
+        colorIconProgramFocused=$background         colorIconWorkspaceUnFocused=$background ; focused_border_color=$color10
+        normal_border_color=$color7               ; active_border_color=$color7             ; presel_feedback_color=$color7 
+        ;;
+    "Elemental.conf" )
+        # weatchercoloricon=$color5 temperaturecpucoloricon=$color3 temperaturecpuwarncolor=$color11 gpuinfotempcolor=$color3 colorFSIconS=($color14 $color11) foregroundDock=$color8 backgroundDock=$background
+        focused_border_color=$color3            ; export colorForegroundFocused=$color6
+        ;;
+    "Subliminal.conf" )
+        mprefixcolorbg=$background
+        bspc config presel_feedback_color $color0
+        ;;
+    "Sundried.conf" )
+         export \
+         wscoloricon=$color5                      colorForegroundFocused=$color10             colorForegroundUnFocused=$color2        \
+         colorBackgroundFocused=$foreground       colorBackgroundUnFocused=$color8            colorIconWorkspaceUnFocused=$foreground \
+         colorIconWorkspaceFocused=$background    colorIconProgramUnFocused=$background       colorIconProgramFocused=$background     \
+         volumecolorsuffix=$color5
+         # weatchercoloricon=$color1 temperaturecpucoloricon=$color1 temperaturecpuwarncolor=$color9  cpucoloricon=$color1 gpuinfotempcolor=$color1 gpuinfousagecolor=$color1 mprefixcolorbg=$background colorFSIconS=($color14 $color1)
+        ;;
+    "Zenburn.conf" )
+        export \
+        colorForegroundFocused=$background       colorForegroundUnFocused=$foreground        colorBackgroundFocused=$color10   \ 
+        colorIconWorkspaceUnFocused=$foreground  colorIconWorkspaceFocused=$background       colorIconProgramUnFocused=$color2 \
+        colorIconProgramFocused=$color2        
+         # foregroundDock=$foreground weatchercoloricon=$color9 temperaturecpucoloricon=$color9 temperaturecpuwarncolor=$color1 cpucoloricon=$color9 gpuinfotempcolor=$color9 gpuinfousagecolor=$color9 mprefixcolorbg=$background colorFSIconS=($color9 $color1)
+        presel_feedback_color=$color0
+        ;;
+    "N0tch2k.conf" )
+        export \
+        colorForegroundFocused=$color15          colorForegroundUnFocused=$color2            colorBackgroundFocused=$color10       \
+        colorBackgroundUnFocused=$color8         colorIconWorkspaceUnFocused=$foreground     colorIconWorkspaceFocused=$background \
+        colorIconProgramUnFocused=$background    colorIconProgramFocused=$background
+         # weatchercoloricon=$color9      temperaturecpucoloricon=$color9    temperaturecpuwarncolor=$color1    cpucoloricon=$color9   gpuinfotempcolor=$color9    gpuinfousagecolor=$color9   mprefixcolorbg=$background  colorFSIconS=($color9 $color1)
+        presel_feedback_color=$color0
+        ;;
+    "Pnevma.conf" )
+        focused_border_color=$color2            ; presel_feedback_color=$color0
+        export \
+        foregroundTaskbar=$cursor               volumecolor=$color0                                                             \
+        calendarcolor=$color8                   calendarcolorprefix=$color2               volumecolorsuffix=$color2             \
+        colorWSForeground=$color8               wscoloricon=$color2                                                             \
+        colorForegroundUnFocused=$color8        colorForegroundFocused=$foreground                                              \
+        colorBackgroundUnFocused=$color0        colorBackgroundFocused=$color8             colorIconProgramFocused=$color11     \
+        colorIconProgramUnFocused=$color8       colorIconWorkspaceFocused=$color2          colorIconWorkspaceUnFocused=$color8
+        # foregroundDock=$color8    weatchercoloricon=$color2  temperaturecpucoloricon=$color3   temperaturecpuwarncolor=$color1  gpuinfotempcolor=$color3  mprefixcolorbg=$background
+        ;;
+    "Chalk.conf" )
+        focused_border_color=$color10           ;active_border_color=$color8               ;normal_border_color=$color8
+        export \
+        foregroundTaskbar=$cursor               volumecolor=$color0                                                             \
+        calendarcolor=$color0                   calendarcolorprefix=$color2                volumecolorsuffix=$color2            \
+        colorWSForeground=$color0               wscoloricon=$color2                        colorForegroundUnFocused=$background \
+        colorBackgroundUnFocused=$color8        colorBackgroundFocused=$color0             colorIconProgramFocused=$color14     \
+        colorIconProgramUnFocused=$color7       colorIconWorkspaceFocused=$color10         colorIconWorkspaceUnFocused="#ADADAD"
+        ;;
+    "losaoall.conf" )
+        focused_border_color=$color2            ; presel_feedback_color=$color0
+        export \
+        foregroundTaskbar=$cursor               volumecolor=$foreground                                                         \
+        calendarcolor=$foreground               calendarcolorprefix=$color10              volumecolorsuffix=$color10            \
+        colorWSForeground=$foreground           wscoloricon=$color10                                                            \
+        colorForegroundUnFocused=$foreground    colorForegroundFocused=$background                                              \
+        colorBackgroundUnFocused=$color0        colorBackgroundFocused="$color2"             colorIconProgramFocused=$color1      \
+        colorIconProgramUnFocused=$color1       colorIconWorkspaceFocused=$color0          colorIconWorkspaceUnFocused=$color8
+        # foregroundDock=$color8    weatchercoloricon=$color2  temperaturecpucoloricon=$color3   temperaturecpuwarncolor=$color1  gpuinfotempcolor=$color3  mprefixcolorbg=$background
+        ;;
+esac
+
+################################################################################################################
+# Section for themes not defined above, what there not set above are condider here.
+[[ -z $wscoloricon  ]] &&  export wscoloricon=$color3
+[[ -z $wscolorbg  ]] &&  export wscolorbg=$background
+
+[[ -z $colorWSForeground  ]] &&  export colorWSForegroun=$color4
+[[ -z $colorWSBackground  ]] &&  export colorWSBackground=$background
+
+[[ -z $colorForegroundFocused  ]] &&  export colorForegroundFocused=$foreground
+[[ -z $colorForegroundUnFocused  ]] && export colorForegroundUnFocused=$color11
+
+[[ -z $colorBackgroundFocused  ]] && export colorBackgroundFocused=$color8
+[[ -z $colorBackgroundUnFocused  ]] &&  export colorBackgroundUnFocused=$color0
+
+[[ -z $colorIconWorkspaceUnFocused  ]] && export colorIconWorkspaceUnFocused=$color8
+[[ -z $colorIconWorkspaceFocused  ]] &&  export colorIconWorkspaceFocused=$foreground
+
+[[ -z $colorIconProgramUnFocused  ]] && export colorIconProgramUnFocused=$color8
+[[ -z $colorIconProgramFocused  ]] && export colorIconProgramFocused=$color10
+
+[[ -z $backgroundTaskbar  ]] && export backgroundTaskbar=$background
+#[[ -z $backgroundDock  ]] &&  backgroundDock=$background
+
+[[ -z $foregroundTaskbar  ]] && export foregroundTaskbar=$foreground
+#[[ -z $foregroundDock  ]] &&  foregroundDock=$color0
+
+[[ -z $polybarBorderColor  ]] && export polybarBorderColor=$color0
+
+[[ -z $volumecolorsuffix  ]] && export volumecolorsuffix=$color3
+
+[[ -z $calendarcolorprefix  ]] && export calendarcolorprefix=$color3
+
+# [[ -z $weatchercoloricon  ]] &&  weatchercoloricon=$color8
+# [[ -z $weatchercolor  ]] &&  weatchercolor=$color0
+
+# [[ -z $temperaturecpucolor  ]] &&  temperaturecpucolor=$color0
+# [[ -z $temperaturecpucoloricon  ]] &&  temperaturecpucoloricon=$color8
+# [[ -z $temperaturecpuwarncolor  ]] &&  temperaturecpuwarncolor=$color1
+
+# [[ -z $cpucoloricon  ]] &&  cpucoloricon=$color13
+
+# [[ -z $ethcolor ]] &&  ethcolor=$color0
+# [[ -z $ethcoloricon ]] &&  ethcoloricon=$color3
+
+# [[ -z $xkeyboardcolor ]] &&  xkeyboardcolor=$color0
+# [[ -z $xkeyboardcoloricon ]] &&  xkeyboardcoloricon=$color11
+
+# [[ -z $memorycolor ]] &&  memorycolor=$color0
+# [[ -z $memorycoloricon ]] &&  memorycoloricon=$color11
+
+# [[ -z $gpuinfocolor ]] &&  gpuinfocolor=$color0
+# [[ -z $gpuinfomemorycolor ]] &&  gpuinfomemorycolor=$color11
+# [[ -z $gpuinfotempcolor ]] &&  gpuinfotempcolor=$color8
+# [[ -z $gpuinfousagecolor ]] &&  gpuinfousagecolor=$color13
+# [[ -z $gpuinfoSuffixColor ]] &&  gpuinfoSuffixColor=$color2
+
+# [[ -z $roficoloricon ]] &&  roficoloricon=$color11
+
+# [[ -z $translatecoloricon ]] &&  translatecoloricon=$color2
+
+# [[ -z $mprefixcolor ]] &&  mprefixcolor=$color3
+# [[ -z $mprefixcolorbg ]] &&  mprefixcolorbg=$background
+
+# [[ -z $colorFSIconS ]] &&  colorFSIconS=($color2 $color13)
+
+# bspc colors
+[[ -z $focused_border_color ]] && bspc config focused_border_color $color7 || bspc config focused_border_color $focused_border_color
+[[ -z $normal_border_color ]] && bspc config normal_border_color $color0 || bspc config normal_border_color $normal_border_color
+[[ -z $active_border_color ]] && bspc config active_border_color $color0 || bspc config active_border_color $active_border_color
+[[ -z $presel_feedback_color ]] && bspc config presel_feedback_color $color0 || bspc config presel_feedback_color $presel_feedback_color
+
+################################################################################################################
+# Set the icons and formated labels for polybar here.
+##### VOLUME PULSE AUDIO
+[[ -z $volumecolor ]] && export volumecolor="$foreground"
+export volumefontsuffix="13"
+export volumesuffix=蓼
+export volumelabel="%{F${volumecolorsuffix}} %{T${volumefontsuffix}} $volumesuffix %{T- F-}"
+##### CALENDAR
+[[ -z $calendarcolor ]] && export calendarcolor="$foreground"
+export calendarfontprefix=11
+export calendarprefix=
+export calendarfontlabeldate=14
+export calendarfontlabelhour=14
+export calendarfontlabelday=9
+######## WS
+export wsfonticon="12"
+export wsicon="%{T$wsfonticon}   " #       ##### WEATCHER
+###### MP
+##  mprefixicon= 
+#  mprefixfont=11
+####### WEATCHER
+#  weatcherfonticon=2
+##### TEMP CPU
+#  temperaturecpufonticon=9
+#  temperaturecpuicon=
+##### CPU
+#  cpucolor=$foreground
+#  cpuicon=
+#  cpufonticon=11
+##### XKEYBOARD
+#  xkeyboardicon=
+#  xkeyboardfonticon=3
+##### REDE
+#  ethiconprefix=
+#  ethiconsuffix=
+#  ethfonticon=2
+##### MEMORY
+#  memoryicon=﬙
+#  memoryfonticon=11
+####### GPU
+#  gpuinfomemoryicon=﬙
+#  gpuinfotempicon=  
+#  gpuinfotempicon2=ºC
+#  gpuinfousageicon=""       #         & #x e9 01  爛 爛                                  
+#  gpuinfomemoryfonticon=11
+#  gpuinfotempfonticon=4
+#  gpuinfotempfonticon2=1
+#  gpuinfousagefonticon=5
+#  gpuinfosuffix="%{T13}%{F$gpuinfoSuffixColor}    %{T-}"
+####### TRANSLATE
+#  translatefonticon="16"
+#  translateicon=  #
+#  translatelabel="%{T$translatefonticon}%{F$translatecoloricon} $translateicon %{T-}%{F-}"
+

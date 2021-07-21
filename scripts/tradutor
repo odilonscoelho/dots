@@ -1,0 +1,68 @@
+#!/bin/zsh
+sel ()
+{
+	trans -b -t pt "$(xclip -s xclipboard -o)"
+}
+
+doc ()
+{
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Tradução</title>
+        <style>
+        html {
+            color: $color8;
+            background-color: $background;
+        }
+        .wrapper {
+            color: $color8;
+            background-color: $background;
+            display: grid;
+            grid-template-columns: 220px 900px;
+            grid-gap: 30px;
+            align-content: center;
+            align-items: center;
+            align-self: center;
+        }
+        .titulo {
+            color: $color2;
+            font-family: \"Iosevka Term SS07\";
+            font-size: 140px;
+            border-radius: 20px;
+            padding: 30px;
+            align-content: center;
+            align-items: center;
+            align-self: center;
+        }
+        .traducao {
+            color: $color3;
+            font-family: \"Iosevka Term SS07\";
+            font-size: 15px;
+            font-stretch: ultra-condensed;
+            border-radius: 20px;
+            padding: 30px;
+            align-content: center;
+            align-items: center;
+            align-self: center;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="titulo"><img src="$icon" width=220 height=200></div>
+            <div class="traducao">$(sel)</div>
+        </div>
+    </body>
+    </html>" > /tmp/translate.html
+}
+ 
+window ()
+{
+    icon="$HOME/.local/share/icons/Revenge/128x128/apps/system-config-language.png"
+    . /hdbkp/dots/temas/colors.zsh
+    doc
+    yad --html --title tradutor --width 1200 --height 500 --no-buttons --uri /tmp/translate.html
+}
+
+[[ -z $@ ]] && sel || $@

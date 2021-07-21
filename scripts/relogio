@@ -1,0 +1,92 @@
+#!/bin/zsh
+relogio () {
+hour=$(date +%H%M)
+for (( i = 1; i <= 4; i++ )); do
+  case `echo $hour |cut -c$i` in
+   0)icons[$i]="";;
+   1)icons[$i]="";;
+   2)icons[$i]="";;
+   3)icons[$i]="";;
+   4)icons[$i]="";;
+   5)icons[$i]="";;
+   6)icons[$i]="";;
+   7)icons[$i]="";;
+   8)icons[$i]="";;
+   9)icons[$i]="";;
+  esac
+done
+echo "%{T$calendarfontlabelhour}%{F$calendarcolor} $icons[1]$icons[2]:$icons[3]$icons[4]"
+}
+
+relogio.extenso () {
+dayweek=$(date |awk {'print $1'})
+date=$(date +%d%m)
+for (( i = 1; i <= 4; i++ )); do
+  case `echo $date |cut -c$i` in
+   0)icons[$i]="";;
+   1)icons[$i]="";;
+   2)icons[$i]="";;
+   3)icons[$i]="";;
+   4)icons[$i]="";;
+   5)icons[$i]="";;
+   6)icons[$i]="";;
+   7)icons[$i]="";;
+   8)icons[$i]="";;
+   9)icons[$i]="";;
+  esac
+done
+echo "%{T$calendarfontlabelday}%{F$calendarcolorprefix} $dayweek, %{F$calendarcolor}%{T$calendarfontlabeldate}$icons[1]$icons[2]/$icons[3]$icons[4] "
+}
+
+term ()
+{
+    attr.icon ()
+        case $@ in;
+            0) <<< " ";;
+            1) <<< " ";;
+            2) <<< " ";;
+            3) <<< " ";;
+            4) <<< " ";;
+            5) <<< " ";;
+            6) <<< " ";;
+            7) <<< " ";;
+            8) <<< " ";;
+            9) <<< " ";;
+        esac
+
+    attr.icon2 ()
+        case $@ in;
+            jan) <<< "    ";;
+            fev) <<< "    ";;
+            mar) <<< "    ";;
+            abr) <<< "    ";;
+            mai) <<< "    ";;
+            jun) <<< "    ";;
+            jul) <<< "    ";;
+            ago) <<< "    ";;
+            set) <<< "    ";;
+            out) <<< "    ";;
+            nov) <<< "    ";;
+            dez) <<< "    ";;
+        esac
+
+    date_base=$(date)
+    day_week=${${(s: :)date_base}[1]}
+    day_month=${${(s: :)date_base}[2]}
+    month=${${(s: :)date_base}[3]}
+    year=${${(s: :)date_base}[4]}
+    hour=${${(s#:#)${(s: :)date_base}[5]}[1]}
+    minute=${${(s#:#)${(s: :)date_base}[5]}[2]}
+    second=${${(s#:#)${(s: :)date_base}[5]}[3]}
+    label_clock_numbers_hours="$(attr.icon ${hour[1]}) $(attr.icon ${hour[2]}) :$(attr.icon ${minute[1]}) $(attr.icon $minute[2])"
+    label_clock_numbers_mounth=$(attr.icon2 ${month})
+    label_clock_numbers_day="$(attr.icon ${day_month[1]}) $(attr.icon $day_month[2])"
+
+    label="$(cor -f blue " $label_clock_numbers_hours  $day_week $label_clock_numbers_day /$label_clock_numbers_mounth ")"
+    len=34
+    #len="$(sed -E 's/\\e\[.*m//g' <<< $label |wc -c)"
+    printf '\n'
+    printf '%'$(( (COLUMNS - len) / 2 ))'s %s\n' " " " $label "
+}
+
+$@
